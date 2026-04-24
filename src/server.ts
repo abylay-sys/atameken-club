@@ -32,8 +32,6 @@ async function buildApp() {
 
   app.get('/health', async () => ({ ok: true, ts: Date.now() }));
 
-  app.get('/', async (_req, reply) => reply.redirect('/login.html'));
-
   await app.register(authRoutes, { prefix: '/auth' });
   await app.register(profileRoutes, { prefix: '/profile' });
   await app.register(adminRoutes, { prefix: '/admin' });

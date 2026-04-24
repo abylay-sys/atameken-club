@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ATAMEKEN Club — Бизнес-сообщество Казахстана</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* PALETTE */
+  --white:#FFFFFF;
+  --bg:#F7F8FA;
+  --bg2:#EEF1F6;
+  --ink:#0F1620;
+  --ink2:#2C3547;
+  --ink3:#4A5568;
+  --red:#C8282A;
+  --red2:#E63B3D;
+  --red-dim:rgba(200,40,42,.08);
+  --red-dim2:rgba(200,40,42,.15);
+  --blue:#1A6FC4;
+  --blue2:#2980D9;
+  --blue-dim:rgba(26,111,196,.08);
+  --gold:#B8922A;
+  --border:#E2E8F0;
+  --border2:#CBD5E0;
+  --shadow:0 1px 3px rgba(15,22,32,.08),0 4px 16px rgba(15,22,32,.06);
+  --shadow-md:0 4px 12px rgba(15,22,32,.1),0 8px 32px rgba(15,22,32,.08);
+  /* TYPE */
+  --t0:.7rem;   /* 11px label */
+  --t1:.8rem;   /* 12.8px small */
+  --t2:.9rem;   /* 14.4px body-sm */
+  --t3:1rem;    /* 16px body */
+  --t4:1.125rem;/* 18px lead */
+  --t5:1.375rem;/* 22px card title */
+  --t6:1.75rem; /* 28px section sub */
+  --t7:2.25rem; /* 36px section head */
+  --hero:clamp(2.6rem,5.5vw,4.2rem);
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--ink);font-family:'Inter',sans-serif;font-size:var(--t3);font-weight:400;line-height:1.65;overflow-x:hidden}
+
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.2}
+p{font-size:var(--t3);line-height:1.75;color:var(--ink3)}
+strong{color:var(--ink);font-weight:600}
+a{color:inherit;text-decoration:none}
+
+.tag{font-size:var(--t0);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--red)}
+.red-bar{width:32px;height:3px;background:var(--red);margin-bottom:.85rem;border-radius:1px}
+.inner{max-width:1140px;margin:0 auto}
+section{padding:3rem 3rem;position:relative}
+.bg-gray{background:var(--bg)}
+.bg-gray2{background:var(--bg2)}
+
+/* ─── BUTTONS ─── */
+.btn-red{background:var(--red);color:#fff;border:none;padding:.8rem 2rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;letter-spacing:.04em;cursor:pointer;display:inline-block;transition:all .22s;border-radius:2px}
+.btn-red:hover{background:var(--red2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,40,42,.3)}
+.btn-blue{background:var(--blue);color:#fff;border:none;padding:.8rem 2rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;letter-spacing:.04em;cursor:pointer;display:inline-block;transition:all .22s;border-radius:2px}
+.btn-blue:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,111,196,.3)}
+.btn-out{background:none;border:1.5px solid var(--border2);color:var(--ink2);padding:.78rem 2rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:500;cursor:pointer;display:inline-block;transition:all .22s;border-radius:2px}
+.btn-out:hover{border-color:var(--red);color:var(--red)}
+.btn-link{font-size:var(--t2);font-weight:500;color:var(--red);display:inline-flex;align-items:center;gap:.35rem;transition:gap .2s}
+.btn-link::after{content:'→';font-size:1rem}
+.btn-link:hover{gap:.55rem}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.75rem 3rem;display:flex;align-items:center;gap:2rem;justify-content:space-between;transition:box-shadow .3s}
+nav.scrolled{box-shadow:var(--shadow)}
+.logo{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+.logo-emblem{width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:50%}
+.logo-text{}
+.logo-main{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;letter-spacing:.06em;color:var(--ink);display:block;line-height:1.1}
+.logo-sub{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:block}
+.nav-links{display:flex;gap:1.6rem;list-style:none;align-items:center;flex:1;justify-content:center}
+.nav-links a{font-size:var(--t1);font-weight:500;letter-spacing:.04em;color:var(--ink3);transition:color .2s}
+.nav-links a:hover{color:var(--red)}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.lang-switch{display:flex;gap:0;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.lang-btn{padding:.3rem .55rem;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.lang-btn.active,.lang-btn:hover{background:var(--red);color:#fff}
+.lang-btn+.lang-btn{border-left:1px solid var(--border)}
+
+/* ─── HERO ─── */
+#hero{background:var(--white);padding:5.5rem 3rem 3rem;display:flex;align-items:center;overflow:hidden;position:relative}
+.hero-bg-shape{position:absolute;right:-120px;top:-80px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,rgba(200,40,42,.06) 0%,transparent 70%);pointer-events:none}
+.hero-bg-shape2{position:absolute;left:-80px;bottom:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(26,111,196,.05) 0%,transparent 70%);pointer-events:none}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;width:100%;max-width:1140px;margin:0 auto;position:relative}
+.hero-left{}
+.hero-label{display:flex;align-items:center;gap:.65rem;margin-bottom:1.4rem}
+.hero-label::before{content:'';width:24px;height:2px;background:var(--red)}
+.hero-title{font-size:var(--hero);color:var(--ink);line-height:1.1;margin-bottom:1.25rem}
+.hero-title em{font-style:italic;color:var(--red)}
+.hero-desc{font-size:var(--t4);color:var(--ink3);line-height:1.75;margin-bottom:2rem}
+.hero-actions{display:flex;gap:.9rem;flex-wrap:wrap}
+.hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);margin-top:1.5rem}
+.hero-stat{background:var(--white);padding:1.25rem 1.5rem}
+.hero-stat-n{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:500;color:var(--ink);line-height:1}
+.hero-stat-n span{color:var(--red)}
+.hero-stat-l{font-size:var(--t1);color:var(--ink3);margin-top:.2rem}
+
+.hero-right{}
+.hero-card-stack{position:relative;height:360px}
+.hc{position:absolute;background:var(--white);border:1px solid var(--border);padding:1.5rem;border-radius:6px;box-shadow:var(--shadow-md)}
+.hc-1{width:280px;top:0;left:0}
+.hc-2{width:260px;top:80px;right:0;border-top:3px solid var(--red)}
+.hc-3{width:240px;bottom:20px;left:40px;border-top:3px solid var(--blue)}
+.hc-tag{font-size:var(--t0);font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:.6rem}
+.hc-tag.red{color:var(--red)}
+.hc-tag.blue{color:var(--blue)}
+.hc-tag.gold{color:var(--gold)}
+.hc-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;color:var(--ink);margin-bottom:.5rem;line-height:1.25}
+.hc-meta{display:flex;gap:.75rem;flex-wrap:wrap}
+.hc-chip{font-size:.7rem;padding:.18rem .55rem;border-radius:2px;font-weight:500}
+.hc-chip.r{background:var(--red-dim);color:var(--red)}
+.hc-chip.b{background:var(--blue-dim);color:var(--blue)}
+.hc-chip.g{background:rgba(184,146,42,.1);color:var(--gold)}
+.hc-price{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--ink);margin-top:.65rem;font-weight:500}
+.hc-price span{font-family:'Inter',sans-serif;font-size:.7rem;color:var(--ink3);font-weight:400;margin-left:.25rem}
+.hc-lock{display:flex;align-items:center;gap:.4rem;margin-top:.65rem;font-size:.7rem;color:var(--ink3)}
+.hc-lock svg{width:11px;height:11px;color:var(--red)}
+.verified-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(22,163,74,.1);color:#16a34a;font-size:.7rem;font-weight:600;padding:.2rem .65rem;border-radius:2px;margin-top:.5rem}
+.verified-badge svg{width:11px;height:11px}
+
+/* ─── TICKER ─── */
+.ticker-wrap{background:var(--red);overflow:hidden;padding:.55rem 0}
+.ticker{display:flex;animation:ticker 35s linear infinite;width:max-content}
+.ticker-item{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.85);font-weight:500;padding:0 2.25rem;white-space:nowrap}
+.ticker-item::before{content:'◆';margin-right:2.25rem;font-size:.45em;vertical-align:middle;opacity:.6}
+
+/* ─── SECTION HEADER ─── */
+.sh{margin-bottom:1.5rem}
+.sh-inner{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:end}
+.sh h2{font-size:var(--t7)}
+.sh-right p{font-size:var(--t3);border-top:2px solid var(--red);padding-top:1.1rem}
+
+/* ─── WHO ─── */
+#who{}
+.who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.who-card{background:var(--white);border:1px solid var(--border);padding:2rem;border-radius:4px;transition:all .25s;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.who-card:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.who-icon-wrap{width:44px;height:44px;background:var(--red-dim);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;color:var(--red)}
+.who-title{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink);margin-bottom:.5rem}
+.who-desc{font-size:var(--t2);color:var(--ink3);margin-bottom:1.1rem;flex:1;line-height:1.65}
+.who-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.4rem}
+.who-list li{font-size:var(--t1);color:var(--ink3);display:flex;gap:.5rem;align-items:flex-start;line-height:1.5}
+.who-list li::before{content:'·';color:var(--red);font-size:1.2rem;line-height:1;flex-shrink:0;margin-top:-.05rem}
+
+/* ─── HOW ─── */
+#how{background:var(--bg)}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--border);background:var(--border)}
+.step-box{background:var(--white);padding:2rem;position:relative;transition:background .25s}
+.step-box:hover{background:var(--red-dim)}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:500;color:var(--red);opacity:.18;line-height:1;margin-bottom:.75rem}
+.step-phase{font-size:var(--t0);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+.step-box h3{font-size:var(--t4);color:var(--ink);margin-bottom:.55rem;font-family:'Cormorant Garamond',serif}
+.step-box p{font-size:var(--t2);color:var(--ink3)}
+.step-box.highlight{background:var(--ink);border-top:3px solid var(--red)}
+.step-box.highlight .step-num{color:var(--red);opacity:.35}
+.step-box.highlight .step-phase{color:rgba(255,255,255,.5)}
+.step-box.highlight h3{color:#fff}
+.step-box.highlight p{color:rgba(255,255,255,.6)}
+
+/* ─── CATALOG ─── */
+#catalog{background:var(--white)}
+.cat-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow-x:auto;margin-bottom:2rem;width:fit-content}
+.cat-tab{padding:.6rem 1.4rem;font-size:var(--t2);font-weight:500;color:var(--ink3);cursor:pointer;background:none;border:none;border-right:1px solid var(--border);font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.cat-tab:last-child{border-right:none}
+.cat-tab.on{background:var(--red);color:#fff}
+.cat-tab:not(.on):hover{background:var(--red-dim);color:var(--red)}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+/* card */
+.pcard{background:var(--white);border:1px solid var(--border);border-radius:4px;overflow:hidden;transition:all .25s;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.pcard:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.pcard-top{height:6px}
+.pcard-top.red{background:var(--red)}
+.pcard-top.blue{background:var(--blue)}
+.pcard-top.amber{background:var(--gold)}
+.pcard-top.green{background:#16a34a}
+.pcard-top.purple{background:#7c3aed}
+.pcard-top.teal{background:#0891b2}
+.pcard-body{padding:1.4rem;flex:1;display:flex;flex-direction:column;gap:.45rem}
+.pcard-type{font-size:var(--t0);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.pcard-title{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink);line-height:1.2}
+.pcard-badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(22,163,74,.08);color:#16a34a;font-size:.68rem;font-weight:600;padding:.18rem .6rem;border-radius:2px;width:fit-content}
+.pcard-badge svg{width:10px;height:10px}
+.pcard-meta{display:flex;gap:1rem;flex-wrap:wrap;margin:.1rem 0}
+.pcard-meta-i{font-size:var(--t1);color:var(--ink3);display:flex;align-items:center;gap:.3rem}
+.pcard-meta-i strong{color:var(--ink2);font-weight:500}
+.pcard-meta-i svg{width:11px;height:11px;color:var(--red);flex-shrink:0}
+.pcard-desc{font-size:var(--t2);color:var(--ink3);line-height:1.6;flex:1}
+.pcard-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.2rem}
+.ptag{font-size:.68rem;font-weight:500;color:var(--ink3);background:var(--bg);border:1px solid var(--border);padding:.15rem .5rem;border-radius:2px}
+.pcard-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:.85rem;margin-top:.65rem}
+.pcard-price{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink);line-height:1}
+.pcard-price-l{font-size:.68rem;color:var(--ink3)}
+.pcard-btn{border:1.5px solid var(--border2);color:var(--ink3);padding:.38rem .85rem;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:none;font-family:'Inter',sans-serif;transition:all .2s;border-radius:2px}
+.pcard-btn:hover{border-color:var(--red);color:var(--red)}
+/* locked */
+.locked{position:relative;overflow:hidden}
+.locked::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 22%,rgba(247,248,250,.98) 68%);z-index:2;pointer-events:none}
+.blurred .pcard-body{filter:blur(4px);user-select:none;pointer-events:none}
+.lock-panel{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:1.4rem;text-align:center}
+.lock-icon-box{width:34px;height:34px;background:var(--red-dim2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .65rem;color:var(--red)}
+.lock-icon-box svg{width:14px;height:14px}
+.lock-panel p{font-size:var(--t1);color:var(--ink3);margin-bottom:.75rem;line-height:1.5}
+.lock-panel a{display:inline-block;background:var(--red);color:#fff;padding:.44rem 1.2rem;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;border-radius:2px}
+.lock-panel a:hover{background:var(--red2)}
+.cat-more{text-align:center;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.cat-more p{font-size:var(--t3);color:var(--ink3);margin-bottom:1rem}
+
+/* ─── SERVICES CATALOG ─── */
+#services{background:var(--bg)}
+.svc-filter{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}
+.svc-f-btn{padding:.45rem 1.1rem;border:1.5px solid var(--border2);color:var(--ink3);font-size:var(--t2);font-weight:500;background:var(--white);cursor:pointer;font-family:'Inter',sans-serif;border-radius:2px;transition:all .2s}
+.svc-f-btn.on{background:var(--red);border-color:var(--red);color:#fff}
+.svc-f-btn:not(.on):hover{border-color:var(--red);color:var(--red)}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.svc-card{background:var(--white);border:1px solid var(--border);padding:1.75rem;border-radius:4px;box-shadow:var(--shadow);transition:all .25s;display:flex;flex-direction:column;gap:.75rem;text-decoration:none;color:inherit;cursor:pointer;position:relative}
+.svc-card::after{content:'Подробнее →';position:absolute;bottom:1.35rem;right:1.35rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;color:var(--red);opacity:0;transition:opacity .2s}
+.svc-card:hover::after{opacity:1}
+.svc-card:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.svc-icon{width:42px;height:42px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.svc-icon.r{background:var(--red-dim);color:var(--red)}
+.svc-icon.b{background:var(--blue-dim);color:var(--blue)}
+.svc-icon svg{width:20px;height:20px}
+.svc-name{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink)}
+.svc-desc{font-size:var(--t2);color:var(--ink3);line-height:1.65;flex:1}
+.svc-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.svc-tag{font-size:.68rem;font-weight:500;padding:.15rem .5rem;border-radius:2px}
+.svc-tag.kz{background:rgba(26,111,196,.08);color:var(--blue)}
+.svc-tag.cn{background:rgba(200,40,42,.08);color:var(--red)}
+.svc-tag.all{background:var(--bg2);color:var(--ink3)}
+.svc-price{font-size:var(--t2);color:var(--ink2);font-weight:500;border-top:1px solid var(--border);padding-top:.65rem;margin-top:.1rem}
+.partners-strip{margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid var(--border)}
+.partners-strip h3{font-family:'Cormorant Garamond',serif;font-size:var(--t6);color:var(--ink);margin-bottom:1.5rem}
+.partners-logos{display:flex;flex-wrap:wrap;gap:1px;background:var(--border)}
+.partner-logo-box{background:var(--white);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:center;min-width:140px;flex:1;font-size:var(--t2);color:var(--ink3);font-weight:500;transition:background .2s;cursor:default}
+.partner-logo-box:hover{background:var(--red-dim)}
+
+/* ─── CALENDAR ─── */
+#calendar{background:var(--white)}
+.cal-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.cal-card{background:var(--white);border:1px solid var(--border);padding:1.75rem;border-radius:4px;display:flex;gap:1.5rem;position:relative;box-shadow:var(--shadow);transition:all .25s}
+.cal-card:hover{border-color:var(--red);box-shadow:var(--shadow-md)}
+.cal-date{flex-shrink:0;text-align:center;width:52px}
+.cal-day{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:500;color:var(--ink);line-height:1}
+.cal-mo{font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-top:.1rem}
+.cal-sep{width:1px;background:var(--border);align-self:stretch;flex-shrink:0}
+.cal-info{flex:1}
+.cal-kind{font-size:var(--t0);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:.35rem}
+.cal-title{font-family:'Cormorant Garamond',serif;font-size:var(--t4);color:var(--ink);margin-bottom:.35rem;line-height:1.25}
+.cal-where{display:flex;align-items:center;gap:.35rem;font-size:var(--t1);color:var(--ink3);margin-bottom:.55rem}
+.cal-where svg{width:11px;height:11px;color:var(--red);flex-shrink:0}
+.cal-desc{font-size:var(--t2);color:var(--ink3);line-height:1.6}
+.cal-status{position:absolute;top:1rem;right:1rem}
+.s-open{background:rgba(22,163,74,.1);color:#16a34a;font-size:.68rem;font-weight:600;padding:.2rem .6rem;border-radius:2px;letter-spacing:.08em;text-transform:uppercase}
+.s-lock{background:var(--red-dim);color:var(--red);font-size:.68rem;font-weight:600;padding:.2rem .6rem;border-radius:2px;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:.35rem}
+.s-lock svg{width:9px;height:9px}
+
+/* ─── PRICING ─── */
+#pricing{background:var(--bg)}
+.price-tabs{display:flex;gap:0;border:1.5px solid var(--border2);border-radius:4px;width:fit-content;overflow:hidden;margin-bottom:2.5rem}
+.price-tab{padding:.55rem 1.75rem;font-size:var(--t2);font-weight:600;background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all .22s;color:var(--ink3)}
+.price-tab.on{background:var(--red);color:#fff}
+.price-tab+.price-tab{border-left:1.5px solid var(--border2)}
+.price-tab:not(.on):hover{background:var(--red-dim);color:var(--red)}
+.price-panel{display:none}
+.price-panel.on{display:block}
+/* KZ panel */
+.kz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.pc{background:var(--white);border:1px solid var(--border);padding:1.85rem;border-radius:4px;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:all .25s;position:relative}
+.pc:hover{border-color:var(--red);box-shadow:var(--shadow-md)}
+.pc.featured{border-color:var(--red);border-width:2px}
+.pc.featured::before{content:'Популярно';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.22rem .85rem;border-radius:2px;white-space:nowrap}
+.pc-name{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink);margin-bottom:.3rem}
+.pc-desc{font-size:var(--t2);color:var(--ink3);min-height:2.8rem;line-height:1.6;margin-bottom:1.3rem}
+.pc-price{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:500;color:var(--ink);line-height:1;margin-bottom:.2rem}
+.pc-cur{font-size:var(--t1);color:var(--ink3);margin-bottom:1.3rem}
+.pc-list{list-style:none;flex:1;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem}
+.pc-list li{font-size:var(--t2);color:var(--ink3);display:flex;gap:.55rem;align-items:flex-start}
+.pc-list li::before{content:'✓';color:var(--red);font-weight:700;flex-shrink:0;font-size:.8rem;margin-top:.2rem}
+.pc-btn{display:block;text-align:center;width:100%;background:none;border:1.5px solid var(--red);color:var(--red);padding:.72rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;transition:all .22s;border-radius:2px}
+.pc-btn:hover,.pc.featured .pc-btn{background:var(--red);color:#fff}
+/* CN panel */
+.cn-intro{background:var(--white);border:1px solid var(--border);padding:2rem;border-radius:4px;box-shadow:var(--shadow);margin-bottom:1.5rem}
+.cn-intro h3{font-family:'Cormorant Garamond',serif;font-size:var(--t6);color:var(--ink);margin-bottom:.75rem}
+.cn-intro p{font-size:var(--t3);color:var(--ink3);margin-bottom:.65rem}
+.cn-intro p:last-child{margin-bottom:0}
+.cn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.cn-card{background:var(--white);border:1px solid var(--border);padding:1.75rem;border-radius:4px;box-shadow:var(--shadow);text-align:center;display:flex;flex-direction:column;gap:.6rem;transition:all .25s;position:relative}
+.cn-card:hover{border-color:var(--red);box-shadow:var(--shadow-md)}
+.cn-card.best{border-color:var(--red);border-width:2px}
+.cn-card.best::before{content:'Лучший выбор';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.22rem .85rem;border-radius:2px;white-space:nowrap}
+.cn-badge{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.cn-name{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink)}
+.cn-companies{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:500;color:var(--red);line-height:1}
+.cn-companies-l{font-size:var(--t2);color:var(--ink3);margin-top:.15rem}
+.cn-price{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--ink);margin-top:.3rem}
+.cn-price span{font-family:'Inter',sans-serif;font-size:var(--t2);color:var(--ink3);font-weight:400}
+.cn-list{list-style:none;text-align:left;display:flex;flex-direction:column;gap:.45rem;margin:0}
+.cn-list li{font-size:var(--t2);color:var(--ink3);display:flex;gap:.5rem;align-items:flex-start}
+.cn-list li::before{content:'✓';color:var(--red);font-weight:700;flex-shrink:0;font-size:.8rem;margin-top:.2rem}
+.cn-btn{display:block;width:100%;background:var(--red);color:#fff;border:none;padding:.72rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;transition:all .22s;border-radius:2px;margin-top:.5rem}
+.cn-btn:hover{background:var(--red2)}
+.pay-strip{background:var(--white);border:1px solid var(--border);padding:1.25rem 1.75rem;border-radius:4px;box-shadow:var(--shadow);margin-top:1rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
+.pay-strip-label{font-size:var(--t2);font-weight:600;color:var(--ink);white-space:nowrap}
+.pay-methods{display:flex;gap:.65rem;flex-wrap:wrap;align-items:center}
+.pay-chip{border:1px solid var(--border2);padding:.35rem .85rem;border-radius:2px;font-size:var(--t1);font-weight:500;color:var(--ink3);display:inline-flex;align-items:center;gap:.4rem}
+.pay-chip svg{width:12px;height:12px}
+.pay-chip.cn{border-color:rgba(200,40,42,.3);color:var(--red)}
+.price-note{text-align:center;margin-top:1.5rem;font-size:var(--t2);color:var(--ink3);font-family:'Cormorant Garamond',serif;font-style:italic}
+
+/* ─── DOCS ─── */
+#docs{background:var(--white)}
+.docs-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.doc-list{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.doc-item{background:var(--white);padding:1.5rem 1.75rem;display:flex;gap:1.1rem;align-items:flex-start;transition:background .2s}
+.doc-item:hover{background:var(--red-dim)}
+.doc-ico{width:38px;height:38px;background:var(--red-dim);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red)}
+.doc-ico svg{width:17px;height:17px}
+.doc-text h4{font-size:var(--t3);font-weight:600;color:var(--ink);margin-bottom:.28rem}
+.doc-text p{font-size:var(--t2);margin:0}
+.docs-side{display:flex;flex-direction:column;gap:1.25rem}
+.docs-box{background:var(--bg);border:1px solid var(--border);padding:1.6rem;border-radius:4px}
+.docs-box.accent{background:var(--red-dim2);border-color:rgba(200,40,42,.25)}
+.docs-box h4{font-size:var(--t4);font-family:'Cormorant Garamond',serif;color:var(--ink);margin-bottom:.65rem}
+.docs-box p{font-size:var(--t2);margin-bottom:.6rem}
+.docs-box p:last-child{margin-bottom:0}
+.flow-list{display:flex;flex-direction:column;gap:.65rem}
+.fl{display:flex;gap:.85rem;align-items:flex-start}
+.fl-dot{width:22px;height:22px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.65rem;font-weight:700;color:#fff;margin-top:.15rem}
+.fl p{font-size:var(--t2);margin:0}
+
+/* ─── PARTNERS ─── */
+#partners{background:var(--bg)}
+.pt-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.pt-left h2{font-size:var(--t7);margin-bottom:1.1rem}
+.pt-left p{margin-bottom:.9rem}
+.pt-benef{list-style:none;display:flex;flex-direction:column;gap:.8rem;margin-top:1.4rem}
+.pt-benef li{display:flex;gap:.85rem;font-size:var(--t3);color:var(--ink3);align-items:flex-start}
+.pt-benef li::before{content:'';width:8px;height:8px;background:var(--red);border-radius:50%;flex-shrink:0;margin-top:.5rem}
+.form-wrap{background:var(--white);border:1px solid var(--border);padding:2.25rem;border-radius:4px;box-shadow:var(--shadow)}
+.form-wrap h3{font-family:'Cormorant Garamond',serif;font-size:var(--t6);color:var(--ink);margin-bottom:.3rem}
+.form-sub{font-size:var(--t2);color:var(--ink3);margin-bottom:1.5rem}
+.field{margin-bottom:.9rem}
+.field label{display:block;font-size:var(--t1);font-weight:600;color:var(--ink2);margin-bottom:.35rem;letter-spacing:.02em}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);padding:.62rem .9rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:400;outline:none;transition:border-color .22s;border-radius:2px;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);background:var(--white)}
+.field textarea{resize:vertical;min-height:72px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.f-submit{width:100%;background:var(--red);color:#fff;border:none;padding:.85rem;font-family:'Inter',sans-serif;font-size:var(--t3);font-weight:600;cursor:pointer;transition:all .25s;border-radius:2px;margin-top:.4rem}
+.f-submit:hover{background:var(--red2);transform:translateY(-1px)}
+
+/* ─── MESSENGER ─── */
+.msg-bar{background:var(--ink);padding:1.1rem 3rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.msg-bar-left h4{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:#fff;margin-bottom:.2rem}
+.msg-bar-left p{font-size:var(--t2);color:rgba(255,255,255,.55);margin:0}
+.msg-btns-row{display:flex;gap:.65rem;flex-wrap:wrap}
+.mbtn{display:inline-flex;align-items:center;gap:.5rem;padding:.52rem 1.1rem;border-radius:2px;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;transition:all .22s;text-decoration:none}
+.mbtn.wa{background:rgba(37,211,102,.12);color:#25d366;border:1px solid rgba(37,211,102,.25)}
+.mbtn.wa:hover{background:#25d366;color:#fff}
+.mbtn.tg{background:rgba(41,182,246,.12);color:#29b6f6;border:1px solid rgba(41,182,246,.25)}
+.mbtn.tg:hover{background:#29b6f6;color:#fff}
+.mbtn.wc{background:rgba(9,181,48,.12);color:#09b530;border:1px solid rgba(9,181,48,.25)}
+.mbtn.wc:hover{background:#09b530;color:#fff}
+
+/* ─── CTA ─── */
+#cta{background:var(--ink);padding:3.5rem 3rem;text-align:center;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 40%,rgba(200,40,42,.15),transparent 70%);pointer-events:none}
+.cta-tag{display:flex;align-items:center;justify-content:center;gap:.7rem;margin-bottom:1.2rem}
+.cta-tag::before,.cta-tag::after{content:'';width:40px;height:1px;background:rgba(200,40,42,.5)}
+.cta-tag span{font-size:var(--t0);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--red)}
+#cta h2{font-size:clamp(2rem,4.5vw,3.2rem);color:#fff;max-width:540px;margin:0 auto 1.1rem;position:relative}
+#cta h2 em{color:var(--red);font-style:italic}
+#cta > p{font-size:var(--t3);color:rgba(255,255,255,.55);max-width:460px;margin:0 auto 2.4rem;position:relative}
+.cta-btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;position:relative}
+
+/* ─── FOOTER ─── */
+footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap;border-top:3px solid var(--red);text-align:center}
+.f-logo{display:flex;align-items:center;gap:.7rem;justify-content:center}
+.f-logo-emb{width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.f-logo-text{font-family:'Cormorant Garamond',serif;font-size:var(--t4);letter-spacing:.08em;color:#fff}
+.f-logo-text span{display:block;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;font-weight:400;margin-top:.05rem}
+.f-mid p{font-size:var(--t1);color:rgba(255,255,255,.4);text-align:center;margin-bottom:.22rem}
+.f-right{text-align:center}
+.f-right a{display:inline-block;font-size:var(--t2);color:rgba(255,255,255,.55);margin:.1rem .4rem;transition:color .2s}
+.f-right a:hover{color:#fff}
+
+/* ─── ANIMATIONS ─── */
+@keyframes up{from{transform:translateY(16px)}to{transform:translateY(0)}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:1;transform:translateY(0);transition:transform .5s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .who-grid{grid-template-columns:repeat(2,1fr)}
+  .kz-grid,.cn-grid,.svc-grid,.cat-grid{grid-template-columns:1fr 1fr}
+  .hero-inner{grid-template-columns:1fr;gap:2.5rem}
+  .hero-card-stack{height:260px}
+  .hc-2,.hc-3{display:none}
+  .hc-1{position:relative;top:0;left:0;width:100%}
+}
+@media(max-width:900px){
+  nav{padding:.75rem 1.25rem}.nav-links{display:none}
+  section{padding:2rem 1.25rem}
+  #hero{padding:6rem 1.25rem 3.5rem;min-height:auto}
+  .who-grid,.kz-grid,.cn-grid,.svc-grid,.cat-grid,.cal-grid,.docs-layout,.pt-layout{grid-template-columns:1fr}
+  .sh-inner{grid-template-columns:1fr;gap:1.25rem}
+  .steps-grid{grid-template-columns:1fr}
+  .f-row{grid-template-columns:1fr}
+  footer{flex-wrap:wrap;gap:1.5rem}
+  .cta-btns{flex-direction:column;align-items:center}
+  .msg-bar{flex-direction:column;text-align:center;padding:1.5rem 1.25rem}
+  .pay-strip{flex-direction:column;align-items:flex-start}
+}
+/* ═══════════════════════════════════════════
+   BADGE / ЗНАЧОК SYSTEM
+═══════════════════════════════════════════ */
+.badge-strip{display:flex;flex-wrap:wrap;gap:.35rem;margin:.55rem 0 .2rem}
+.bdg{
+  position:relative;display:inline-flex;align-items:center;gap:.32rem;
+  padding:.22rem .6rem;border-radius:3px;font-size:.66rem;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;cursor:default;
+  transition:transform .15s,box-shadow .15s;
+  border:1.5px solid transparent;
+  user-select:none;
+}
+.bdg:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.bdg svg{width:10px;height:10px;flex-shrink:0}
+
+/* ACTIVE states */
+.bdg-club{background:linear-gradient(135deg,#1A3A6B,#2455A4);color:#C5963A;border-color:#C5963A}
+.bdg-club svg{color:#C5963A}
+.bdg-verified{background:rgba(22,163,74,.12);color:#16a34a;border-color:rgba(22,163,74,.4)}
+.bdg-bp-audit{background:rgba(234,88,12,.1);color:#ea580c;border-color:rgba(234,88,12,.35)}
+.bdg-buh-audit{background:rgba(109,40,217,.1);color:#7c3aed;border-color:rgba(109,40,217,.3)}
+.bdg-fin-audit{background:rgba(26,111,196,.12);color:#1A6FC4;border-color:rgba(26,111,196,.35)}
+.bdg-ct-kz{background:rgba(6,148,162,.1);color:#0891b2;border-color:rgba(6,148,162,.35)}
+.bdg-ct1{background:rgba(15,118,110,.1);color:#0f766e;border-color:rgba(15,118,110,.3)}
+.bdg-halal{background:rgba(21,128,61,.12);color:#15803d;border-color:rgba(21,128,61,.35)}
+
+/* INACTIVE (grey) */
+.bdg-off{background:var(--bg2);color:var(--border2);border-color:var(--border)}
+.bdg-off svg{color:var(--border2)}
+
+/* TOOLTIP */
+.bdg-tip{
+  display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;font-size:.68rem;font-weight:500;letter-spacing:.02em;
+  text-transform:none;padding:.45rem .75rem;border-radius:4px;white-space:nowrap;
+  z-index:200;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none;
+  max-width:220px;text-align:center;line-height:1.45;white-space:normal;
+}
+.bdg-tip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--ink);
+}
+.bdg:hover .bdg-tip{display:block}
+
+/* PRIORITY STAR (ATAMEKEN Club member) */
+.card-priority{
+  position:absolute;top:.6rem;right:.6rem;
+  background:linear-gradient(135deg,#1A3A6B,#2455A4);
+  color:#C5963A;font-size:.6rem;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;padding:.2rem .6rem;border-radius:2px;
+  display:flex;align-items:center;gap:.3rem;border:1px solid #C5963A;
+  z-index:4;
+}
+.card-priority svg{width:9px;height:9px}
+
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <div class="logo-emblem">
+      <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="52" height="52">
+        <!-- Outer circle -->
+        <circle cx="30" cy="30" r="28.5" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.5"/>
+        <!-- Circular text path -->
+        <defs>
+          <path id="circ" d="M30,30 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0"/>
+        </defs>
+        <text font-family="Inter,Arial,sans-serif" font-size="4.8" font-weight="600" fill="#C5963A" letter-spacing="0.9">
+          <textPath href="#circ" startOffset="3%">ATAMEKEN Club • Business Community •</textPath>
+        </text>
+        <!-- Bridge arch -->
+        <path d="M10 38 Q30 16 50 38" stroke="#C5963A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <!-- Bridge deck -->
+        <line x1="8" y1="38" x2="52" y2="38" stroke="#C5963A" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- Bridge pillars -->
+        <line x1="22" y1="38" x2="22" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="38" y1="38" x2="38" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- Bridge cables -->
+        <line x1="30" y1="18.5" x2="22" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
+        <line x1="30" y1="18.5" x2="38" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
+        <line x1="30" y1="18.5" x2="15" y2="38" stroke="#C5963A" stroke-width="0.7" stroke-linecap="round" opacity="0.6"/>
+        <line x1="30" y1="18.5" x2="45" y2="38" stroke="#C5963A" stroke-width="0.7" stroke-linecap="round" opacity="0.6"/>
+        <!-- Top pin -->
+        <circle cx="30" cy="18.5" r="1.4" fill="#C5963A"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="logo-main">ATAMEKEN CLUB</span>
+      <span class="logo-sub">Бизнес-сообщество · Казахстан</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#who">Участникам</a></li>
+    <li><a href="#how">Верификация</a></li>
+    <li><a href="#catalog">Проекты</a></li>
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#calendar">Мероприятия</a></li>
+    <li><a href="#pricing">Тарифы</a></li>
+    <li><a href="#partners">Партнёрам</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button class="lang-btn active">RU</button>
+      <button class="lang-btn">KZ</button>
+      <button class="lang-btn">EN</button>
+      <button class="lang-btn">中文</button>
+    </div>
+    <a href="/login.html" class="btn-red" style="padding:.48rem 1.2rem;font-size:.75rem">Войти</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-bg-shape"></div>
+  <div class="hero-bg-shape2"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-label"><span class="tag">Казахстан · Евразия · Глобальные рынки</span></div>
+      <h1 class="hero-title">Надёжный доступ<br/>к <em>деловой экосистеме</em></h1>
+      <p class="hero-desc">Бизнес-сообщество «ATAMEKEN Club» — платформа для соискателей инвестиций, инвесторов, франчайзеров и продавцов бизнеса. Верификация, закрытый каталог, деловые мероприятия.</p>
+      <div class="hero-actions">
+        <a href="/register.html" class="btn-red">Пройти верификацию</a>
+        <a href="#catalog" class="btn-out">Смотреть проекты</a>
+        <a href="cabinet.html" class="btn-out" style="border-color:var(--blue);color:var(--blue)">Личный кабинет</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-n">4</div><div class="hero-stat-l">Типа участников</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">6</div><div class="hero-stat-l">Этапов верификации</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">4</div><div class="hero-stat-l">Языка интерфейса</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">0 <span>₸</span></div><div class="hero-stat-l">Стоимость регистрации</div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-card-stack">
+        <div class="hc hc-1">
+          <div class="hc-tag gold">Инвест-проект</div>
+          <div class="hc-title">Агропромышленный хаб «Степной»</div>
+          <div class="hc-meta">
+            <span class="hc-chip r">Pre-A раунд</span>
+            <span class="hc-chip g">Казахстан</span>
+          </div>
+          <div class="hc-price">от 150 млн KZT <span>мин. чек</span></div>
+          <div class="verified-badge">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верифицирован · ATAMEKEN Club
+          </div>
+          <div class="hc-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg> Досье только после верификации</div>
+        </div>
+        <div class="hc hc-2">
+          <div class="hc-tag red">Мероприятие</div>
+          <div class="hc-title">Eurasia деловой ужин для инвесторов — Дубай</div>
+          <div class="hc-meta"><span class="hc-chip b">22 Окт 2025</span><span class="hc-chip r">Закрытое</span></div>
+          <div class="hc-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg> Только для участников платформы</div>
+        </div>
+        <div class="hc hc-3">
+          <div class="hc-tag blue">Услуга</div>
+          <div class="hc-title">Визовая поддержка для иностранных компаний</div>
+          <div class="hc-meta"><span class="hc-chip b">КЗ + ОАЭ</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TICKER ══ -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">Соискатели инвестиций</span><span class="ticker-item">Инвесторы</span><span class="ticker-item">Франчайзеры</span><span class="ticker-item">Продажа бизнеса</span><span class="ticker-item">Верификация</span><span class="ticker-item">Деловые мероприятия</span><span class="ticker-item">ATAMEKEN Club</span><span class="ticker-item">ATAMEKEN Club</span><span class="ticker-item">Соискатели инвестиций</span><span class="ticker-item">Инвесторы</span><span class="ticker-item">Франчайзеры</span><span class="ticker-item">Продажа бизнеса</span><span class="ticker-item">Верификация</span><span class="ticker-item">Деловые мероприятия</span><span class="ticker-item">ATAMEKEN Club</span><span class="ticker-item">Атамекен</span>
+  </div>
+</div>
+
+<!-- ══ ДЛЯ КОГО ══ -->
+<section id="who">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Для кого платформа</span>
+          <h2>Четыре типа участников,<br/>один личный кабинет</h2>
+        </div>
+        <div class="sh-right">
+          <p>У каждого типа участника — свой личный кабинет, настроенный под конкретные задачи. Базовая регистрация бесплатна. Доступ к закрытому каталогу открывается после верификации.</p>
+        </div>
+      </div>
+    </div>
+    <div class="who-grid reveal">
+      <div class="who-card">
+        <div class="who-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div class="who-title">Соискатели инвестиций</div>
+        <p class="who-desc">Стартапы, инвест-проекты и растущие компании, которые ищут финансирование, партнёров или дистрибьюторов.</p>
+        <ul class="who-list">
+          <li>Публичная карточка и закрытое досье для инвесторов</li>
+          <li>Статусы «Проверенная компания» и «Проверенный проект»</li>
+          <li>Питч-сессии и закрытые встречи с инвесторами</li>
+          <li>Аудит бизнес-плана и финансовой модели</li>
+          <li>Перевод презентации на английский и китайский</li>
+        </ul>
+        <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Разместить проект</a>
+      </div>
+      <div class="who-card">
+        <div class="who-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <div class="who-title">Инвесторы</div>
+        <p class="who-desc">Частные инвесторы, фонды, семейные офисы и корпоративные инвестподразделения.</p>
+        <ul class="who-list">
+          <li>Поток верифицированных проектов с полными досье</li>
+          <li>Фильтрация по отрасли, стадии, географии, чеку</li>
+          <li>Финансовые модели, команда, документы проекта</li>
+          <li>Прямой контакт с командой через платформу</li>
+          <li>Приоритет на питч-сессиях и деловой ужин для инвесторов</li>
+        </ul>
+        <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Войти как инвестор</a>
+      </div>
+      <div class="who-card">
+        <div class="who-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="who-title">Франчайзеры и франчайзи</div>
+        <p class="who-desc">Владельцы франшиз, ищущие масштабирование на новых рынках, и предприниматели, выбирающие бизнес-модель.</p>
+        <ul class="who-list">
+          <li>Каталог верифицированных франшиз с финмоделями</li>
+          <li>ROI-калькуляторы и сроки окупаемости</li>
+          <li>Верификация надёжности франчайзера</li>
+          <li>Подбор франшизы под бюджет и регион</li>
+          <li>Юридическое сопровождение франшизного договора</li>
+        </ul>
+        <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Смотреть франшизы</a>
+      </div>
+      <div class="who-card">
+        <div class="who-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        </div>
+        <div class="who-title">Продавцы и покупатели бизнеса</div>
+        <p class="who-desc">Собственники, продающие действующий бизнес, и покупатели, ищущие компании с подтверждёнными показателями.</p>
+        <ul class="who-list">
+          <li>Конфиденциальное размещение без лишней огласки</li>
+          <li>Верификация реальности финансовых показателей</li>
+          <li>Независимый аудит компании перед сделкой</li>
+          <li>Консалтинговое сопровождение до закрытия</li>
+          <li>Комиссия за сопровождение — по индивидуальному запросу</li>
+        </ul>
+        <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Разместить / найти бизнес</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ КАК РАБОТАЕТ ══ -->
+<section id="how" class="bg-gray">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Процесс верификации</span>
+          <h2>6 шагов от заявки<br/>до полного доступа</h2>
+        </div>
+        <div class="sh-right">
+          <p>Прозрачная система без скрытых условий. На каждом этапе вы точно знаете, что нужно дальше. Доступ к закрытому каталогу и мероприятиям открывается после этапа 3.</p>
+        </div>
+      </div>
+    </div>
+    <div class="steps-grid reveal">
+      <div class="step-box">
+        <div class="step-phase">Шаг 1</div>
+        <div class="step-num">01</div>
+        <h3>Регистрация</h3>
+        <p>Создайте аккаунт на платформе. Укажите тип участника — соискатель инвестиций, инвестор, франчайзер или продавец бизнеса. Занимает 2 минуты.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-phase">Шаг 2</div>
+        <div class="step-num">02</div>
+        <h3>Заполнение анкеты</h3>
+        <p>Заполните профиль компании или проекта: краткое описание, отрасль, стадия, цель. Приложите презентацию или другие материалы для закрытого досье.</p>
+      </div>
+      <div class="step-box highlight">
+        <div class="step-phase">Шаг 3</div>
+        <div class="step-num">03</div>
+        <h3>Проверка и комплаенс</h3>
+        <p>Оператор платформы проверяет данные и организует подписание пакета документов. После подписания открывается доступ к закрытому каталогу.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-phase">Шаг 4</div>
+        <div class="step-num">04</div>
+        <h3>Публикация карточки</h3>
+        <p>Ваш публичный профиль появляется в верифицированном каталоге платформы. Полные данные видны только верифицированным участникам.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-phase">Шаг 5</div>
+        <div class="step-num">05</div>
+        <h3>Верификация и статусы</h3>
+        <p>По желанию: получите статус «Проверенная компания» или «Проверенный проект», закажите аудит бизнес-плана или финансовой модели.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-phase">Шаг 6</div>
+        <div class="step-num">06</div>
+        <h3>Доступ к мероприятиям</h3>
+        <p>Участвуйте в закрытых питч-сессиях, деловых ужинах и бизнес-миссиях. Используйте личный кабинет для прямых деловых контактов.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ КАТАЛОГ ПРОЕКТОВ ══ -->
+<section id="catalog">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Каталог проектов</span>
+          <h2>Верифицированные<br/>проекты и компании</h2>
+        </div>
+        <div class="sh-right">
+          <p>Карточки видны всем. Полные данные — финансовые модели, команда, контакты — открываются только верифицированным участникам. Регистрация бесплатна.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cat-tabs reveal" id="catTabs">
+      <button class="cat-tab on" data-tab="all">Все</button>
+      <button class="cat-tab" data-tab="invest">Инвест-проекты</button>
+      <button class="cat-tab" data-tab="startup">Стартапы</button>
+      <button class="cat-tab" data-tab="franchise">Франшизы</button>
+      <button class="cat-tab" data-tab="sale">Продажа бизнеса</button>
+      <button class="cat-tab" data-tab="company">Компании</button>
+    </div>
+    <div class="cat-grid" id="catGrid">
+
+      <div class="pcard locked blurred" data-tab="invest" style="position:relative">
+        <span class="card-priority"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 6.5,3.5 10,3.5 7.5,5.5 8.5,9 5,7 1.5,9 2.5,5.5 0,3.5 3.5,3.5"/></svg>Приоритет</span>
+<div class="pcard-top green"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Инвест-проект</div>
+          <div class="pcard-title">Агропромышленный хаб «Степной»</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            ATAMEKEN Club
+            <span class="bdg-tip">Значок не присвоен. Компания не является членом бизнес-сообщества «ATAMEKEN Club».</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верифицирована
+            <span class="bdg-tip">Франшиза прошла первичный комплаенс.</span>
+          </span>
+          <span class="bdg bdg-ct-kz">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+            СТ-КЗ
+            <span class="bdg-tip">Сертификат о казахстанском происхождении товара СТ-КЗ.</span>
+          </span>
+          <span class="bdg bdg-ct1">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+            СТ-1
+            <span class="bdg-tip">Сертификат происхождения СТ-1 для стран СНГ. Даёт преференции при экспорте.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>Pre-A</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M5 3V2h4v1"/></svg><strong>1.2 млрд KZT</strong></div>
+          </div>
+          <div class="pcard-desc">Вертикально интегрированное агропроизводство с экспортным потенциалом на рынки КНР и ЦА. Ищут инвестора или стратегического партнёра.</div>
+          <div class="pcard-tags"><span class="ptag">Агропром</span><span class="ptag">Казахстан</span><span class="ptag">Экспорт</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">от 150 млн</div><div class="pcard-price-l">мин. чек, KZT</div></div><button class="pcard-btn">Досье</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финансовая модель, команда и контакты — только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="invest">
+        <div class="pcard-top blue"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Инвест-проект</div>
+          <div class="pcard-title">МФК «AlmaCity Towers»</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            ATAMEKEN Club
+            <span class="bdg-tip">Значок не присвоен. Компания не является членом бизнес-сообщества «ATAMEKEN Club».</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верифицирован
+            <span class="bdg-tip">Компания прошла первичный комплаенс: проверка регистрации, контактов и публичного следа.</span>
+          </span>
+          <span class="bdg bdg-fin-audit">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            Фин. аудит
+            <span class="bdg-tip">Проведён финансовый аудит компании. Отчётность и финансовая модель проверены независимым аудитором.</span>
+          </span>
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="1" width="8" height="10" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7" x2="8" y2="7"/></svg>
+            Аудит бизнес-плана
+            <span class="bdg-tip">Значок не присвоен. Аудит бизнес-плана ещё не проводился.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>Seed</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M5 3V2h4v1"/></svg><strong>4.8 млрд KZT</strong></div>
+          </div>
+          <div class="pcard-desc">МФК с жилой и коммерческой составляющей в Алматы. Ищут со-инвестора в SPV. Полная финмодель и юридическая структура в закрытом досье.</div>
+          <div class="pcard-tags"><span class="ptag">Недвижимость</span><span class="ptag">Алматы</span><span class="ptag">SPV</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">от 500 млн</div><div class="pcard-price-l">мин. чек, KZT</div></div><button class="pcard-btn">Досье</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финансовая модель, команда и контакты — только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="startup" style="position:relative">
+        <span class="card-priority"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 6.5,3.5 10,3.5 7.5,5.5 8.5,9 5,7 1.5,9 2.5,5.5 0,3.5 3.5,3.5"/></svg>Приоритет</span>
+<div class="pcard-top purple"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Стартап</div>
+          <div class="pcard-title">PayFlow — B2B платёжная платформа</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-club">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            ATAMEKEN Club
+            <span class="bdg-tip">Член бизнес-сообщества «ATAMEKEN Club». Приоритетное отображение в каталоге.</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верифицирован
+            <span class="bdg-tip">Компания прошла первичный комплаенс.</span>
+          </span>
+          <span class="bdg bdg-bp-audit">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="1" width="8" height="10" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7" x2="8" y2="7"/></svg>
+            Аудит бизнес-плана
+            <span class="bdg-tip">Бизнес-план прошёл независимую проверку: допущения, юнит-экономика, логика монетизации.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>Series A</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9h10M4 5h6M3 7h8"/></svg><strong>MRR 4.2M KZT</strong></div>
+          </div>
+          <div class="pcard-desc">SaaS для B2B-расчётов. 18 месяцев, 47 корпоративных клиентов в КЗ. Раунд 180 млн KZT на масштабирование в ОАЭ и Узбекистан.</div>
+          <div class="pcard-tags"><span class="ptag">FinTech</span><span class="ptag">SaaS</span><span class="ptag">B2B</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">180 млн</div><div class="pcard-price-l">раунд, KZT</div></div><button class="pcard-btn">Досье</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финансовая модель, команда и контакты — только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="franchise">
+        <div class="pcard-top amber"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Франшиза</div>
+          <div class="pcard-title">«Stepnoy Kitchen» — сеть кафе</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            ATAMEKEN Club
+            <span class="bdg-tip">Значок не присвоен.</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верифицирован
+            <span class="bdg-tip">Бизнес прошёл первичный комплаенс.</span>
+          </span>
+          <span class="bdg bdg-buh-audit">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 9V5l4-4 4 4v4"/><rect x="4" y="7" width="4" height="4"/></svg>
+            Бухг. аудит
+            <span class="bdg-tip">Проведён бухгалтерский аудит: проверка первичных документов, учётной политики и соответствия стандартам.</span>
+          </span>
+          <span class="bdg bdg-fin-audit">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            Фин. аудит
+            <span class="bdg-tip">Проведён финансовый аудит. Отчётность проверена независимым аудитором.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 3.3 4.5 7.5 4.5 7.5s4.5-4.2 4.5-7.5c0-2.5-2-4.5-4.5-4.5z"/></svg><strong>12 точек, СНГ</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>Окупаемость 18 мес.</strong></div>
+          </div>
+          <div class="pcard-desc">Казахстанский фаст-кэжуал. ROI-калькулятор, стандарты, обучение 14 дней, полная операционная поддержка.</div>
+          <div class="pcard-tags"><span class="ptag">HoReCa</span><span class="ptag">Масштабирование</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">от 35 млн</div><div class="pcard-price-l">паушальный взнос, KZT</div></div><button class="pcard-btn">Досье</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финмодель и контакты франчайзера — только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="sale">
+        <div class="pcard-top green"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Продажа бизнеса</div>
+          <div class="pcard-title">Завод металлообработки — Алматы</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-club">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            ATAMEKEN Club
+            <span class="bdg-tip">Член бизнес-сообщества «ATAMEKEN Club». Приоритетное отображение в каталоге.</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верифицирована
+            <span class="bdg-tip">Компания прошла первичный комплаенс.</span>
+          </span>
+          <span class="bdg bdg-ct-kz">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+            СТ-КЗ
+            <span class="bdg-tip">Сертификат СТ-КЗ о казахстанском происхождении.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="12" height="11" rx="1"/><path d="M5 2V1h4v1"/></svg><strong>Основан 2015</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-2.5 2-4.5 5-4.5s5 2 5 4.5M7 6.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/></svg><strong>85 сотрудников</strong></div>
+          </div>
+          <div class="pcard-desc">Действующий завод с собственными площадями. Прибыльный. Собственник выходит. Полная отчётность и аудит в закрытом досье.</div>
+          <div class="pcard-tags"><span class="ptag">Производство</span><span class="ptag">Прибыльный</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">по запросу</div><div class="pcard-price-l">конфиденциально</div></div><button class="pcard-btn">Запросить</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финотчётность и стоимость — только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="company" style="position:relative">
+        <span class="card-priority"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 6.5,3.5 10,3.5 7.5,5.5 8.5,9 5,7 1.5,9 2.5,5.5 0,3.5 3.5,3.5"/></svg>Приоритет</span>
+<div class="pcard-top teal"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Компания</div>
+          <div class="pcard-title">TransSteppe — мультимодальная логистика</div>
+          <div class="pcard-badge"><svg viewBox="0 0 10 10" fill="currentColor"><path d="M5 0L6.12 3.38H9.76L6.88 5.47L8 8.85L5 6.76L2 8.85L3.12 5.47L.24 3.38H3.88L5 0Z"/></svg>Проверена</div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 3.3 4.5 7.5 4.5 7.5s4.5-4.2 4.5-7.5c0-2.5-2-4.5-4.5-4.5z"/></svg><strong>КЗ — КНР — ЕС</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="12" height="8" rx="1"/><path d="M4 4V3h6v1"/></svg><strong>3 маршрута</strong></div>
+          </div>
+          <div class="pcard-desc">Оператор перевозок Казахстан–Китай–Европа. Ищут грузовладельцев и дистрибьюторов для освоения транзитного коридора.</div>
+          <div class="pcard-tags"><span class="ptag">Логистика</span><span class="ptag">Транзит</span><span class="ptag">КНР</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">Партнёрство</div><div class="pcard-price-l">тип сотрудничества</div></div><button class="pcard-btn">Профиль</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Полный профиль и контакты — только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+    </div>
+    <div class="cat-more reveal">
+      <p>В каталоге 40+ активных проектов, франшиз и компаний. Полный доступ — после верификации.</p>
+      <a href="/register.html" class="btn-red">Зарегистрироваться и открыть каталог</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ КАТАЛОГ УСЛУГ ══ -->
+<section id="services" class="bg-gray">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Каталог услуг</span>
+          <h2>Деловые услуги<br/>для компаний и инвесторов</h2>
+        </div>
+        <div class="sh-right">
+          <p>Публикуются только услуги, готовые к оказанию прямо сейчас. Каталог пополняется. Для иностранных компаний — пакетная модель входа на рынок Казахстана.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="svc-filter reveal" id="svcFilter">
+      <button class="svc-f-btn on" data-svc="all">Все услуги</button>
+      <button class="svc-f-btn" data-svc="kz">Для КЗ рынка</button>
+      <button class="svc-f-btn" data-svc="cn">Для китайских компаний</button>
+      <button class="svc-f-btn" data-svc="legal">Юридические</button>
+      <button class="svc-f-btn" data-svc="fin">Финансовые</button>
+      <button class="svc-f-btn" data-svc="research">Аналитика и исследования</button>
+    </div>
+
+    <div class="svc-grid" id="svcGrid">
+
+      <a class="svc-card" data-svc="kz cn legal" href="services.html">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><circle cx="12" cy="14" r="2"/></svg></div>
+        <div class="svc-name">Визовая поддержка</div>
+        <div class="svc-desc">Получение бизнес-виз, инвесторских виз и ВНЖ Казахстана. Оформление для иностранных сотрудников, командировок и деловых поездок. Партнёр: Жазира.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag all">Иностранные компании</span></div>
+        <div class="svc-price">По запросу · Индивидуально</div>
+      </a>
+
+      <a class="svc-card" data-svc="kz cn legal" href="services.html">
+        <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 3h22l-2 13H3L1 3z"/><path d="M1 3l2 13M22 3l-2 13M8 3v13M16 3v13"/></svg></div>
+        <div class="svc-name">Таможенное оформление</div>
+        <div class="svc-desc">Таможенное сопровождение и очистка грузов на казахстанских КПП. Импорт/экспорт, сертификация товаров, работа с документами. Партнёр: Жазира.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">По запросу · По объёму груза</div>
+      </a>
+
+      <a class="svc-card" data-svc="kz cn research" href="services.html">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="svc-name">Анализ рынка</div>
+        <div class="svc-desc">Исследования рынка Казахстана и стран ЦА: ёмкость, конкуренты, потребители, регуляторика. Включая энергетический сектор. Отраслевые отчёты под запрос.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag all">Энергетика</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">от 200 000 KZT</div>
+      </a>
+
+      <a class="svc-card" data-svc="kz cn" href="services.html">
+        <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="svc-name">Упаковка и вывод продукта на рынок</div>
+        <div class="svc-desc">Адаптация продукта для казахстанского рынка: маркировка, упаковка, сертификация, регистрация торговых марок. Перевод и локализация материалов.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">По запросу · Пакетно</div>
+      </a>
+
+      <a class="svc-card" data-svc="kz cn fin" href="services.html">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="svc-name">Аудит и сертификация</div>
+        <div class="svc-desc">Независимый аудит компаний и проектов. Получение сертификатов соответствия, ISO, халяль, экспортных разрешений. Подготовка к международным сделкам.</div>
+        <div class="svc-tags"><span class="svc-tag all">Сертификаты</span><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag cn">Экспорт в КНР</span></div>
+        <div class="svc-price">По запросу</div>
+      </a>
+
+      <a class="svc-card" data-svc="kz cn legal fin" href="services.html">
+        <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="svc-name">Бухгалтерия и юридическая поддержка</div>
+        <div class="svc-desc">Ведение бухгалтерского учёта, налоговое сопровождение, регистрация компаний, составление договоров и корпоративные документы по праву РК.</div>
+        <div class="svc-tags"><span class="svc-tag kz">КЗ право</span><span class="svc-tag legal">Юридические</span><span class="svc-tag fin">Финансовые</span></div>
+        <div class="svc-price">от 50 000 KZT / мес.</div>
+      </a>
+
+      <a class="svc-card" data-svc="cn" href="services.html">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
+        <div class="svc-name">Пакет входа для иностранных компаний</div>
+        <div class="svc-desc">Комплексная поддержка выхода на рынок КЗ: ИИН, банковская карта, прописка, iCUNAC, визовое сопровождение, бизнес-план, подбор жилья и авиабилеты. Расширяемый перечень по запросу.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag all">«Под ключ»</span></div>
+        <div class="svc-price">Пакетная цена · По запросу</div>
+      </a>
+
+      <a class="svc-card" data-svc="kz cn fin research" href="services.html">
+        <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+        <div class="svc-name">Бизнес-план и юнит-экономика</div>
+        <div class="svc-desc">Разработка и проверка бизнес-плана с юнит-экономикой для казахстанских и международных стандартов. Включая подготовку для банков и инвесторов.</div>
+        <div class="svc-tags"><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag cn">Для КНР</span><span class="svc-tag fin">Финансовые</span></div>
+        <div class="svc-price">от 100 000 KZT</div>
+      </a>
+
+      <a class="svc-card" data-svc="kz cn research" href="services.html">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="svc-name">Верификация договоров намерений</div>
+        <div class="svc-desc">Проверка договоров намерений с поставщиками и потребителями перед заключением сделок.</div>
+        <div class="svc-tags"><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag legal">Юридические</span></div>
+        <div class="svc-price">По запросу</div>
+      </a>
+
+    </div>
+
+    <!-- services subpage link -->
+    <div class="cat-more reveal" style="margin-top:2.5rem">
+      <p>Здесь представлены основные направления. Полный каталог услуг — на отдельной странице.</p>
+      <a href="services.html" class="btn-red">Все услуги подробно</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ МЕРОПРИЯТИЯ ══ -->
+<section id="calendar">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Деловые мероприятия</span>
+          <h2>Закрытые встречи<br/>и деловые события</h2>
+        </div>
+        <div class="sh-right">
+          <p>Форумы, инвестиционные ужины, питч-сессии и бизнес-миссии. Доступ к закрытым мероприятиям — только для верифицированных участников платформы.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cal-grid reveal">
+      <div class="cal-card">
+        <div class="cal-date"><div class="cal-day">14</div><div class="cal-mo">Сент</div></div>
+        <div class="cal-sep"></div>
+        <div class="cal-info">
+          <div class="cal-kind">Форум · Нетворкинг</div>
+          <div class="cal-title">ATAMEKEN Club Forum 2025</div>
+          <div class="cal-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>Алматы, The Ritz-Carlton</div>
+          <p class="cal-desc">Ежегодный форум. B2B-встречи, панельные дискуссии, закрытые переговоры с инвесторами из КЗ, ОАЭ и Европы. Бесплатно для верифицированных.</p>
+        </div>
+        <div class="cal-status"><span class="s-open">Открыт</span></div>
+      </div>
+      <div class="cal-card">
+        <div class="cal-date"><div class="cal-day">22</div><div class="cal-mo">Окт</div></div>
+        <div class="cal-sep"></div>
+        <div class="cal-info">
+          <div class="cal-kind">Закрытый ужин · Инвестиции</div>
+          <div class="cal-title">UAE–Kazakhstan деловой ужин для инвесторов</div>
+          <div class="cal-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>Дубай, ОАЭ</div>
+          <p class="cal-desc">12 команд, 1 стол, 3 часа переговоров. Только для участников со статусом «Проверенная компания».</p>
+        </div>
+        <div class="cal-status"><span class="s-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg>Закрыто</span></div>
+      </div>
+      <div class="cal-card">
+        <div class="cal-date"><div class="cal-day">08</div><div class="cal-mo">Нояб</div></div>
+        <div class="cal-sep"></div>
+        <div class="cal-info">
+          <div class="cal-kind">Бизнес-миссия · Экспорт</div>
+          <div class="cal-title">Central Asia Business Mission — Берлин</div>
+          <div class="cal-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>Берлин, Германия — 3 дня</div>
+          <p class="cal-desc">Встречи с европейскими дистрибьюторами. B2B-переговоры, 20 минут на пару. Только для верифицированных экспортёров.</p>
+        </div>
+        <div class="cal-status"><span class="s-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg>Закрыто</span></div>
+      </div>
+      <div class="cal-card">
+        <div class="cal-date"><div class="cal-day">18</div><div class="cal-mo">Дек</div></div>
+        <div class="cal-sep"></div>
+        <div class="cal-info">
+          <div class="cal-kind">Питч-сессия · Инвесторы</div>
+          <div class="cal-title">Атамекен Investor Day Q4</div>
+          <div class="cal-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>Алматы · Полдня</div>
+          <p class="cal-desc">7 минут питч + 10 минут вопросы, до 12 команд. Инвесторы получают досье заранее. Только для верифицированных проектов.</p>
+        </div>
+        <div class="cal-status"><span class="s-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg>Закрыто</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ТАРИФЫ ══ -->
+<section id="pricing" class="bg-gray">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Тарифы</span>
+          <h2>Прозрачная структура<br/>для КЗ и КНР рынков</h2>
+        </div>
+        <div class="sh-right">
+          <p>Базовая регистрация бесплатна. Монетизация через верификацию, аудит и сопровождение сделок.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="price-tabs reveal">
+      <button class="price-tab on" data-panel="kz">Казахстан (KZ)</button>
+      <button class="price-tab" data-panel="cn">Китай (CN)</button>
+    </div>
+
+    <!-- KZ Panel -->
+    <div class="price-panel on" id="panel-kz">
+      <div class="kz-grid">
+        <div class="pc">
+          <div class="pc-name">Базовое подключение</div>
+          <div class="pc-desc">Размещение профиля в каталоге, доступ к анонсам мероприятий</div>
+          <div class="pc-price">Бесплатно</div>
+          <div class="pc-cur">для всех типов участников</div>
+          <ul class="pc-list">
+            <li>3 обязательных договора (меморандум, NDA, NCNDA)</li>
+            <li>Проверка комплектности данных оператором</li>
+            <li>Публичная карточка в каталоге платформы</li>
+            <li>Модерация профиля перед публикацией</li>
+            <li>Размещение информации для подписчиков</li>
+          </ul>
+          <a href="/register.html" class="pc-btn">Зарегистрироваться</a>
+        </div>
+        <div class="pc featured">
+          <div class="pc-name">Проверенная компания</div>
+          <div class="pc-desc">Официальный значок верификации легитимности бизнеса</div>
+          <div class="pc-price">95 000</div>
+          <div class="pc-cur">KZT (~$50 × 2)</div>
+          <ul class="pc-list">
+            <li>Проверка регистрационных данных и контактов</li>
+            <li>Скрининг корпоративной структуры</li>
+            <li>Проверка публичного следа и репутации</li>
+            <li>Значок «Проверенная компания» в профиле</li>
+            <li>Доступ к закрытым встречам и событиям</li>
+          </ul>
+          <a href="/register.html" class="pc-btn">Выбрать</a>
+        </div>
+        <div class="pc">
+          <div class="pc-name">Подтверждённый бизнес-план</div>
+          <div class="pc-desc">Аудит бизнес-плана с юнит-экономикой и проверка договоров намерений</div>
+          <div class="pc-price">от 100 000</div>
+          <div class="pc-cur">KZT</div>
+          <ul class="pc-list">
+            <li>Аудит юнит-экономики и допущений плана</li>
+            <li>Верификация договоров намерений с поставщиками и потребителями</li>
+            <li>Оценка реальности бизнес-партнёрств</li>
+            <li>Итоговый отчёт с рекомендациями</li>
+            <li>Значок «Проверенный проект» в профиле</li>
+          </ul>
+          <a href="/register.html" class="pc-btn">Запросить</a>
+        </div>
+        <div class="pc">
+          <div class="pc-name">Финансовая модель</div>
+          <div class="pc-desc">Разработка или аудит финмодели проекта или компании</div>
+          <div class="pc-price">от 800 000</div>
+          <div class="pc-cur">KZT</div>
+          <ul class="pc-list">
+            <li>P&amp;L, Cash Flow, Balance Sheet</li>
+            <li>Unit-экономика и LTV/CAC-анализ</li>
+            <li>Сценарный анализ (base / stress)</li>
+            <li>Питч-версия для инвесторов</li>
+          </ul>
+          <a href="/register.html" class="pc-btn">Запросить</a>
+        </div>
+        <div class="pc">
+          <div class="pc-name">Подписка инвестора</div>
+          <div class="pc-desc">Полный доступ к потоку проектов с досье и контактами</div>
+          <div class="pc-price">~5 000</div>
+          <div class="pc-cur">KZT / месяц или поштучно</div>
+          <ul class="pc-list">
+            <li>Полные досье: команда, финансы, документы</li>
+            <li>Фильтрация по отрасли, стадии, чеку</li>
+            <li>Прямой контакт с командой через платформу</li>
+            <li>Приоритет на питч-сессиях и деловой ужин для инвесторов</li>
+          </ul>
+          <a href="/register.html" class="pc-btn">Войти как инвестор</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CN Panel -->
+    <div class="price-panel" id="panel-cn">
+      <div class="cn-intro">
+        <h3>Тарифы для китайских компаний</h3>
+        <p>Доступ к каталогу казахстанских проектов и компаний с ранжированием по отраслям. Тарифы дифференцированы по количеству доступных компаний.</p>
+        <p>Для китайских B2B-клиентов поддерживаются платёжные системы <strong>Alipay, WeChat Pay, UnionPay</strong> (интеграция в разработке). Выставление счёта — автоматически на e-mail.</p>
+      </div>
+      <div class="cn-grid">
+        <div class="cn-card">
+          <div class="cn-badge">Базовый</div>
+          <div class="cn-name">Стартовый доступ</div>
+          <div class="cn-companies">5</div>
+          <div class="cn-companies-l">компаний из каталога</div>
+          <div class="cn-price">По запросу <span>/ мес.</span></div>
+          <ul class="cn-list">
+            <li>Фильтрация по 2 отраслям</li>
+            <li>Краткие профили компаний</li>
+            <li>Базовые контактные данные</li>
+            <li>Интерфейс на китайском</li>
+          </ul>
+          <button class="cn-btn">Запросить доступ</button>
+        </div>
+        <div class="cn-card best">
+          <div class="cn-badge">Бизнес</div>
+          <div class="cn-name">Расширенный доступ</div>
+          <div class="cn-companies">10</div>
+          <div class="cn-companies-l">компаний из каталога</div>
+          <div class="cn-price">По запросу <span>/ мес.</span></div>
+          <ul class="cn-list">
+            <li>Фильтрация по 5 отраслям</li>
+            <li>Полные профили с финпоказателями</li>
+            <li>Прямой контакт через платформу</li>
+            <li>Приглашение на деловые мероприятия</li>
+            <li>Поддержка на китайском языке</li>
+          </ul>
+          <button class="cn-btn">Запросить доступ</button>
+        </div>
+        <div class="cn-card">
+          <div class="cn-badge">Премиум</div>
+          <div class="cn-name">Полный доступ</div>
+          <div class="cn-companies">50</div>
+          <div class="cn-companies-l">компаний из каталога</div>
+          <div class="cn-price">По запросу <span>/ мес.</span></div>
+          <ul class="cn-list">
+            <li>Доступ ко всем отраслям без ограничений</li>
+            <li>Приоритетный показ новых компаний</li>
+            <li>Персональный менеджер</li>
+            <li>Организация переговоров и встреч</li>
+            <li>Пакет входа на рынок КЗ включён</li>
+          </ul>
+          <button class="cn-btn">Запросить доступ</button>
+        </div>
+      </div>
+      <div class="pay-strip">
+        <div class="pay-strip-label">Способы оплаты:</div>
+        <div class="pay-methods">
+          <div class="pay-chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 7h14"/></svg>Банковская карта (KZ/RU)</div>
+          <div class="pay-chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="10" height="10" rx="1"/><path d="M6 8h4M8 6v4"/></svg>QR-оплата / Kaspi</div>
+          <div class="pay-chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M8 2l6 6-6 6"/></svg>Счёт для юрлиц (авто)</div>
+          <div class="pay-chip cn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8a5 5 0 0010 0A5 5 0 003 8z"/><circle cx="8" cy="8" r="1.5"/></svg>Alipay (в разработке)</div>
+          <div class="pay-chip cn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8a5 5 0 0010 0A5 5 0 003 8z"/><circle cx="8" cy="8" r="1.5"/></svg>WeChat Pay (в разработке)</div>
+          <div class="pay-chip cn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="1.5"/></svg>UnionPay (в разработке)</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="price-note reveal">* Цены ориентировочные. Конкретные условия — в отдельном договоре или спецификации. Точный курс конвертации KZT/$  уточняется.</p>
+  </div>
+</section>
+
+<!-- ══ ДОКУМЕНТЫ ══ -->
+<section id="docs">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Юридический контур</span>
+          <h2>Обязательный пакет<br/>документов</h2>
+        </div>
+        <div class="sh-right">
+          <p>Все документы подписываются до публикации профиля и получения доступа. Часть согласий переведена в онлайн-акцепт прямо на сайте.</p>
+        </div>
+      </div>
+    </div>
+    <div class="docs-layout reveal">
+      <div class="doc-list">
+        <div class="doc-item">
+          <div class="doc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+          <div class="doc-text"><h4>Меморандум о сотрудничестве</h4><p>Между ATAMEKEN Club и клубом-партнёром. Роли, порядок работы, конфиденциальность, срок 12 месяцев с пролонгацией.</p></div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <div class="doc-text"><h4>NDA — Соглашение о неразглашении</h4><p>Между ATAMEKEN Club и участником. Защищает информацию о компании, проекте, финмодели и команде. Срок: взаимодействие + 3 года.</p></div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="doc-text"><h4>NCNDA — Ненарушение каналов</h4><p>Исключает прямой обход платформы при установлении деловых контактов через экосистему ATAMEKEN Club. Международный стандарт.</p></div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <div class="doc-text"><h4>Анкета-заявка на верификацию</h4><p>Краткое описание компании или проекта и перечень прилагаемых материалов.</p></div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+          <div class="doc-text"><h4>Договор на использование информации</h4><p>Регулирует права использования предоставленных материалов платформой.</p></div>
+        </div>
+      </div>
+      <div class="docs-side">
+        <div class="docs-box accent">
+          <h4>Онлайн-акцепт на сайте</h4>
+          <p>Часть согласий переведена в онлайн-акцепт прямо в процессе регистрации. Не требует отдельной подписи — достаточно подтвердить на платформе.</p>
+          <p>Документы, требующие подписи, направляются участнику в течение 3 рабочих дней после заявки.</p>
+        </div>
+        <div class="docs-box">
+          <h4>Порядок подписания</h4>
+          <div class="flow-list">
+            <div class="fl"><div class="fl-dot">1</div><p>Клуб-партнёр передаёт реестр кандидатов оператору</p></div>
+            <div class="fl"><div class="fl-dot">2</div><p>Оператор направляет участнику пакет документов</p></div>
+            <div class="fl"><div class="fl-dot">3</div><p>Подписание онлайн или офлайн — в течение 5 дней</p></div>
+            <div class="fl"><div class="fl-dot">4</div><p>Создание публичного профиля и модерация</p></div>
+            <div class="fl"><div class="fl-dot">5</div><p>Публикация карточки и открытие доступа к каталогу</p></div>
+          </div>
+        </div>
+        <div class="docs-box">
+          <h4>Защита данных</h4>
+          <p>Закрытое досье не передаётся третьим лицам без письменного согласия участника. Режим конфиденциальности распространяется на всех привлечённых консультантов и партнёров платформы.</p>
+          <p>Обновление карточки — не реже 1 раза в 14 дней. Неактуальные карточки снимаются с публикации.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ МЕССЕНДЖЕРЫ ══ -->
+<div class="msg-bar reveal">
+  <div class="msg-bar-left">
+    <h4>Связь через мессенджеры</h4>
+    <p>Уведомления, статус верификации, анонсы мероприятий — в WhatsApp, Telegram или WeChat</p>
+  </div>
+  <div class="msg-btns-row">
+    <a href="#" class="mbtn wa">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+    <a href="#" class="mbtn tg">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      Telegram
+    </a>
+    <a href="#" class="mbtn wc">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 4C5.36 4 2 6.69 2 10c0 1.89 1.08 3.56 2.78 4.66L4 17l2.37-1.19c.96.27 2 .42 3.13.42.23 0 .46 0 .69-.02-.13-.47-.2-.96-.2-1.46C10 11.35 13.13 9 17 9c.31 0 .62.02.92.05C17.09 6.17 13.63 4 9.5 4zm-2 3.5a1 1 0 110 2 1 1 0 010-2zm4 0a1 1 0 110 2 1 1 0 010-2zm5.5 4c-3.31 0-6 2.01-6 4.5 0 2.5 2.69 4.5 6 4.5.75 0 1.47-.12 2.13-.33L21 21l-.59-2.08C21.35 17.86 22 16.72 22 15.5c0-2.49-2.69-4.5-6-4.5zm-2 3a.75.75 0 110 1.5.75.75 0 010-1.5zm4 0a.75.75 0 110 1.5.75.75 0 010-1.5z"/></svg>
+      WeChat
+    </a>
+  </div>
+</div>
+
+<!-- ══ ПАРТНЁРЫ ══ -->
+<section id="partners" class="bg-gray">
+  <div class="inner">
+    <div class="pt-layout">
+      <div class="pt-left reveal">
+        <div class="red-bar"></div>
+        <span class="tag" style="display:block;margin-bottom:.75rem">Клубам-партнёрам</span>
+        <h2>Подключите ваш клуб<br/>к платформе</h2>
+        <p style="margin-top:1.15rem">Подключайте ваш бизнес-клуб к платформе и открывайте участникам доступ к деловому каталогу, мероприятиям и инструментам верификации.</p>
+        <p>Меморандум не является эксклюзивным. Каждая сторона несёт ответственность за достоверность сведений. Взаимодействие строго по регламенту.</p>
+        <ul class="pt-benef">
+          <li>Участники клуба получают доступ к верифицированному каталогу и закрытым мероприятиям</li>
+          <li>Юридически оформленный процесс — меморандум, NDA, NCNDA с каждым участником</li>
+          <li>Операционная поддержка и брендовый контур от ATAMEKEN Club</li>
+          <li>Возможность проведения питч-сессий под брендом клуба</li>
+          <li>Прозрачная модель — без обещания гарантированных сделок</li>
+        </ul>
+      </div>
+      <div class="form-wrap reveal">
+        <h3>Запрос для клуба-партнёра</h3>
+        <p class="form-sub">Оставьте контакты — свяжемся в течение 2 рабочих дней</p>
+        <div class="f-row">
+          <div class="field"><label>Название клуба</label><input type="text" placeholder="Ваша организация"/></div>
+          <div class="field"><label>Страна / город</label><input type="text" placeholder="Алматы, КЗ"/></div>
+        </div>
+        <div class="field"><label>Контактное лицо</label><input type="text" placeholder="ФИО, должность"/></div>
+        <div class="f-row">
+          <div class="field"><label>Телефон / WhatsApp</label><input type="tel" placeholder="+7 (___) ___-__-__"/></div>
+          <div class="field"><label>E-mail</label><input type="email" placeholder="mail@example.com"/></div>
+        </div>
+        <div class="field"><label>Кол-во участников</label>
+          <select><option value="" disabled selected>Выберите диапазон</option><option>До 10</option><option>10–30</option><option>30–100</option><option>Более 100</option></select>
+        </div>
+        <div class="field"><label>Комментарий</label><textarea placeholder="Расскажите о клубе, задачах и рынках присутствия"></textarea></div>
+        <button class="f-submit" id="fBtn">Отправить запрос</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section id="cta">
+  <div class="cta-tag"><span>Начало работы</span></div>
+  <h2>Присоединяйтесь к<br/><em>ATAMEKEN Club</em></h2>
+  
+  <div class="cta-btns">
+    <a href="/register.html" class="btn-red">Зарегистрироваться</a>
+    <a href="/login.html" class="btn-out" style="color:#fff;border-color:rgba(255,255,255,.3)">Уже есть аккаунт — Войти</a>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="f-logo">
+    <div class="f-logo-emb">
+    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="38" height="38">
+      <circle cx="30" cy="30" r="28.5" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.5"/>
+      <defs><path id="fcirc" d="M30,30 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0"/></defs>
+      <text font-family="Inter,Arial,sans-serif" font-size="4.8" font-weight="600" fill="#C5963A" letter-spacing="0.9">
+        <textPath href="#fcirc" startOffset="3%">ATAMEKEN Club • Business Community •</textPath>
+      </text>
+      <path d="M10 38 Q30 16 50 38" stroke="#C5963A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <line x1="8" y1="38" x2="52" y2="38" stroke="#C5963A" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="22" y1="38" x2="22" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="38" y1="38" x2="38" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="30" y1="18.5" x2="22" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
+      <line x1="30" y1="18.5" x2="38" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
+      <circle cx="30" cy="18.5" r="1.4" fill="#C5963A"/>
+    </svg>
+  </div>
+    <div class="f-logo-text">ATAMEKEN CLUB<span>Бизнес-сообщество · г. Алматы</span></div>
+  </div>
+  <div class="f-mid">
+    <p>© 2025 ТОО «ATAMEKEN Web». Все права защищены.</p>
+    <p>Бизнес-сообщество «ATAMEKEN Club» · Казахстан</p>
+  </div>
+  <div class="f-right">
+    <a href="mailto:info@atameken.club">info@atameken.club</a>
+    <a href="tel:+77000000000">+7 (700) 000-00-00</a>
+    <a href="#">г. Алматы, Казахстан</a>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+
+// Reveal
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.06});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Catalog tabs
+document.querySelectorAll('.cat-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const t = btn.dataset.tab;
+    document.querySelectorAll('#catGrid .pcard').forEach(c => {
+      c.style.display = (t === 'all' || c.dataset.tab === t) ? 'flex' : 'none';
+    });
+  });
+});
+
+// Services filter
+document.querySelectorAll('.svc-f-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.svc-f-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const f = btn.dataset.svc;
+    document.querySelectorAll('#svcGrid .svc-card').forEach(c => {
+      if(f === 'all') { c.style.display = 'flex'; return; }
+      c.style.display = c.dataset.svc.split(' ').includes(f) ? 'flex' : 'none';
+    });
+  });
+});
+
+// Price tabs
+document.querySelectorAll('.price-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.price-tab').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.price-panel').forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('panel-' + btn.dataset.panel).classList.add('on');
+  });
+});
+
+// Lang buttons (UI only)
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(b => b.class
