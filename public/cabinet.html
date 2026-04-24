@@ -6,235 +6,1160 @@
 <title>Личный кабинет — ATAMEKEN Club</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="/assets/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#fff;--bg:#F7F8FA;--bg2:#EEF1F6;
+  --ink:#0F1620;--ink2:#2C3547;--ink3:#4A5568;--ink4:#718096;
+  --red:#C8282A;--red2:#E63B3D;--red-dim:rgba(200,40,42,.08);--red-dim2:rgba(200,40,42,.15);
+  --blue:#1A6FC4;--blue2:#2980D9;--blue-dim:rgba(26,111,196,.08);
+  --green:#16a34a;--green-dim:rgba(22,163,74,.08);
+  --amber:#B45309;--amber-dim:rgba(180,83,9,.08);
+  --border:#E2E8F0;--border2:#CBD5E0;
+  --shadow:0 1px 3px rgba(15,22,32,.08),0 4px 16px rgba(15,22,32,.06);
+  --shadow-md:0 4px 12px rgba(15,22,32,.1),0 8px 32px rgba(15,22,32,.08);
+  --t0:.7rem;--t1:.8rem;--t2:.9rem;--t3:1rem;--t4:1.125rem;--t5:1.375rem;--t6:1.75rem;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:var(--t3);font-weight:400;line-height:1.65}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.2}
+p{font-size:var(--t3);line-height:1.7;color:var(--ink3)}
+a{color:inherit;text-decoration:none}
+strong{color:var(--ink);font-weight:600}
+
+/* TOP NAV */
+.top-nav{background:#fff;border-bottom:1px solid var(--border);padding:.7rem 1.75rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,22,32,.06)}
+.tn-logo{display:flex;align-items:center;gap:.6rem}
+.tn-emb{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tn-emb svg{width:14px;height:14px;color:#fff}
+.tn-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;letter-spacing:.08em;color:var(--ink)}
+.tn-right{display:flex;align-items:center;gap:.85rem}
+.tn-user{display:flex;align-items:center;gap:.55rem;font-size:var(--t2);color:var(--ink3)}
+.tn-avatar{width:30px;height:30px;border-radius:50%;background:var(--red-dim2);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--red)}
+.tn-back{font-size:var(--t2);font-weight:500;color:var(--ink3);display:flex;align-items:center;gap:.35rem;transition:color .2s}
+.tn-back:hover{color:var(--red)}
+.tn-back svg{width:13px;height:13px}
+
+/* TYPE SELECTOR (top switcher) */
+.type-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;gap:0;overflow-x:auto;box-shadow:0 1px 0 var(--border)}
+.type-btn{padding:.65rem 1.5rem;font-size:var(--t2);font-weight:500;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
+.type-btn.on{color:var(--red);border-bottom-color:var(--red);font-weight:600}
+.type-btn:not(.on):hover{color:var(--ink2)}
+
+/* LAYOUT */
+.cab-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 91px)}
+
+/* SIDEBAR */
+.sidebar{background:#fff;border-right:1px solid var(--border);padding:1.25rem 0;position:sticky;top:91px;height:calc(100vh - 91px);overflow-y:auto}
+.sidebar-section{margin-bottom:1.5rem}
+.sidebar-label{font-size:var(--t0);font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink4);padding:.3rem 1.25rem;margin-bottom:.25rem}
+.sidebar-item{display:flex;align-items:center;gap:.65rem;padding:.62rem 1.25rem;font-size:var(--t2);font-weight:500;color:var(--ink3);cursor:pointer;transition:all .2s;border-left:3px solid transparent;border-radius:0 4px 4px 0;margin-right:.5rem}
+.sidebar-item:hover{background:var(--bg);color:var(--ink)}
+.sidebar-item.on{background:var(--red-dim);color:var(--red);border-left-color:var(--red)}
+.sidebar-item svg{width:15px;height:15px;flex-shrink:0}
+.sidebar-item .badge{margin-left:auto;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;padding:.1rem .45rem;border-radius:2px;min-width:18px;text-align:center}
+
+/* MAIN CONTENT */
+.cab-main{padding:2rem 2.25rem;overflow-y:auto;background:var(--bg)}
+
+/* PANEL — shown/hidden */
+.panel{display:none}
+.panel.on{display:block}
+
+/* PAGE HEADER */
+.page-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.75rem;gap:1rem;flex-wrap:wrap;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.page-hd-left h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--ink)}
+.page-hd-left p{font-size:var(--t2);color:var(--ink3);margin-top:.2rem}
+.hd-actions{display:flex;gap:.65rem;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn-r{background:var(--red);color:#fff;border:none;padding:.65rem 1.5rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;border-radius:2px;transition:all .22s;display:inline-block}
+.btn-r:hover{background:var(--red2)}
+.btn-b{background:var(--blue);color:#fff;border:none;padding:.65rem 1.5rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;border-radius:2px;transition:all .22s;display:inline-block}
+.btn-b:hover{background:var(--blue2)}
+.btn-o{background:none;border:1.5px solid var(--border2);color:var(--ink2);padding:.63rem 1.5rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:500;cursor:pointer;border-radius:2px;transition:all .22s;display:inline-block}
+.btn-o:hover{border-color:var(--red);color:var(--red)}
+.btn-sm{padding:.42rem 1rem;font-size:var(--t1)}
+
+/* STATUS BANNERS */
+.status-banner{border-radius:6px;padding:1.25rem 1.5rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:1rem}
+.sb-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-icon svg{width:18px;height:18px}
+.sb-text h4{font-size:var(--t3);font-weight:600;margin-bottom:.2rem}
+.sb-text p{font-size:var(--t2);margin:0}
+.sb-actions{margin-left:auto;flex-shrink:0;display:flex;gap:.5rem}
+.sb.warning{background:#fffbeb;border:1px solid #fbbf24}
+.sb.warning .sb-icon{background:#fef3c7;color:#d97706}
+.sb.warning .sb-text h4{color:#92400e}
+.sb.warning .sb-text p{color:#a16207}
+.sb.success{background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.2)}
+.sb.success .sb-icon{background:var(--green-dim);color:var(--green)}
+.sb.success .sb-text h4{color:#166534}
+.sb.success .sb-text p{color:#15803d}
+.sb.info{background:var(--blue-dim);border:1px solid rgba(26,111,196,.2)}
+.sb.info .sb-icon{background:rgba(26,111,196,.12);color:var(--blue)}
+.sb.info .sb-text h4{color:#1e3a5f}
+.sb.info .sb-text p{color:var(--blue)}
+
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.4rem;box-shadow:0 1px 4px rgba(15,22,32,.06);transition:box-shadow .2s}.stat-card:hover{box-shadow:0 4px 16px rgba(15,22,32,.1)}
+.stat-icon{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem}
+.stat-icon svg{width:17px;height:17px}
+.stat-icon.r{background:var(--red-dim);color:var(--red)}
+.stat-icon.b{background:var(--blue-dim);color:var(--blue)}
+.stat-icon.g{background:var(--green-dim);color:var(--green)}
+.stat-icon.a{background:var(--amber-dim);color:var(--amber)}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;color:var(--ink);line-height:1}
+.stat-label{font-size:var(--t1);color:var(--ink3);margin-top:.2rem}
+
+/* GRID 2 COL */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.5rem}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 4px rgba(15,22,32,.06)}
+.card-hd{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-hd h3{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink)}
+.card-body{padding:1.4rem}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{margin-bottom:1rem}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:var(--t1);font-weight:600;color:var(--ink2);margin-bottom:.38rem}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);padding:.6rem .9rem;font-family:'Inter',sans-serif;font-size:var(--t2);outline:none;transition:border-color .2s;border-radius:2px;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);background:#fff}
+.field textarea{resize:vertical;min-height:80px}
+.field.full{grid-column:1/-1}
+.field-hint{font-size:var(--t0);color:var(--ink4);margin-top:.3rem}
+
+/* PROGRESS STEPS */
+.progress-steps{display:flex;gap:0;margin-bottom:1.75rem;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(15,22,32,.06)}
+.ps{flex:1;padding:.7rem .5rem;text-align:center;position:relative;border-right:1px solid var(--border)}
+.ps:last-child{border-right:none}
+.ps-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;margin:0 auto .35rem;background:var(--bg2);color:var(--ink4)}
+.ps-label{font-size:.65rem;font-weight:500;color:var(--ink4);letter-spacing:.04em}
+.ps.done .ps-num{background:var(--green);color:#fff}
+.ps.done .ps-label{color:var(--green)}
+.ps.active .ps-num{background:var(--red);color:#fff;animation:psPulse 1.8s ease-in-out infinite}
+.ps.active .ps-label{color:var(--red);font-weight:700}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:var(--t2)}
+.tbl th{background:var(--bg);font-size:var(--t0);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding:.65rem .9rem;text-align:left;border-bottom:1px solid var(--border)}
+.tbl td{padding:.75rem .9rem;border-bottom:1px solid var(--border);color:var(--ink3);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--bg)}
+.status-pill{display:inline-block;font-size:.68rem;font-weight:600;padding:.2rem .6rem;border-radius:2px;letter-spacing:.06em;text-transform:uppercase}
+.sp-green{background:var(--green-dim);color:var(--green)}
+.sp-red{background:var(--red-dim2);color:var(--red)}
+.sp-amber{background:var(--amber-dim);color:var(--amber)}
+.sp-blue{background:var(--blue-dim);color:var(--blue)}
+.sp-gray{background:var(--bg2);color:var(--ink4)}
+
+/* NOTIFY */
+.notify-item{display:flex;gap:.85rem;padding:.85rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.notify-item:last-child{border-bottom:none}
+.notify-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:.5rem}
+.nd-red{background:var(--red)}
+.nd-blue{background:var(--blue)}
+.nd-green{background:var(--green)}
+.nd-gray{background:var(--border2)}
+.notify-text{}
+.notify-title{font-size:var(--t2);font-weight:500;color:var(--ink2);margin-bottom:.15rem}
+.notify-sub{font-size:var(--t1);color:var(--ink4)}
+
+/* SERVICE ORDER LIST */
+.svc-order{display:flex;flex-direction:column;gap:.85rem}
+.svc-o-item{background:#fff;border:1px solid var(--border);border-radius:4px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem}
+.svc-o-icon{width:36px;height:36px;border-radius:4px;background:var(--red-dim);color:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.svc-o-icon svg{width:16px;height:16px}
+.svc-o-info{flex:1}
+.svc-o-name{font-size:var(--t2);font-weight:600;color:var(--ink)}
+.svc-o-meta{font-size:var(--t1);color:var(--ink4);margin-top:.15rem}
+.svc-o-right{text-align:right;flex-shrink:0}
+.svc-o-price{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink)}
+.svc-o-status{font-size:var(--t0);margin-top:.2rem}
+
+/* CATALOG FILTER MINI */
+.proj-filter{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.pf-btn{padding:.38rem .9rem;border:1px solid var(--border2);border-radius:2px;font-size:var(--t1);font-weight:500;color:var(--ink3);background:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.pf-btn.on{background:var(--red);border-color:var(--red);color:#fff}
+
+/* LOCK OVERLAY FOR INVESTOR */
+.locked-card{position:relative;overflow:hidden}
+.locked-card::after{content:'';position:absolute;inset:0;background:rgba(247,248,250,.9);z-index:2;border-radius:6px}
+.lock-msg{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.85rem;text-align:center;padding:1.5rem}
+.lock-msg svg{width:28px;height:28px;color:var(--red);opacity:.5}
+.lock-msg p{font-size:var(--t2);color:var(--ink3)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .cab-layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .grid2,.grid3,.form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:1}
+}
+/* BADGE SYSTEM */
+.badge-strip-cab{display:flex;flex-wrap:wrap;gap:.3rem;margin:.6rem 0 .3rem}
+.bdg{position:relative;display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .6rem;border-radius:3px;font-size:.64rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:default;transition:transform .15s;border:1.5px solid transparent;user-select:none}
+.bdg:hover{transform:translateY(-1px)}
+.bdg svg{width:9px;height:9px;flex-shrink:0}
+.bdg-club{background:linear-gradient(135deg,#1A3A6B,#2455A4);color:#C5963A;border-color:#C5963A}
+.bdg-verified{background:rgba(22,163,74,.12);color:#16a34a;border-color:rgba(22,163,74,.4)}
+.bdg-bp-audit{background:rgba(234,88,12,.1);color:#ea580c;border-color:rgba(234,88,12,.35)}
+.bdg-buh-audit{background:rgba(109,40,217,.1);color:#7c3aed;border-color:rgba(109,40,217,.3)}
+.bdg-fin-audit{background:rgba(26,111,196,.12);color:#1A6FC4;border-color:rgba(26,111,196,.35)}
+.bdg-ct-kz{background:rgba(6,148,162,.1);color:#0891b2;border-color:rgba(6,148,162,.35)}
+.bdg-ct1{background:rgba(15,118,110,.1);color:#0f766e;border-color:rgba(15,118,110,.3)}
+.bdg-off{background:#f1f5f9;color:#94a3b8;border-color:#e2e8f0}
+.bdg-tip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0F1620;color:#fff;font-size:.67rem;font-weight:500;text-transform:none;letter-spacing:.02em;padding:.45rem .75rem;border-radius:4px;white-space:normal;z-index:300;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:200px;text-align:center;line-height:1.45;pointer-events:none}
+.bdg-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0F1620}
+.bdg:hover .bdg-tip{display:block}
+
+@keyframes psPulse{0%,100%{box-shadow:0 0 0 0 rgba(200,40,42,.4)}50%{box-shadow:0 0 0 4px rgba(200,40,42,0)}}
+/* Smooth panel transitions */
+.panel.on{animation:panelFadeIn .25s ease both}
+@keyframes panelFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* Card hover */
+.card-hd{background:#fff;border-radius:8px 8px 0 0}
+</style>
 </head>
 <body>
 
+<!-- TOP NAV -->
 <div class="top-nav">
-  <a href="/cabinet.html" class="tn-logo">
-    <div class="tn-emb">A</div>
-    <div class="tn-name">ATAMEKEN CLUB</div>
+  <a href="index.html" class="tn-logo">
+    <div class="tn-emb">
+    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
+      <circle cx="30" cy="30" r="28.5" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.5"/>
+      <defs><path id="cc" d="M30,30 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0"/></defs>
+      <text font-family="Inter,Arial,sans-serif" font-size="4.8" font-weight="600" fill="#C5963A" letter-spacing="0.9">
+        <textPath href="#cc" startOffset="3%">ATAMEKEN Club • Business Community •</textPath>
+      </text>
+      <path d="M10 38 Q30 16 50 38" stroke="#C5963A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <line x1="8" y1="38" x2="52" y2="38" stroke="#C5963A" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="22" y1="38" x2="22" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="38" y1="38" x2="38" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="30" y1="18.5" x2="22" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
+      <line x1="30" y1="18.5" x2="38" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
+      <circle cx="30" cy="18.5" r="1.4" fill="#C5963A"/>
+    </svg>
+  </div>
+    <span class="tn-name">ATAMEKEN CLUB</span>
   </a>
   <div class="tn-right">
-    <div class="tn-user" id="user-info">—</div>
-    <button class="btn btn-ghost small" id="logout-btn">Выйти</button>
-  </div>
-</div>
-
-<div class="container">
-  <div class="page-hd">
-    <div class="page-hd-left">
-      <h1>Профиль компании</h1>
-      <p>Заполните данные — они будут видны модераторам при проверке</p>
+    <a href="/" class="tn-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 12L6 8l4-4"/></svg>
+      На главную
+    </a>
+    <a href="#" id="btn-logout" class="tn-back">Выйти</a>
+    <div class="tn-user">
+      <div class="tn-avatar" id="avatarText">—</div>
+      <span id="userNameDisplay">Загрузка…</span>
     </div>
-    <div><span class="status-pill" id="status-pill">Загрузка...</span></div>
-  </div>
-
-  <div id="alert" class="alert"></div>
-
-  <div class="card">
-    <form id="profile-form">
-      <div class="form-grid">
-        <div class="field full">
-          <label for="companyName">Название компании / проекта *</label>
-          <input type="text" id="companyName" required maxlength="200"/>
-        </div>
-        <div class="field">
-          <label for="bin">БИН / ИИН</label>
-          <input type="text" id="bin" maxlength="32"/>
-        </div>
-        <div class="field">
-          <label for="industry">Отрасль</label>
-          <input type="text" id="industry" placeholder="IT, Агро, HoReCa..." maxlength="120"/>
-        </div>
-        <div class="field">
-          <label for="region">Регион</label>
-          <input type="text" id="region" placeholder="Алматы, Астана..." maxlength="120"/>
-        </div>
-        <div class="field">
-          <label for="foundedYear">Год основания</label>
-          <input type="number" id="foundedYear" min="1900" max="2100"/>
-        </div>
-        <div class="field">
-          <label for="revenue">Годовая выручка</label>
-          <input type="text" id="revenue" placeholder="например, 1.2 млрд ₸/год" maxlength="120"/>
-        </div>
-        <div class="field">
-          <label for="employees">Сотрудников</label>
-          <input type="text" id="employees" placeholder="например, 50" maxlength="60"/>
-        </div>
-        <div class="field">
-          <label for="website">Сайт</label>
-          <input type="url" id="website" placeholder="https://..." maxlength="200"/>
-        </div>
-        <div class="field">
-          <label for="investmentNeed">Потребность в инвестициях</label>
-          <input type="text" id="investmentNeed" placeholder="например, 500 млн ₸" maxlength="120"/>
-        </div>
-        <div class="field">
-          <label for="investmentGoal">Цель инвестиций</label>
-          <input type="text" id="investmentGoal" placeholder="на что пойдут средства" maxlength="1000"/>
-        </div>
-
-        <div class="field full">
-          <label for="description">Описание компании *</label>
-          <textarea id="description" required maxlength="4000" placeholder="Расскажите, чем занимается компания, какие результаты, что ищете"></textarea>
-          <div class="field-hint">От 30 символов. Будет видно инвесторам.</div>
-        </div>
-
-        <div class="field full" style="border-top:1px solid var(--border);padding-top:1rem;margin-top:.5rem">
-          <label style="font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4)">Контакт для связи</label>
-        </div>
-        <div class="field">
-          <label for="contactName">Контактное лицо</label>
-          <input type="text" id="contactName" maxlength="120"/>
-        </div>
-        <div class="field">
-          <label for="contactPhone">Телефон</label>
-          <input type="tel" id="contactPhone" maxlength="32"/>
-        </div>
-        <div class="field full">
-          <label for="contactEmail">Email</label>
-          <input type="email" id="contactEmail"/>
-        </div>
-      </div>
-
-      <div class="flex-between mt-2">
-        <div class="small muted" id="save-hint">—</div>
-        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
-          <button type="submit" class="btn btn-out" id="save-btn">Сохранить черновик</button>
-          <button type="button" class="btn btn-red" id="submit-btn">Отправить на верификацию</button>
-        </div>
-      </div>
-    </form>
   </div>
 </div>
 
+<!-- TYPE SWITCHER -->
+<div class="type-bar">
+  <button class="type-btn on" data-type="seeker" onclick="switchType('seeker',this)">Соискатель инвестиций</button>
+  <button class="type-btn" data-type="investor" onclick="switchType('investor',this)">Инвестор</button>
+  <button class="type-btn" data-type="franchise" onclick="switchType('franchise',this)">Франчайзер / Франчайзи</button>
+  <button class="type-btn" data-type="sale" onclick="switchType('sale',this)">Продавец / Покупатель бизнеса</button>
+</div>
+
+<div class="cab-layout">
+
+  <!-- ═══ SIDEBAR (динамически меняется) ═══ -->
+  <nav class="sidebar" id="sidebar">
+    <!-- Profile widget -->
+  <div style="padding:.75rem 1.25rem 1.25rem;border-bottom:1px solid var(--border);margin-bottom:.75rem">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <div id="sb-avatar" style="width:40px;height:40px;border-radius:50%;background:var(--red-dim2);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:var(--red);flex-shrink:0">АА</div>
+      <div>
+        <div style="font-size:var(--t2);font-weight:600;color:var(--ink)" id="sb-name">Айгерим А.</div>
+        <div style="font-size:var(--t0);color:var(--ink4);margin-top:.1rem" id="sb-type-label">Соискатель инвестиций</div>
+      </div>
+    </div>
+    <div style="margin-top:.85rem;background:var(--bg);border-radius:4px;padding:.55rem .75rem;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:var(--t0);color:var(--ink4)">Верификация</div>
+      <div style="font-size:var(--t0);font-weight:700;color:var(--red)">Шаг 2 из 6</div>
+    </div>
+    <div style="margin-top:.4rem;background:var(--border);border-radius:4px;height:4px;overflow:hidden">
+      <div style="width:20%;height:100%;background:var(--red);border-radius:4px;transition:width .4s"></div>
+    </div>
+  </div>
+  <!-- injected by JS -->
+  </nav>
+
+  <!-- ═══ MAIN PANELS ═══ -->
+  <main class="cab-main">
+
+    <!-- ──────── SEEKER PANELS ──────── -->
+    <div id="type-seeker">
+
+      <!-- Dashboard -->
+      <div class="panel on" id="seeker-dashboard">
+        <div class="page-hd">
+          <div class="page-hd-left">
+            <h2>Мой кабинет</h2>
+            <p>Управление профилем, документами и услугами</p>
+          </div>
+          <div class="hd-actions">
+            <button class="btn-r btn-sm" onclick="showPanel('seeker','profile')">Редактировать профиль</button>
+          </div>
+        </div>
+
+        <!-- Status banner: set by JS -->
+        <div id="status-banner" class="status-banner sb warning">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="sb-text">
+            <h4 id="status-title">Профиль не верифицирован</h4>
+            <p id="status-desc">Заполните профиль и отправьте его на проверку</p>
+          </div>
+          <div class="sb-actions" id="status-actions">
+            <button class="btn-r btn-sm" onclick="showPanel('seeker','profile')">Заполнить профиль</button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+            <div class="stat-val" id="stat-fill">0%</div>
+            <div class="stat-label">Заполненность профиля</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div class="stat-val">—</div>
+            <div class="stat-label">Просмотры профиля</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="stat-val" id="stat-status" style="font-size:1.1rem">—</div>
+            <div class="stat-label">Статус верификации</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="stat-val">0</div>
+            <div class="stat-label">Предстоящих событий</div>
+          </div>
+        </div>
+
+        <!-- Steps progress -->
+        <div class="card" style="margin-bottom:1.5rem">
+          <div class="card-hd"><h3>Прогресс верификации</h3></div>
+          <div class="card-body">
+            <div class="progress-steps">
+              <div class="ps done"><div class="ps-num">✓</div><div class="ps-label">Регистрация</div></div>
+              <div class="ps active"><div class="ps-num">2</div><div class="ps-label">Анкета</div></div>
+              <div class="ps"><div class="ps-num">3</div><div class="ps-label">Документы</div></div>
+              <div class="ps"><div class="ps-num">4</div><div class="ps-label">Проверка</div></div>
+              <div class="ps"><div class="ps-num">5</div><div class="ps-label">Публикация</div></div>
+              <div class="ps"><div class="ps-num">6</div><div class="ps-label">Мероприятия</div></div>
+            </div>
+            <p style="font-size:var(--t2);margin-bottom:1rem">Следующий шаг: заполните анкету о компании или проекте для начала верификации.</p>
+            <button class="btn-r" onclick="showPanel('seeker','verify')">Заполнить анкету</button>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <!-- Quick actions -->
+          <div class="card">
+            <div class="card-hd"><h3>Быстрые действия</h3></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:.65rem">
+              <button class="btn-r" onclick="showPanel('seeker','profile')" style="text-align:left;width:100%">Заполнить профиль компании</button>
+              <button class="btn-o" onclick="showPanel('seeker','verify')" style="text-align:left;width:100%">Начать верификацию</button>
+              <button class="btn-o" onclick="showPanel('seeker','services')" style="text-align:left;width:100%">Заказать аудит бизнес-плана</button>
+              <button class="btn-b" onclick="showPanel('seeker','docs')" style="text-align:left;width:100%">Документы для подписания</button>
+            </div>
+          </div>
+
+          <!-- Notifications -->
+          <div class="card">
+            <div class="card-hd"><h3>Уведомления</h3></div>
+            <div class="card-body" style="padding:0 1.4rem">
+              <div class="notify-item">
+                <div class="notify-dot nd-red"></div>
+                <div class="notify-text">
+                  <div class="notify-title">Добро пожаловать в ATAMEKEN Club!</div>
+                  <div class="notify-sub">Заполните профиль и начните верификацию · Сейчас</div>
+                </div>
+              </div>
+              <div class="notify-item">
+                <div class="notify-dot nd-blue"></div>
+                <div class="notify-text">
+                  <div class="notify-title">ATAMEKEN Club Forum 2025 — 14 сентября, Алматы</div>
+                  <div class="notify-sub">Открыт для верифицированных участников · Анонс</div>
+                </div>
+              </div>
+              <div class="notify-item">
+                <div class="notify-dot nd-gray"></div>
+                <div class="notify-text">
+                  <div class="notify-title">Пройдите верификацию для доступа к мероприятиям</div>
+                  <div class="notify-sub">Pitching Session Q4 — 18 декабря · Доступ закрыт</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Panel -->
+      <div class="panel" id="seeker-profile">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Профиль компании / проекта</h2><p>Эти данные будут использованы для создания публичной карточки</p></div>
+          <div class="hd-actions">
+            <button id="btn-save-profile" class="btn-r btn-sm">Сохранить</button>
+            <button class="btn-o btn-sm" onclick="showPanel('seeker','dashboard')">Назад</button>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-hd"><h3>Основные сведения</h3></div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="field full"><label>Полное наименование компании / проекта</label><input id="pf-companyName" type="text" placeholder="ТОО «Название» или Проект «Название»"/></div>
+                <div class="field"><label>Год основания</label><input id="pf-foundedYear" type="number" min="1900" max="2100" placeholder="2019"/></div>
+                <div class="field"><label>Отрасль</label>
+                  <select id="pf-industry"><option value="">—</option><option>Агропром</option><option>IT / FinTech</option><option>Недвижимость</option><option>Логистика</option><option>Энергетика</option><option>HoReCa</option><option>Строительство</option><option>Медицина</option><option>Другое</option></select>
+                </div>
+                <div class="field"><label>Страна / город</label><input id="pf-region" type="text" placeholder="Алматы, Казахстан"/></div>
+                <div class="field"><label>БИН / регистрационный номер</label><input id="pf-bin" type="text" placeholder="000000000000"/></div>
+                <div class="field full"><label>Сайт / соцсети</label><input id="pf-website" type="text" placeholder="https://"/></div>
+                <div class="field full"><label>Публичная выжимка <span style="font-weight:400;color:var(--ink4)">(краткое описание для каталога)</span></label><textarea id="pf-description" placeholder="Кратко опишите ваш проект или компанию. Что делаете, для кого, какой результат..."></textarea><div class="field-hint">Минимум 30 символов. Будет видно инвесторам.</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><h3>Инвестиционные параметры</h3></div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="field"><label>Годовая выручка, KZT</label><input id="pf-revenue" type="number" min="0" placeholder="Например: 150000000"/></div>
+                <div class="field"><label>Сотрудников</label><input id="pf-employees" type="number" min="0" placeholder="Например: 25"/></div>
+                <div class="field"><label>Запрашиваемые инвестиции, KZT</label><input id="pf-investmentNeed" type="number" min="0" placeholder="Например: 150000000"/></div>
+                <div class="field full"><label>Цель инвестиций</label><textarea id="pf-investmentGoal" placeholder="На что пойдут средства"></textarea></div>
+                <div class="field"><label>Контактное лицо</label><input id="pf-contactName" type="text" placeholder="Имя представителя"/></div>
+                <div class="field"><label>Контактный телефон</label><input id="pf-contactPhone" type="tel" placeholder="+7 (___) ___-__-__"/></div>
+                <div class="field full"><label>Контактный email</label><input id="pf-contactEmail" type="email" placeholder="contact@company.kz"/></div>
+              </div>
+              
+              <div style="margin-top:1.4rem;padding-top:1.4rem;border-top:1px solid var(--border)">
+                <p style="font-size:var(--t2);font-weight:600;color:var(--ink);margin-bottom:.85rem">Статус значков</p>
+                <p style="font-size:var(--t2);color:var(--ink3);margin-bottom:.85rem">Значки присваиваются оператором после прохождения соответствующих проверок. Серые — ещё не получены.</p>
+                <div class="badge-strip-cab">
+                  <span class="bdg bdg-off">
+                    <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="4"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="4" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="3"/></svg>
+                    ATAMEKEN Club<span class="bdg-tip">Членство в бизнес-сообществе «ATAMEKEN Club». Даёт приоритет в каталоге.</span>
+                  </span>
+                  <span class="bdg bdg-off">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+                    Верифицирован<span class="bdg-tip">Компания прошла первичный комплаенс платформы.</span>
+                  </span>
+                  <span class="bdg bdg-off">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="1" width="8" height="10" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7" x2="8" y2="7"/></svg>
+                    Аудит бизнес-плана<span class="bdg-tip">Независимая проверка бизнес-плана и юнит-экономики.</span>
+                  </span>
+                  <span class="bdg bdg-off">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 9V5l4-4 4 4v4"/><rect x="4" y="7" width="4" height="4"/></svg>
+                    Бухг. аудит<span class="bdg-tip">Проверка первичных документов и учётной политики.</span>
+                  </span>
+                  <span class="bdg bdg-off">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+                    Фин. аудит<span class="bdg-tip">Независимый финансовый аудит компании.</span>
+                  </span>
+                  <span class="bdg bdg-off">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+                    СТ-КЗ<span class="bdg-tip">Сертификат о казахстанском происхождении товара.</span>
+                  </span>
+                  <span class="bdg bdg-off">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+                    СТ-1<span class="bdg-tip">Сертификат происхождения СТ-1 для стран СНГ.</span>
+                  </span>
+                </div>
+                <p style="font-size:var(--t1);color:var(--ink4);margin-top:.65rem">Для получения значка — закажите соответствующую услугу в разделе «Услуги».</p>
+              </div>
+              <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+                <p style="font-size:var(--t2);margin-bottom:.9rem;font-weight:600;color:var(--ink)">Закрытое досье (только для верифицированных инвесторов)</p>
+                <div class="field"><label>Финансовая модель</label><input type="file" style="font-size:var(--t2)"/></div>
+                <div class="field"><label>Презентация для инвесторов</label><input type="file" style="font-size:var(--t2)"/></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Panel -->
+      <div class="panel" id="seeker-verify">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Верификация профиля</h2><p>Заполните анкету и подпишите документы для публикации карточки</p></div>
+          <button class="btn-o btn-sm" onclick="showPanel('seeker','dashboard')">Назад</button>
+        </div>
+        <div class="progress-steps">
+          <div class="ps done"><div class="ps-num">✓</div><div class="ps-label">Регистрация</div></div>
+          <div class="ps active"><div class="ps-num">2</div><div class="ps-label">Анкета</div></div>
+          <div class="ps"><div class="ps-num">3</div><div class="ps-label">Документы</div></div>
+          <div class="ps"><div class="ps-num">4</div><div class="ps-label">Проверка</div></div>
+          <div class="ps"><div class="ps-num">5</div><div class="ps-label">Публикация</div></div>
+          <div class="ps"><div class="ps-num">6</div><div class="ps-label">Мероприятия</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-hd"><h3>Анкета-заявка на верификацию</h3></div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="field full"><label>Категория обращения</label>
+                  <select><option>Инвест-проект</option><option>Стартап</option><option>Франшиза</option><option>Продажа бизнеса</option><option>Поиск партнёра / дистрибьютора</option></select>
+                </div>
+                <div class="field full"><label>Что вы хотите получить от платформы?</label><textarea placeholder="Опишите цель участия: инвестиции, партнёр, выход на новый рынок..."></textarea></div>
+                <div class="field"><label>Телефон для связи</label><input type="tel" placeholder="+7 (___) ___-__-__"/></div>
+                <div class="field"><label>E-mail</label><input type="email" placeholder="your@email.com"/></div>
+              </div>
+              <div style="margin-top:1rem;padding:1rem;background:var(--bg);border-radius:4px;font-size:var(--t2);color:var(--ink3)">
+                Нажимая «Отправить анкету», вы соглашаетесь с обработкой данных и условиями платформы. Оператор свяжется с вами в течение 2 рабочих дней.
+              </div>
+              <button id="btn-submit-verify" class="btn-r" style="margin-top:1rem;width:100%">Отправить анкету на верификацию</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><h3>Что происходит дальше?</h3></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:1rem">
+                <div style="display:flex;gap:.85rem">
+                  <div style="width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">1</div>
+                  <div><p style="font-size:var(--t2);font-weight:600;color:var(--ink);margin-bottom:.2rem">Оператор проверяет данные</p><p style="font-size:var(--t2)">В течение 2 рабочих дней мы изучим анкету и свяжемся с вами.</p></div>
+                </div>
+                <div style="display:flex;gap:.85rem">
+                  <div style="width:26px;height:26px;border-radius:50%;background:var(--border2);color:var(--ink3);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">2</div>
+                  <div><p style="font-size:var(--t2);font-weight:600;color:var(--ink);margin-bottom:.2rem">Подписание документов</p><p style="font-size:var(--t2)">Меморандум, соглашение о неразглашении и договор об использовании данных — онлайн или офлайн.</p></div>
+                </div>
+                <div style="display:flex;gap:.85rem">
+                  <div style="width:26px;height:26px;border-radius:50%;background:var(--border2);color:var(--ink3);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">3</div>
+                  <div><p style="font-size:var(--t2);font-weight:600;color:var(--ink);margin-bottom:.2rem">Публикация карточки</p><p style="font-size:var(--t2)">Ваш профиль появляется в каталоге. Полные данные — только для верифицированных инвесторов.</p></div>
+                </div>
+                <div style="display:flex;gap:.85rem">
+                  <div style="width:26px;height:26px;border-radius:50%;background:var(--border2);color:var(--ink3);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">4</div>
+                  <div><p style="font-size:var(--t2);font-weight:600;color:var(--ink);margin-bottom:.2rem">Доступ к мероприятиям</p><p style="font-size:var(--t2)">Питч-сессии, деловые ужины и бизнес-миссии — открыты.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Services Panel -->
+      <div class="panel" id="seeker-services">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Деловые услуги</h2><p>Усильте позицию проекта перед инвесторами</p></div>
+          <div class="hd-actions">
+            <a href="services.html" class="btn-o btn-sm">Все услуги</a>
+            <button class="btn-o btn-sm" onclick="showPanel('seeker','dashboard')">Назад</button>
+          </div>
+        </div>
+        <div class="grid3">
+          <div class="card">
+            <div class="card-body" style="display:flex;flex-direction:column;gap:.65rem">
+              <div class="stat-icon r" style="margin-bottom:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+              <h3 style="font-size:var(--t4)">Аудит бизнес-плана</h3>
+              <p style="font-size:var(--t2)">Независимая проверка бизнес-плана, допущений и логики проекта.</p>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink)">от 800 000 KZT</div>
+              <button class="btn-r" onclick="alert('Заявка на аудит бизнес-плана отправлена!')">Заказать</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body" style="display:flex;flex-direction:column;gap:.65rem">
+              <div class="stat-icon b" style="margin-bottom:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <h3 style="font-size:var(--t4)">Финансовая модель</h3>
+              <p style="font-size:var(--t2)">P&L, Cash Flow, юнит-экономика. Питч-версия для инвесторов.</p>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink)">от 100 000 KZT</div>
+              <button class="btn-r" onclick="alert('Заявка на финансовую модель отправлена!')">Заказать</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body" style="display:flex;flex-direction:column;gap:.65rem">
+              <div class="stat-icon g" style="margin-bottom:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h3 style="font-size:var(--t4)">Статус «Проверенный проект»</h3>
+              <p style="font-size:var(--t2)">Верификация команды, описания и бизнес-логики.</p>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink)">145 000 KZT</div>
+              <button class="btn-r" onclick="alert('Заявка на верификацию проекта отправлена!')">Заказать</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Docs Panel -->
+      <div class="panel" id="seeker-docs">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Документы</h2><p>Статус подписания обязательного пакета</p></div>
+          <button class="btn-o btn-sm" onclick="showPanel('seeker','dashboard')">Назад</button>
+        </div>
+        <div class="card">
+          <div class="card-body" style="padding:0">
+            <table class="tbl">
+              <thead><tr><th>Документ</th><th>Статус</th><th>Действие</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Меморандум о сотрудничестве</strong><br/><span style="font-size:var(--t1);color:var(--ink4)">ATAMEKEN Club ↔ Участник</span></td><td><span class="status-pill sp-amber">Ожидает подписи</span></td><td><button class="btn-r btn-sm" onclick="alert('Открываем документ для подписания...')">Подписать онлайн</button></td></tr>
+                <tr><td><strong>Соглашение о неразглашении (NDA)</strong><br/><span style="font-size:var(--t1);color:var(--ink4)">Срок: взаимодействие + 3 года</span></td><td><span class="status-pill sp-amber">Ожидает подписи</span></td><td><button class="btn-r btn-sm" onclick="alert('Открываем NDA для подписания...')">Подписать онлайн</button></td></tr>
+                <tr><td><strong>Соглашение о ненарушении каналов (NCNDA)</strong><br/><span style="font-size:var(--t1);color:var(--ink4)">Международный стандарт</span></td><td><span class="status-pill sp-amber">Ожидает подписи</span></td><td><button class="btn-r btn-sm" onclick="alert('Открываем NCNDA для подписания...')">Подписать онлайн</button></td></tr>
+                <tr><td><strong>Договор на использование информации</strong><br/><span style="font-size:var(--t1);color:var(--ink4)">Права на размещение материалов</span></td><td><span class="status-pill sp-gray">Не требуется пока</span></td><td><button class="btn-o btn-sm">Скачать шаблон</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /type-seeker -->
+
+    <!-- ──────── INVESTOR PANELS ──────── -->
+    <div id="type-investor" style="display:none">
+      <div class="panel on" id="investor-dashboard">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Кабинет инвестора</h2><p>Доступ к верифицированному каталогу проектов</p></div>
+          <div class="hd-actions">
+            <button class="btn-r btn-sm" onclick="showPanel('investor','catalog')">Смотреть проекты</button>
+          </div>
+        </div>
+
+        <div class="status-banner sb info">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="sb-text">
+            <h4>Пробный доступ активен</h4>
+            <p>Вы видите карточки проектов. Для полных досье и контактов — подключите подписку.</p>
+          </div>
+          <div class="sb-actions">
+            <button class="btn-r btn-sm" onclick="showPanel('investor','subscribe')">Подключить подписку</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-icon r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-val">40+</div><div class="stat-label">Проектов в каталоге</div></div>
+          <div class="stat-card"><div class="stat-icon b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div class="stat-val">3</div><div class="stat-label">Мероприятия в Q4</div></div>
+          <div class="stat-card"><div class="stat-icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></div><div class="stat-val">0</div><div class="stat-label">Сохранённых проектов</div></div>
+          <div class="stat-card"><div class="stat-icon a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="stat-val">—</div><div class="stat-label">Статус подписки</div></div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="card-hd"><h3>Последние проекты</h3><button class="btn-o btn-sm" onclick="showPanel('investor','catalog')">Все проекты</button></div>
+            <div class="card-body" style="padding:0">
+              <table class="tbl">
+                <thead><tr><th>Проект</th><th>Отрасль</th><th>Сумма</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Агропром хаб «Степной»</strong><br/><span class="status-pill sp-green">Проверен</span></td><td style="font-size:var(--t1)">Агропром</td><td style="font-size:var(--t2);font-family:'Cormorant Garamond',serif">от 150 млн</td><td><button class="btn-o btn-sm" onclick="alert('Для просмотра досье необходима подписка')">Досье</button></td></tr>
+                  <tr><td><strong>PayFlow — FinTech</strong><br/><span class="status-pill sp-green">Проверен</span></td><td style="font-size:var(--t1)">FinTech</td><td style="font-size:var(--t2);font-family:'Cormorant Garamond',serif">180 млн</td><td><button class="btn-o btn-sm" onclick="alert('Для просмотра досье необходима подписка')">Досье</button></td></tr>
+                  <tr><td><strong>МФК «AlmaCity Towers»</strong><br/><span class="status-pill sp-green">Проверен</span></td><td style="font-size:var(--t1)">Недвижимость</td><td style="font-size:var(--t2);font-family:'Cormorant Garamond',serif">от 500 млн</td><td><button class="btn-o btn-sm" onclick="alert('Для просмотра досье необходима подписка')">Досье</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><h3>Ближайшие мероприятия</h3></div>
+            <div class="card-body" style="padding:0 1.4rem">
+              <div class="notify-item"><div class="notify-dot nd-green"></div><div class="notify-text"><div class="notify-title">ATAMEKEN Club Forum 2025</div><div class="notify-sub">14 сентября · Алматы · Открыт для верифицированных</div></div></div>
+              <div class="notify-item"><div class="notify-dot nd-red"></div><div class="notify-text"><div class="notify-title">UAE–Kazakhstan Investment Dinner</div><div class="notify-sub">22 октября · Дубай · Только для подписчиков</div></div></div>
+              <div class="notify-item"><div class="notify-dot nd-red"></div><div class="notify-text"><div class="notify-title">Investor Day Q4 — Питч-сессия</div><div class="notify-sub">18 декабря · Алматы · Только для подписчиков</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscription panel -->
+      <div class="panel" id="investor-subscribe">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Подписка инвестора</h2><p>Полный доступ к досье проектов и закрытым мероприятиям</p></div>
+          <button class="btn-o btn-sm" onclick="showPanel('investor','dashboard')">Назад</button>
+        </div>
+        <div class="grid2">
+          <div class="card" style="border-color:var(--red);border-width:2px">
+            <div class="card-hd" style="background:var(--red-dim)"><h3>Подписка · ~5 000 KZT / мес.</h3></div>
+            <div class="card-body">
+              <ul style="list-style:none;display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.25rem">
+                <li style="display:flex;gap:.5rem;font-size:var(--t2);color:var(--ink3)"><span style="color:var(--red);font-weight:700">✓</span>Полные досье: команда, финансы, документы</li>
+                <li style="display:flex;gap:.5rem;font-size:var(--t2);color:var(--ink3)"><span style="color:var(--red);font-weight:700">✓</span>Фильтрация по отрасли, стадии, сумме</li>
+                <li style="display:flex;gap:.5rem;font-size:var(--t2);color:var(--ink3)"><span style="color:var(--red);font-weight:700">✓</span>Прямой контакт с командой</li>
+                <li style="display:flex;gap:.5rem;font-size:var(--t2);color:var(--ink3)"><span style="color:var(--red);font-weight:700">✓</span>Приоритет на питч-сессиях и деловых ужинах</li>
+                <li style="display:flex;gap:.5rem;font-size:var(--t2);color:var(--ink3)"><span style="color:var(--red);font-weight:700">✓</span>Или поштучная оплата за отдельные досье</li>
+              </ul>
+              <button class="btn-r" style="width:100%" onclick="alert('Переход к оплате...\nДоступные способы: банковская карта, QR/Kaspi, счёт для юрлиц.')">Подключить подписку</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><h3>Способы оплаты</h3></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:.75rem">
+              <button class="btn-o" style="text-align:left;width:100%;display:flex;gap:.65rem;align-items:center" onclick="alert('Оплата картой...')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Банковская карта
+              </button>
+              <button class="btn-o" style="text-align:left;width:100%;display:flex;gap:.65rem;align-items:center" onclick="alert('QR-оплата / Kaspi...')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M17 14h3M14 17v3M17 17h3v3"/></svg>
+                QR / Kaspi Pay
+              </button>
+              <button class="btn-o" style="text-align:left;width:100%;display:flex;gap:.65rem;align-items:center" onclick="alert('Счёт на e-mail для юрлиц...')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Счёт для юрлиц (автоматически на e-mail)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catalog panel (investor) -->
+      <div class="panel" id="investor-catalog">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Каталог проектов</h2><p>Верифицированные проекты и компании</p></div>
+          <button class="btn-o btn-sm" onclick="showPanel('investor','dashboard')">Назад</button>
+        </div>
+        <div class="proj-filter">
+          <button class="pf-btn on">Все</button>
+          <button class="pf-btn">Инвест-проекты</button>
+          <button class="pf-btn">Стартапы</button>
+          <button class="pf-btn">Франшизы</button>
+          <button class="pf-btn">Продажа бизнеса</button>
+        </div>
+        <div class="grid3">
+          <div class="card locked-card">
+            <div class="card-body" style="filter:blur(4px);pointer-events:none">
+              <div style="font-size:var(--t0);color:var(--red);font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.4rem">Инвест-проект</div>
+              <h3 style="font-family:'Cormorant Garamond',serif;font-size:var(--t5);margin-bottom:.5rem">Агропромышленный хаб «Степной»</h3>
+              <p style="font-size:var(--t2)">Pre-A · 1.2 млрд KZT · Казахстан</p>
+            </div>
+            <div class="lock-msg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <p>Полное досье — только для подписчиков</p>
+              <button class="btn-r btn-sm" onclick="showPanel('investor','subscribe')">Подключить доступ</button>
+            </div>
+          </div>
+          <div class="card locked-card">
+            <div class="card-body" style="filter:blur(4px);pointer-events:none">
+              <div style="font-size:var(--t0);color:var(--blue);font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.4rem">Стартап</div>
+              <h3 style="font-family:'Cormorant Garamond',serif;font-size:var(--t5);margin-bottom:.5rem">PayFlow — B2B платёжная платформа</h3>
+              <p style="font-size:var(--t2)">Series A · 180 млн KZT · FinTech</p>
+            </div>
+            <div class="lock-msg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <p>Полное досье — только для подписчиков</p>
+              <button class="btn-r btn-sm" onclick="showPanel('investor','subscribe')">Подключить доступ</button>
+            </div>
+          </div>
+          <div class="card locked-card">
+            <div class="card-body" style="filter:blur(4px);pointer-events:none">
+              <div style="font-size:var(--t0);color:var(--green);font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.4rem">Инвест-проект</div>
+              <h3 style="font-family:'Cormorant Garamond',serif;font-size:var(--t5);margin-bottom:.5rem">МФК «AlmaCity Towers»</h3>
+              <p style="font-size:var(--t2)">Seed · от 500 млн KZT · Недвижимость</p>
+            </div>
+            <div class="lock-msg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <p>Полное досье — только для подписчиков</p>
+              <button class="btn-r btn-sm" onclick="showPanel('investor','subscribe')">Подключить доступ</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /type-investor -->
+
+    <!-- ──────── FRANCHISE PANELS ──────── -->
+    <div id="type-franchise" style="display:none">
+      <div class="panel on" id="franchise-dashboard">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Кабинет франшизы</h2><p>Управление профилем и поиск франчайзи</p></div>
+          <button class="btn-r btn-sm" onclick="showPanel('franchise','profile')">Заполнить профиль</button>
+        </div>
+        <div class="status-banner sb warning">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="sb-text"><h4>Профиль не верифицирован</h4><p>Пройдите верификацию для публикации франшизы в каталоге</p></div>
+          <div class="sb-actions"><button class="btn-r btn-sm" onclick="showPanel('franchise','profile')">Начать</button></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-icon r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="stat-val">0</div><div class="stat-label">Активных точек</div></div>
+          <div class="stat-card"><div class="stat-icon b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-val">—</div><div class="stat-label">Заявок от франчайзи</div></div>
+          <div class="stat-card"><div class="stat-icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></div><div class="stat-val">—</div><div class="stat-label">Статус верификации</div></div>
+          <div class="stat-card"><div class="stat-icon a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-val">—</div><div class="stat-label">Просмотры профиля</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><h3>Заявки от потенциальных франчайзи</h3></div>
+          <div class="card-body"><p style="color:var(--ink4);text-align:center;padding:2rem">Заявки появятся после публикации вашего профиля в каталоге.</p></div>
+        </div>
+      </div>
+
+      <div class="panel" id="franchise-profile">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Профиль франшизы</h2><p>Заполните данные для публикации в каталоге</p></div>
+          <div class="hd-actions">
+            <button class="btn-r btn-sm" onclick="alert('Профиль сохранён!')">Сохранить</button>
+            <button class="btn-o btn-sm" onclick="showPanel('franchise','dashboard')">Назад</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field full"><label>Название франшизы</label><input type="text" placeholder="Название вашего бренда"/></div>
+              <div class="field"><label>Отрасль</label><select><option>HoReCa</option><option>Ритейл</option><option>Услуги</option><option>Образование</option><option>Другое</option></select></div>
+              <div class="field"><label>Кол-во действующих точек</label><input type="number" placeholder="12"/></div>
+              <div class="field"><label>Паушальный взнос</label><input type="text" placeholder="от 35 000 000 KZT"/></div>
+              <div class="field"><label>Роялти</label><input type="text" placeholder="3% от оборота"/></div>
+              <div class="field"><label>Срок окупаемости</label><input type="text" placeholder="18 месяцев"/></div>
+              <div class="field full"><label>Описание франшизы</label><textarea placeholder="Опишите концепцию, преимущества, поддержку франчайзи..."></textarea></div>
+              <div class="field full"><label>Ссылка на презентацию / ROI-калькулятор</label><input type="text" placeholder="https://"/></div>
+            </div>
+            <button class="btn-r" style="margin-top:1rem" onclick="alert('Анкета отправлена на верификацию!')">Отправить на верификацию</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /type-franchise -->
+
+    <!-- ──────── SALE PANELS ──────── -->
+    <div id="type-sale" style="display:none">
+      <div class="panel on" id="sale-dashboard">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Купля-продажа бизнеса</h2><p>Конфиденциальное размещение и поиск объектов</p></div>
+          <div class="hd-actions">
+            <button class="btn-r btn-sm" onclick="showPanel('sale','list')">Разместить бизнес</button>
+            <button class="btn-b btn-sm" onclick="showPanel('sale','search')">Найти бизнес</button>
+          </div>
+        </div>
+        <div class="status-banner sb info">
+          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="sb-text"><h4>Конфиденциальность гарантирована</h4><p>Ваши объявления видны только верифицированным участникам. Контакты не раскрываются без вашего согласия.</p></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-icon r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/></svg></div><div class="stat-val">0</div><div class="stat-label">Размещённых объектов</div></div>
+          <div class="stat-card"><div class="stat-icon b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><div class="stat-val">40+</div><div class="stat-label">Объектов в каталоге</div></div>
+          <div class="stat-card"><div class="stat-icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-val">—</div><div class="stat-label">Запросов на объект</div></div>
+          <div class="stat-card"><div class="stat-icon a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></div><div class="stat-val">—</div><div class="stat-label">Статус верификации</div></div>
+        </div>
+      </div>
+
+      <div class="panel" id="sale-list">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Разместить бизнес на продажу</h2><p>Данные видны только верифицированным покупателям</p></div>
+          <div class="hd-actions">
+            <button class="btn-r btn-sm" onclick="alert('Объявление отправлено на проверку!')">Опубликовать</button>
+            <button class="btn-o btn-sm" onclick="showPanel('sale','dashboard')">Назад</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field full"><label>Тип объекта</label><select><option>Действующий бизнес</option><option>Доля в компании</option><option>Имущественный комплекс</option></select></div>
+              <div class="field"><label>Отрасль</label><select><option>Производство</option><option>Ритейл</option><option>Услуги</option><option>Логистика</option><option>IT</option><option>Другое</option></select></div>
+              <div class="field"><label>Город / регион</label><input type="text" placeholder="Алматы"/></div>
+              <div class="field"><label>Год основания</label><input type="number" placeholder="2015"/></div>
+              <div class="field"><label>Кол-во сотрудников</label><input type="number" placeholder="85"/></div>
+              <div class="field"><label>Годовая выручка (конфиденциально)</label><input type="text" placeholder="млн KZT"/></div>
+              <div class="field full"><label>Описание (публичное)</label><textarea placeholder="Кратко о бизнесе без раскрытия названия и деталей..."></textarea></div>
+              <div class="field full"><label>Причина продажи</label><textarea placeholder="Переезд, выход из бизнеса, смена деятельности..."></textarea></div>
+              <div class="field"><label>Финансовая отчётность (закрытое)</label><input type="file" style="font-size:var(--t2)"/></div>
+              <div class="field"><label>Стоимость бизнеса</label><select><option>Конфиденциально (по запросу)</option><option>Указать сумму</option></select></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="sale-search">
+        <div class="page-hd">
+          <div class="page-hd-left"><h2>Поиск бизнеса</h2><p>Верифицированные объекты с подтверждёнными показателями</p></div>
+          <button class="btn-o btn-sm" onclick="showPanel('sale','dashboard')">Назад</button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="form-grid" style="margin-bottom:1.25rem">
+              <div class="field"><label>Отрасль</label><select><option value="">Все отрасли</option><option>Производство</option><option>Ритейл</option><option>Услуги</option><option>IT</option></select></div>
+              <div class="field"><label>Город</label><select><option value="">Все города</option><option>Алматы</option><option>Астана</option><option>Шымкент</option></select></div>
+              <div class="field"><label>Кол-во сотрудников</label><select><option value="">Любое</option><option>До 20</option><option>20–100</option><option>Более 100</option></select></div>
+              <div class="field"><label>Срок работы</label><select><option value="">Любой</option><option>1–3 года</option><option>3–7 лет</option><option>Более 7 лет</option></select></div>
+            </div>
+            <button class="btn-r">Найти объекты</button>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem">
+          <div class="card locked-card">
+            <div class="card-body" style="filter:blur(3px);pointer-events:none">
+              <h3 style="font-family:'Cormorant Garamond',serif">Завод металлообработки — Алматы</h3>
+              <p style="font-size:var(--t2);margin-top:.4rem">Производство · 85 сотрудников · Основан 2015</p>
+            </div>
+            <div class="lock-msg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <p>Пройдите верификацию для просмотра деталей и контактов</p>
+              <a href="index.html#cta" class="btn-r btn-sm">Пройти верификацию</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /type-sale -->
+
+  </main>
+</div>
+
+<script>
+const sidebars = {
+  seeker: [
+    {label:'Мой кабинет',sections:[
+      {id:'seeker-dashboard',icon:'home',text:'Обзор'},
+      {id:'seeker-profile',icon:'edit',text:'Профиль проекта'},
+      {id:'seeker-verify',icon:'check',text:'Верификация',badge:'!'},
+      {id:'seeker-docs',icon:'file',text:'Документы'},
+      {id:'seeker-services',icon:'star',text:'Услуги'},
+    ]}
+  ],
+  investor:[
+    {label:'Кабинет инвестора',sections:[
+      {id:'investor-dashboard',icon:'home',text:'Обзор'},
+      {id:'investor-catalog',icon:'search',text:'Каталог проектов'},
+      {id:'investor-subscribe',icon:'card',text:'Подписка'},
+    ]}
+  ],
+  franchise:[
+    {label:'Моя франшиза',sections:[
+      {id:'franchise-dashboard',icon:'home',text:'Обзор'},
+      {id:'franchise-profile',icon:'edit',text:'Профиль франшизы'},
+    ]}
+  ],
+  sale:[
+    {label:'Купля-продажа',sections:[
+      {id:'sale-dashboard',icon:'home',text:'Обзор'},
+      {id:'sale-list',icon:'plus',text:'Разместить объект'},
+      {id:'sale-search',icon:'search',text:'Найти бизнес'},
+    ]}
+  ]
+};
+
+const icons = {
+  home:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 7l6-5 6 5v7a1 1 0 01-1 1H3a1 1 0 01-1-1V7z"/><rect x="6" y="10" width="4" height="4"/></svg>',
+  edit:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.5 2.5a1.414 1.414 0 012 2L5 12l-3 1 1-3 7.5-7.5z"/></svg>',
+  check:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 8 6.5 11.5 13 5"/></svg>',
+  file:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 1H3a1 1 0 00-1 1v12a1 1 0 001 1h10a1 1 0 001-1V6L9 1z"/><polyline points="9 1 9 6 14 6"/></svg>',
+  star:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><polygon points="8 1 10 6 15 6 11 9.5 12.5 14.5 8 11.5 3.5 14.5 5 9.5 1 6 6 6"/></svg>',
+  search:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>',
+  card:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="14" height="10" rx="1.5"/><line x1="1" y1="7" x2="15" y2="7"/></svg>',
+  plus:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>',
+};
+
+let currentType = 'seeker';
+let currentPanel = 'seeker-dashboard';
+
+function buildSidebar(type){
+  const sidebar = document.getElementById('sidebar');
+  const groups = sidebars[type];
+  sidebar.innerHTML = '';
+  groups.forEach(g => {
+    const sec = document.createElement('div');
+    sec.className = 'sidebar-section';
+    const lbl = document.createElement('div');
+    lbl.className = 'sidebar-label';
+    lbl.textContent = g.label;
+    sec.appendChild(lbl);
+    g.sections.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'sidebar-item' + (item.id === currentPanel ? ' on' : '');
+      div.innerHTML = icons[item.icon] + item.text + (item.badge ? `<span class="badge">${item.badge}</span>` : '');
+      div.onclick = () => showPanel(type, item.id.replace(type+'-',''));
+      sec.appendChild(div);
+    });
+    sidebar.appendChild(sec);
+  });
+}
+
+function showPanel(type, panelId){
+  currentPanel = type + '-' + panelId;
+  document.querySelectorAll('[id^="type-"]').forEach(d => d.style.display = 'none');
+  document.getElementById('type-' + type).style.display = 'block';
+  document.querySelectorAll('#type-' + type + ' .panel').forEach(p => p.classList.remove('on'));
+  const target = document.getElementById(currentPanel);
+  if(target) target.classList.add('on');
+  buildSidebar(type);
+  window.scrollTo(0,0);
+}
+
+function switchType(type, btn){
+  currentType = type;
+  currentPanel = type + '-dashboard';
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  showPanel(type, 'dashboard');
+}
+
+// Init
+buildSidebar('seeker');
+
+// Filter pills (non-functional UI demo)
+document.querySelectorAll('.pf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.closest('.proj-filter').querySelectorAll('.pf-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+  });
+});
+</script>
+
+<!-- ═══ Backend integration ═══ -->
 <script src="/assets/api.js"></script>
 <script>
-(function () {
+(async function () {
   if (!AC.requireAuth('/login.html')) return;
 
-  const alertBox = document.getElementById('alert');
-  function showAlert(type, text) {
-    alertBox.className = 'alert alert-' + type + ' show';
-    alertBox.textContent = text;
-    if (type === 'success') setTimeout(() => { alertBox.className = 'alert'; }, 4000);
+  const ROLE_TO_TYPE = { SEEKER: 'seeker', INVESTOR: 'investor', FRANCHISE: 'franchise', SALE: 'sale' };
+  const ROLE_LABEL = { SEEKER: 'Соискатель инвестиций', INVESTOR: 'Инвестор', FRANCHISE: 'Франчайзер / Франчайзи', SALE: 'Продавец / Покупатель бизнеса' };
+
+  const $ = (id) => document.getElementById(id);
+  const PROFILE_FIELDS = ['companyName','bin','industry','region','description','website','foundedYear','revenue','employees','investmentNeed','investmentGoal','contactName','contactPhone','contactEmail'];
+
+  function initials(name) {
+    if (!name) return '—';
+    const parts = name.trim().split(/\s+/);
+    return (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
   }
 
-  const pill = document.getElementById('status-pill');
-  function setStatus(status) {
-    const map = {
-      DRAFT: ['sp-draft', 'Черновик'],
-      SUBMITTED: ['sp-submitted', 'На проверке'],
-      VERIFIED: ['sp-verified', 'Верифицирован'],
-      REJECTED: ['sp-rejected', 'Отклонён'],
-    };
-    const [cls, label] = map[status] || ['sp-draft', 'Нет профиля'];
-    pill.className = 'status-pill ' + cls;
-    pill.textContent = label;
-  }
-
-  const fields = [
-    'companyName','bin','industry','region','foundedYear','revenue',
-    'employees','website','investmentNeed','investmentGoal','description',
-    'contactName','contactPhone','contactEmail',
-  ];
-
-  function fillForm(p) {
+  function fillProfileForm(p) {
     if (!p) return;
-    fields.forEach((f) => {
-      const el = document.getElementById(f);
-      if (el && p[f] !== null && p[f] !== undefined) el.value = p[f];
+    PROFILE_FIELDS.forEach((f) => {
+      const el = $('pf-' + f);
+      if (el && p[f] != null) el.value = p[f];
     });
   }
 
-  function readForm() {
+  function readProfileForm() {
     const data = {};
-    fields.forEach((f) => {
-      const el = document.getElementById(f);
-      let v = (el.value || '').trim();
-      if (v === '') { data[f] = null; return; }
-      if (f === 'foundedYear') data[f] = Number(v);
-      else data[f] = v;
+    PROFILE_FIELDS.forEach((f) => {
+      const el = $('pf-' + f);
+      if (!el) return;
+      let v = el.value.trim();
+      if (v === '') return;
+      if (f === 'foundedYear') {
+        const n = Number(v);
+        if (!isNaN(n)) data[f] = n;
+      } else {
+        data[f] = v;
+      }
     });
     return data;
   }
 
-  function lockIfSubmitted(status) {
-    const locked = status === 'SUBMITTED' || status === 'VERIFIED';
-    fields.forEach((f) => { document.getElementById(f).disabled = locked; });
-    document.getElementById('save-btn').disabled = locked;
-    document.getElementById('submit-btn').disabled = locked;
-    if (status === 'SUBMITTED') {
-      showAlert('info', 'Заявка отправлена на проверку. Модераторы свяжутся с вами.');
-    } else if (status === 'VERIFIED') {
-      showAlert('success', 'Компания верифицирована ✓');
-    }
+  function computeFill(p) {
+    if (!p) return 0;
+    const filled = PROFILE_FIELDS.filter((f) => p[f] != null && String(p[f]).trim() !== '').length;
+    return Math.round((filled / PROFILE_FIELDS.length) * 100);
   }
 
-  async function loadProfile() {
-    try {
-      const me = await AC.me();
-      document.getElementById('user-info').textContent = me.user.email;
-      const { profile } = await AC.getProfile();
-      if (profile) {
-        fillForm(profile);
-        setStatus(profile.status);
-        lockIfSubmitted(profile.status);
-        if (profile.status === 'REJECTED' && profile.rejectedReason) {
-          showAlert('error', 'Заявка отклонена: ' + profile.rejectedReason);
-        }
-      } else {
-        setStatus(null);
-      }
-    } catch (err) {
-      if (err.status === 401) { AC.clearSession(); window.location.href = '/login.html'; return; }
-      showAlert('error', err.message);
+  function updateStatusBanner(profile) {
+    const banner = $('status-banner');
+    const title = $('status-title');
+    const desc = $('status-desc');
+    const actions = $('status-actions');
+    banner.classList.remove('warning', 'success', 'info');
+
+    if (!profile || profile.status === 'DRAFT') {
+      banner.classList.add('warning');
+      title.textContent = 'Профиль не верифицирован';
+      desc.textContent = 'Заполните профиль и отправьте его на проверку';
+      actions.innerHTML = '<button class="btn-r btn-sm" onclick="showPanel(\'seeker\',\'profile\')">Заполнить профиль</button>';
+      $('stat-status').textContent = 'Черновик';
+    } else if (profile.status === 'SUBMITTED') {
+      banner.classList.add('info');
+      title.textContent = 'Заявка на проверке';
+      desc.textContent = 'Модераторы рассмотрят заявку и свяжутся с вами.';
+      actions.innerHTML = '';
+      $('stat-status').textContent = 'На проверке';
+    } else if (profile.status === 'VERIFIED') {
+      banner.classList.add('success');
+      title.textContent = 'Профиль верифицирован';
+      desc.textContent = 'Ваша карточка опубликована в каталоге ATAMEKEN Club.';
+      actions.innerHTML = '';
+      $('stat-status').textContent = 'Верифицирован';
+    } else if (profile.status === 'REJECTED') {
+      banner.classList.add('warning');
+      title.textContent = 'Заявка отклонена';
+      desc.textContent = profile.rejectedReason || 'Свяжитесь с оператором для уточнения.';
+      actions.innerHTML = '<button class="btn-r btn-sm" onclick="showPanel(\'seeker\',\'profile\')">Исправить и отправить снова</button>';
+      $('stat-status').textContent = 'Отклонён';
     }
+
+    $('stat-fill').textContent = computeFill(profile) + '%';
+    const locked = profile && (profile.status === 'SUBMITTED' || profile.status === 'VERIFIED');
+    document.querySelectorAll('#seeker-profile input, #seeker-profile select, #seeker-profile textarea').forEach((el) => {
+      el.disabled = locked;
+    });
+    $('btn-save-profile').disabled = locked;
+    $('btn-submit-verify').disabled = locked;
   }
 
-  document.getElementById('profile-form').addEventListener('submit', async (e) => {
+  // Header user info
+  const user = AC.getUser();
+  if (user) {
+    const name = user.fullName || user.email;
+    $('userNameDisplay').textContent = name;
+    $('avatarText').textContent = initials(name);
+    const sbName = $('sb-name'); if (sbName) sbName.textContent = name;
+    const sbAvatar = $('sb-avatar'); if (sbAvatar) sbAvatar.textContent = initials(name);
+    const sbType = $('sb-type-label'); if (sbType) sbType.textContent = ROLE_LABEL[user.role] || '';
+
+    // auto-select type tab by role
+    const type = ROLE_TO_TYPE[user.role] || 'seeker';
+    const btn = document.querySelector('.type-btn[data-type="' + type + '"]');
+    if (btn && type !== 'seeker') switchType(type, btn);
+  }
+
+  // Logout
+  $('btn-logout').addEventListener('click', async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('save-btn');
-    btn.disabled = true; btn.textContent = 'Сохраняем...';
-    try {
-      const { profile } = await AC.saveProfile(readForm());
-      setStatus(profile.status);
-      showAlert('success', 'Черновик сохранён');
-      document.getElementById('save-hint').textContent = 'Обновлено ' + new Date().toLocaleTimeString('ru');
-    } catch (err) {
-      const msg = err.details ? JSON.stringify(err.details.fieldErrors || err.details) : err.message;
-      showAlert('error', msg);
-    } finally {
-      btn.disabled = false; btn.textContent = 'Сохранить черновик';
-    }
-  });
-
-  document.getElementById('submit-btn').addEventListener('click', async () => {
-    if (!confirm('Отправить профиль на верификацию? После отправки редактирование будет заблокировано.')) return;
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true; btn.textContent = 'Отправляем...';
-    try {
-      // сначала сохраняем актуальные данные
-      await AC.saveProfile(readForm());
-      const { profile } = await AC.submitProfile();
-      setStatus(profile.status);
-      lockIfSubmitted(profile.status);
-      showAlert('success', 'Заявка отправлена модераторам');
-    } catch (err) {
-      showAlert('error', err.message);
-      btn.disabled = false; btn.textContent = 'Отправить на верификацию';
-    }
-  });
-
-  document.getElementById('logout-btn').addEventListener('click', async () => {
     await AC.logout();
     window.location.href = '/login.html';
   });
 
-  loadProfile();
+  // Load profile
+  let profile = null;
+  try {
+    const res = await AC.getProfile();
+    profile = res.profile;
+    fillProfileForm(profile);
+  } catch (err) {
+    console.warn('Failed to load profile:', err);
+  }
+  updateStatusBanner(profile);
+
+  // Save profile
+  $('btn-save-profile').addEventListener('click', async () => {
+    const btn = $('btn-save-profile');
+    const data = readProfileForm();
+    if (!data.companyName) { alert('Укажите название компании'); return; }
+    btn.disabled = true; btn.textContent = '...';
+    try {
+      const res = await AC.saveProfile(data);
+      profile = res.profile;
+      updateStatusBanner(profile);
+      btn.textContent = 'Сохранено ✓';
+      setTimeout(() => { btn.textContent = 'Сохранить'; btn.disabled = false; }, 1500);
+    } catch (err) {
+      alert(err.message || 'Ошибка сохранения');
+      btn.textContent = 'Сохранить'; btn.disabled = false;
+    }
+  });
+
+  // Submit for verification
+  $('btn-submit-verify').addEventListener('click', async () => {
+    if (!profile || !profile.companyName) {
+      alert('Сначала заполните профиль компании.');
+      showPanel('seeker', 'profile');
+      return;
+    }
+    if (!confirm('Отправить заявку на верификацию? После отправки редактирование будет недоступно до решения модератора.')) return;
+    const btn = $('btn-submit-verify');
+    btn.disabled = true; btn.textContent = '...';
+    try {
+      const res = await AC.submitProfile();
+      profile = res.profile;
+      updateStatusBanner(profile);
+      alert('Заявка отправлена! Модераторы свяжутся с вами.');
+      showPanel('seeker', 'dashboard');
+    } catch (err) {
+      alert(err.message || 'Ошибка отправки');
+    } finally {
+      btn.textContent = 'Отправить анкету на верификацию';
+      btn.disabled = false;
+    }
+  });
 })();
 </script>
 </body>
