@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Верификация профиля — ATAMEKEN Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#fff;--bg:#F7F8FA;--bg2:#EEF1F6;
+  --ink:#0F1620;--ink2:#2C3547;--ink3:#4A5568;--ink4:#718096;
+  --red:#C8282A;--red2:#E63B3D;--red-dim:rgba(200,40,42,.08);--red-dim2:rgba(200,40,42,.15);
+  --blue:#1A6FC4;--blue2:#2980D9;--blue-dim:rgba(26,111,196,.08);
+  --green:#16a34a;--green-dim:rgba(22,163,74,.08);
+  --amber:#B45309;--amber-dim:rgba(180,83,9,.08);
+  --border:#E2E8F0;--border2:#CBD5E0;
+  --t0:.7rem;--t1:.8rem;--t2:.9rem;--t3:1rem;--t4:1.125rem;--t5:1.375rem;--t6:1.75rem;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:var(--t3);font-weight:400;line-height:1.65}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.2}
+p{font-size:var(--t3);line-height:1.7;color:var(--ink3)}
+a{color:inherit;text-decoration:none}
+strong{color:var(--ink);font-weight:600}
+
+.top-nav{background:#fff;border-bottom:1px solid var(--border);padding:.7rem 1.75rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,22,32,.06)}
+.tn-logo{display:flex;align-items:center;gap:.6rem}
+.tn-emb{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tn-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;letter-spacing:.08em;color:var(--ink)}
+.tn-right{display:flex;align-items:center;gap:.85rem}
+.tn-user{display:flex;align-items:center;gap:.55rem;font-size:var(--t2);color:var(--ink3)}
+.tn-avatar{width:30px;height:30px;border-radius:50%;background:var(--red-dim2);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--red)}
+.tn-back{font-size:var(--t2);font-weight:500;color:var(--ink3);display:flex;align-items:center;gap:.35rem;transition:color .2s}
+.tn-back:hover{color:var(--red)}
+.tn-back svg{width:13px;height:13px}
+
+.wrap{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+
+.page-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.75rem;gap:1rem;flex-wrap:wrap;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.page-hd-left h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--ink)}
+.page-hd-left p{font-size:var(--t2);color:var(--ink3);margin-top:.2rem}
+.hd-actions{display:flex;gap:.65rem;flex-wrap:wrap}
+
+.btn-r{background:var(--red);color:#fff;border:none;padding:.65rem 1.5rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;border-radius:2px;transition:all .22s;display:inline-block}
+.btn-r:hover{background:var(--red2)}
+.btn-r:disabled{opacity:.6;cursor:not-allowed}
+.btn-o{background:none;border:1.5px solid var(--border2);color:var(--ink2);padding:.63rem 1.5rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:500;cursor:pointer;border-radius:2px;transition:all .22s;display:inline-block}
+.btn-o:hover{border-color:var(--red);color:var(--red)}
+.btn-sm{padding:.42rem 1rem;font-size:var(--t1)}
+
+.status-banner{border-radius:6px;padding:1.25rem 1.5rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:1rem}
+.sb-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-icon svg{width:18px;height:18px}
+.sb-text h4{font-size:var(--t3);font-weight:600;margin-bottom:.2rem}
+.sb-text p{font-size:var(--t2);margin:0}
+.sb.warning{background:#fffbeb;border:1px solid #fbbf24}
+.sb.warning .sb-icon{background:#fef3c7;color:#d97706}
+.sb.warning .sb-text h4{color:#92400e}
+.sb.warning .sb-text p{color:#a16207}
+.sb.success{background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.2)}
+.sb.success .sb-icon{background:var(--green-dim);color:var(--green)}
+.sb.success .sb-text h4{color:#166534}
+.sb.success .sb-text p{color:#15803d}
+.sb.info{background:var(--blue-dim);border:1px solid rgba(26,111,196,.2)}
+.sb.info .sb-icon{background:rgba(26,111,196,.12);color:var(--blue)}
+.sb.info .sb-text h4{color:#1e3a5f}
+.sb.info .sb-text p{color:var(--blue)}
+
+.progress-steps{display:flex;gap:0;margin-bottom:1.75rem;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(15,22,32,.06)}
+.ps{flex:1;padding:.7rem .5rem;text-align:center;position:relative;border-right:1px solid var(--border)}
+.ps:last-child{border-right:none}
+.ps-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;margin:0 auto .35rem;background:var(--bg2);color:var(--ink4)}
+.ps-label{font-size:.65rem;font-weight:500;color:var(--ink4);letter-spacing:.04em}
+.ps.done .ps-num{background:var(--green);color:#fff}
+.ps.done .ps-label{color:var(--green)}
+.ps.active .ps-num{background:var(--red);color:#fff}
+.ps.active .ps-label{color:var(--red);font-weight:700}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 4px rgba(15,22,32,.06)}
+.card-hd{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:8px 8px 0 0}
+.card-hd h3{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink)}
+.card-body{padding:1.4rem}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{margin-bottom:1rem}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:var(--t1);font-weight:600;color:var(--ink2);margin-bottom:.38rem}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);padding:.6rem .9rem;font-family:'Inter',sans-serif;font-size:var(--t2);outline:none;transition:border-color .2s;border-radius:2px;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);background:#fff}
+.field textarea{resize:vertical;min-height:80px}
+.field.full{grid-column:1/-1}
+.field-hint{font-size:var(--t0);color:var(--ink4);margin-top:.3rem}
+
+.bar{background:var(--border);border-radius:4px;height:6px;overflow:hidden;margin:.35rem 0 1rem}
+.bar-fill{height:100%;background:var(--red);border-radius:4px;transition:width .4s}
+
+.step-list{display:flex;flex-direction:column;gap:1rem}
+.step-row{display:flex;gap:.85rem}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--border2);color:var(--ink3);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.step-num.on{background:var(--red);color:#fff}
+.step-title{font-size:var(--t2);font-weight:600;color:var(--ink);margin-bottom:.2rem}
+.step-text{font-size:var(--t2);color:var(--ink3)}
+
+.actions-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+
+@media(max-width:900px){
+  .grid2,.form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:1}
+  .progress-steps{flex-wrap:wrap}
+  .ps{flex:1 1 33%}
+}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <a href="/" class="tn-logo">
+    <div class="tn-emb">
+    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
+      <circle cx="30" cy="30" r="28.5" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.5"/>
+      <defs><path id="cc" d="M30,30 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0"/></defs>
+      <text font-family="Inter,Arial,sans-serif" font-size="4.8" font-weight="600" fill="#C5963A" letter-spacing="0.9">
+        <textPath href="#cc" startOffset="3%">ATAMEKEN Club • Business Community •</textPath>
+      </text>
+      <path d="M10 38 Q30 16 50 38" stroke="#C5963A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <line x1="8" y1="38" x2="52" y2="38" stroke="#C5963A" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="22" y1="38" x2="22" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="38" y1="38" x2="38" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="30" y1="18.5" x2="22" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
+      <line x1="30" y1="18.5" x2="38" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
+      <circle cx="30" cy="18.5" r="1.4" fill="#C5963A"/>
+    </svg>
+  </div>
+    <span class="tn-name">ATAMEKEN CLUB</span>
+  </a>
+  <div class="tn-right">
+    <a href="/cabinet.html" class="tn-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 12L6 8l4-4"/></svg>
+      В кабинет
+    </a>
+    <a href="#" id="btn-logout" class="tn-back">Выйти</a>
+    <div class="tn-user">
+      <div class="tn-avatar" id="avatarText">—</div>
+      <span id="userNameDisplay">Загрузка…</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="page-hd">
+    <div class="page-hd-left">
+      <h2>Верификация профиля</h2>
+      <p>Заполните анкету компании или проекта и отправьте её на проверку оператору</p>
+    </div>
+    <div class="hd-actions">
+      <a href="/cabinet.html" class="btn-o btn-sm">Назад в кабинет</a>
+    </div>
+  </div>
+
+  <!-- Status banner -->
+  <div id="status-banner" class="status-banner sb warning">
+    <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+    <div class="sb-text">
+      <h4 id="status-title">Профиль не верифицирован</h4>
+      <p id="status-desc">Заполните анкету и отправьте её на проверку</p>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-steps" id="progress-steps">
+    <div class="ps done"><div class="ps-num">✓</div><div class="ps-label">Регистрация</div></div>
+    <div class="ps active" id="ps-form"><div class="ps-num">2</div><div class="ps-label">Анкета</div></div>
+    <div class="ps" id="ps-review"><div class="ps-num">3</div><div class="ps-label">Проверка</div></div>
+    <div class="ps" id="ps-docs"><div class="ps-num">4</div><div class="ps-label">Документы</div></div>
+    <div class="ps" id="ps-publish"><div class="ps-num">5</div><div class="ps-label">Публикация</div></div>
+  </div>
+
+  <!-- Fill progress bar -->
+  <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:var(--t2)">
+      <span style="font-weight:600;color:var(--ink)">Заполненность анкеты</span>
+      <span id="fill-pct" style="font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--red)">0%</span>
+    </div>
+    <div class="bar"><div class="bar-fill" id="fill-bar" style="width:0%"></div></div>
+    <p style="font-size:var(--t1);color:var(--ink4);margin:0">Минимум: название компании, отрасль, регион, БИН и описание</p>
+  </div>
+
+  <!-- Form -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hd"><h3>Основные сведения</h3></div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="field full"><label>Полное наименование компании / проекта *</label><input id="pf-companyName" type="text" placeholder="ТОО «Название» или Проект «Название»"/></div>
+          <div class="field"><label>Год основания</label><input id="pf-foundedYear" type="number" min="1900" max="2100" placeholder="2019"/></div>
+          <div class="field"><label>Отрасль *</label>
+            <select id="pf-industry"><option value="">—</option><option>Агропром</option><option>IT / FinTech</option><option>Недвижимость</option><option>Логистика</option><option>Энергетика</option><option>HoReCa</option><option>Строительство</option><option>Медицина</option><option>Другое</option></select>
+          </div>
+          <div class="field"><label>Страна / город *</label><input id="pf-region" type="text" placeholder="Алматы, Казахстан"/></div>
+          <div class="field"><label>БИН / регистрационный номер *</label><input id="pf-bin" type="text" placeholder="000000000000"/></div>
+          <div class="field full"><label>Сайт / соцсети</label><input id="pf-website" type="text" placeholder="https://"/></div>
+          <div class="field full"><label>Публичная выжимка * <span style="font-weight:400;color:var(--ink4)">(краткое описание для каталога)</span></label><textarea id="pf-description" placeholder="Кратко опишите ваш проект или компанию. Что делаете, для кого, какой результат..."></textarea><div class="field-hint">Минимум 30 символов. Будет видно инвесторам.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd"><h3>Инвестиционные параметры</h3></div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="field"><label>Годовая выручка</label><input id="pf-revenue" type="text" placeholder="Например: 150 млн KZT"/></div>
+          <div class="field"><label>Сотрудников</label><input id="pf-employees" type="text" placeholder="Например: 25"/></div>
+          <div class="field"><label>Запрашиваемые инвестиции</label><input id="pf-investmentNeed" type="text" placeholder="Например: 150 млн KZT"/></div>
+          <div class="field full"><label>Цель инвестиций</label><textarea id="pf-investmentGoal" placeholder="На что пойдут средства"></textarea></div>
+          <div class="field"><label>Контактное лицо</label><input id="pf-contactName" type="text" placeholder="Имя представителя"/></div>
+          <div class="field"><label>Контактный телефон</label><input id="pf-contactPhone" type="tel" placeholder="+7 (___) ___-__-__"/></div>
+          <div class="field full"><label>Контактный email</label><input id="pf-contactEmail" type="email" placeholder="contact@company.kz"/></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What happens next -->
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-hd"><h3>Что происходит дальше?</h3></div>
+    <div class="card-body">
+      <div class="step-list">
+        <div class="step-row">
+          <div class="step-num on">1</div>
+          <div><div class="step-title">Вы отправляете анкету</div><div class="step-text">Нажмите «Отправить на верификацию» ниже. После отправки редактирование будет недоступно до решения модератора.</div></div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">2</div>
+          <div><div class="step-title">Оператор проверяет данные</div><div class="step-text">В течение 2 рабочих дней мы изучим анкету и свяжемся с вами.</div></div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">3</div>
+          <div><div class="step-title">Подписание документов</div><div class="step-text">Меморандум, NDA и договор об использовании данных — онлайн или офлайн.</div></div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">4</div>
+          <div><div class="step-title">Публикация карточки</div><div class="step-text">Ваш профиль появляется в каталоге. Полные данные — только для верифицированных инвесторов.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="card">
+    <div class="card-body">
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:flex-end">
+        <button id="btn-save-profile" class="btn-o">Сохранить черновик</button>
+        <button id="btn-submit-verify" class="btn-r">Отправить на верификацию</button>
+      </div>
+      <p style="font-size:var(--t1);color:var(--ink4);margin-top:.75rem;text-align:right">Нажимая «Отправить», вы соглашаетесь с обработкой данных и условиями платформы.</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+(async function () {
+  if (!AC.requireAuth('/login.html')) return;
+
+  const $ = (id) => document.getElementById(id);
+  const PROFILE_FIELDS = ['companyName','bin','industry','region','description','website','foundedYear','revenue','employees','investmentNeed','investmentGoal','contactName','contactPhone','contactEmail'];
+
+  function initials(name) {
+    if (!name) return '—';
+    const parts = name.trim().split(/\s+/);
+    return (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
+  }
+
+  function fillProfileForm(p) {
+    if (!p) return;
+    PROFILE_FIELDS.forEach((f) => {
+      const el = $('pf-' + f);
+      if (el && p[f] != null) el.value = p[f];
+    });
+    updateFillBar();
+  }
+
+  function readProfileForm() {
+    const data = {};
+    PROFILE_FIELDS.forEach((f) => {
+      const el = $('pf-' + f);
+      if (!el) return;
+      const v = el.value.trim();
+      if (v === '') return;
+      if (f === 'foundedYear') {
+        const n = Number(v);
+        if (!isNaN(n)) data[f] = n;
+      } else {
+        data[f] = v;
+      }
+    });
+    return data;
+  }
+
+  function countFilled() {
+    return PROFILE_FIELDS.filter((f) => {
+      const el = $('pf-' + f);
+      return el && el.value.trim() !== '';
+    }).length;
+  }
+
+  function updateFillBar() {
+    const pct = Math.round((countFilled() / PROFILE_FIELDS.length) * 100);
+    $('fill-pct').textContent = pct + '%';
+    $('fill-bar').style.width = pct + '%';
+  }
+
+  function setStep(status) {
+    const steps = ['ps-form','ps-review','ps-docs','ps-publish'];
+    steps.forEach((id) => {
+      const el = $(id);
+      if (el) { el.classList.remove('active','done'); }
+    });
+    if (status === 'DRAFT' || !status) { $('ps-form').classList.add('active'); }
+    else if (status === 'SUBMITTED') { $('ps-form').classList.add('done'); $('ps-review').classList.add('active'); }
+    else if (status === 'VERIFIED') { $('ps-form').classList.add('done'); $('ps-review').classList.add('done'); $('ps-docs').classList.add('active'); }
+    else if (status === 'REJECTED') { $('ps-form').classList.add('active'); }
+  }
+
+  function updateStatusBanner(profile) {
+    const banner = $('status-banner');
+    const title = $('status-title');
+    const desc = $('status-desc');
+    banner.classList.remove('warning','success','info');
+
+    if (!profile || profile.status === 'DRAFT') {
+      banner.classList.add('warning');
+      title.textContent = 'Профиль не верифицирован';
+      desc.textContent = 'Заполните анкету и отправьте её на проверку';
+    } else if (profile.status === 'SUBMITTED') {
+      banner.classList.add('info');
+      title.textContent = 'Заявка на проверке';
+      desc.textContent = 'Модераторы рассмотрят заявку в течение 2 рабочих дней.';
+    } else if (profile.status === 'VERIFIED') {
+      banner.classList.add('success');
+      title.textContent = 'Профиль верифицирован';
+      desc.textContent = 'Ваша карточка опубликована в каталоге ATAMEKEN Club.';
+    } else if (profile.status === 'REJECTED') {
+      banner.classList.add('warning');
+      title.textContent = 'Заявка отклонена';
+      desc.textContent = profile.rejectedReason || 'Свяжитесь с оператором для уточнения и отправьте заявку повторно.';
+    }
+
+    setStep(profile?.status);
+
+    const locked = profile && (profile.status === 'SUBMITTED' || profile.status === 'VERIFIED');
+    document.querySelectorAll('.field input, .field select, .field textarea').forEach((el) => { el.disabled = locked; });
+    $('btn-save-profile').disabled = locked;
+    $('btn-submit-verify').disabled = locked;
+    if (locked) {
+      $('btn-submit-verify').textContent = profile.status === 'VERIFIED' ? 'Профиль верифицирован' : 'Отправлено — ожидает проверки';
+    }
+  }
+
+  // Header user
+  const user = AC.getUser();
+  if (user) {
+    const name = user.fullName || user.email;
+    $('userNameDisplay').textContent = name;
+    $('avatarText').textContent = initials(name);
+  }
+
+  $('btn-logout').addEventListener('click', async (e) => {
+    e.preventDefault();
+    await AC.logout();
+    window.location.href = '/login.html';
+  });
+
+  // Live fill bar
+  PROFILE_FIELDS.forEach((f) => {
+    const el = $('pf-' + f);
+    if (el) el.addEventListener('input', updateFillBar);
+  });
+
+  // Load profile
+  let profile = null;
+  try {
+    const res = await AC.getProfile();
+    profile = res.profile;
+    fillProfileForm(profile);
+  } catch (err) {
+    console.warn('Failed to load profile:', err);
+  }
+  updateStatusBanner(profile);
+
+  // Save
+  $('btn-save-profile').addEventListener('click', async () => {
+    const btn = $('btn-save-profile');
+    const data = readProfileForm();
+    if (!data.companyName) { alert('Укажите название компании'); return; }
+    btn.disabled = true; const prev = btn.textContent; btn.textContent = '...';
+    try {
+      const res = await AC.saveProfile(data);
+      profile = res.profile;
+      updateStatusBanner(profile);
+      btn.textContent = 'Сохранено ✓';
+      setTimeout(() => { btn.textContent = prev; btn.disabled = false; }, 1500);
+    } catch (err) {
+      alert(err.message || 'Ошибка сохранения');
+      btn.textContent = prev; btn.disabled = false;
+    }
+  });
+
+  // Submit
+  $('btn-submit-verify').addEventListener('click', async () => {
+    // save latest edits first
+    const data = readProfileForm();
+    if (!data.companyName || !data.industry || !data.region || !data.bin || !data.description) {
+      alert('Заполните обязательные поля: название, отрасль, регион, БИН, описание.');
+      return;
+    }
+    if (!confirm('Отправить заявку на верификацию? После отправки редактирование будет недоступно до решения модератора.')) return;
+    const btn = $('btn-submit-verify');
+    btn.disabled = true; btn.textContent = '...';
+    try {
+      await AC.saveProfile(data);
+      const res = await AC.submitProfile();
+      profile = res.profile;
+      updateStatusBanner(profile);
+      alert('Заявка отправлена! Модераторы свяжутся с вами в течение 2 рабочих дней.');
+    } catch (err) {
+      alert(err.message || 'Ошибка отправки');
+      btn.disabled = false; btn.textContent = 'Отправить на верификацию';
+    }
+  });
+})();
+</script>
+</body>
+</html>
