@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Модерация — ATAMEKEN Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/style.css"/>
+<style>
+  .container { max-width: 1200px; }
+  .filter-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; background: #fff; border: 1px solid var(--border); border-radius: 4px; width: fit-content; overflow: hidden; }
+  .filter-tab { padding: .6rem 1.2rem; font-size: .85rem; font-weight: 500; color: var(--ink3); cursor: pointer; background: none; border: none; border-right: 1px solid var(--border); font-family: inherit; transition: all .2s; }
+  .filter-tab:last-child { border-right: none; }
+  .filter-tab.on { background: var(--red); color: #fff; }
+  .filter-tab:not(.on):hover { background: var(--red-dim); color: var(--red); }
+  .expand-row td { padding: 1rem; background: var(--bg); }
+  .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; font-size: .85rem; }
+  .detail-grid .k { color: var(--ink4); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
+  .detail-grid .v { color: var(--ink2); word-break: break-word; }
+  .detail-desc { margin-top: .85rem; padding-top: .85rem; border-top: 1px solid var(--border); font-size: .9rem; color: var(--ink3); white-space: pre-wrap; }
+  .toggle-row { cursor: pointer; }
+  .toggle-row:hover td { background: var(--bg); }
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <a href="/admin.html" class="tn-logo">
+    <div class="tn-emb">A</div>
+    <div class="tn-name">ATAMEKEN · МОДЕРАЦИЯ</div>
+  </a>
+  <div class="tn-right">
+    <div class="tn-user" id="user-info">—</div>
+    <button class="btn btn-ghost small" id="logout-btn">Выйти</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="page-hd">
+    <div class="page-hd-left">
+      <h1>Заявки на верификацию</h1>
+      <p>Рассматривайте профили компаний и подтверждайте доступ</p>
+    </div>
+    <button class="btn btn-out" id="refresh-btn">Обновить</button>
+  </div>
+
+  <div id="alert" class="alert"></div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab on" data-status="SUBMITTED">На проверке</button>
+    <button class="filter-tab" data-status="VERIFIED">Верифицированы</button>
+    <button class="filter-tab" data-status="REJECTED">Отклонены</button>
+    <button class="filter-tab" data-status="">Все</button>
+  </div>
+
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Компания</th>
+          <th>Тип</th>
+          <th>Контакт</th>
+          <th>Отправлено</th>
+          <th>Статус</th>
+          <th style="text-align:right">Действия</th>
+        </tr>
+      </thead>
+      <tbody id="rows">
+        <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--ink4)">Загрузка...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+(function () {
+  if (!AC.requireAuth('/login.html')) return;
+
+  const alertBox = document.getElementById('alert');
+  function showAlert(type, text) {
+    alertBox.className = 'alert alert-' + type + ' show';
+    alertBox.textContent = text;
+    if (type === 'success') setTimeout(() => { alertBox.className = 'alert'; }, 3500);
+  }
+
+  const ROLE_LABEL = {
+    SEEKER: 'Соискатель',
+    INVESTOR: 'Инвестор',
+    FRANCHISE: 'Франчайзи',
+    SALE: 'Продажа бизнеса',
+  };
+  const STATUS_MAP = {
+    DRAFT: ['sp-draft', 'Черновик'],
+    SUBMITTED: ['sp-submitted', 'На проверке'],
+    VERIFIED: ['sp-verified', 'Верифицирован'],
+    REJECTED: ['sp-rejected', 'Отклонён'],
+  };
+
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) =>
+      ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  let currentStatus = 'SUBMITTED';
+
+  async function load() {
+    const tbody = document.getElementById('rows');
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--ink4)">Загрузка...</td></tr>';
+    try {
+      const { profiles } = await AC.adminList(currentStatus);
+      if (!profiles.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--ink4)">Нет заявок</td></tr>';
+        return;
+      }
+      tbody.innerHTML = profiles.map((p) => {
+        const [cls, label] = STATUS_MAP[p.status] || ['sp-draft', p.status];
+        const when = p.submittedAt ? new Date(p.submittedAt).toLocaleString('ru') : '—';
+        const actions = p.status === 'SUBMITTED'
+          ? `<div class="row-actions" style="justify-content:flex-end">
+               <button class="btn btn-red small" data-act="verify" data-id="${p.id}">Одобрить</button>
+               <button class="btn btn-out small" data-act="reject" data-id="${p.id}">Отклонить</button>
+             </div>`
+          : p.status === 'REJECTED' && p.rejectedReason
+            ? `<div class="small muted" style="text-align:right">Причина: ${esc(p.rejectedReason)}</div>`
+            : '';
+        return `
+          <tr class="toggle-row" data-id="${p.id}">
+            <td>
+              <strong style="color:var(--ink)">${esc(p.companyName)}</strong>
+              ${p.bin ? `<div class="small muted">БИН: ${esc(p.bin)}</div>` : ''}
+            </td>
+            <td>${esc(ROLE_LABEL[p.user.role] || p.user.role)}</td>
+            <td>
+              <div>${esc(p.user.fullName || '—')}</div>
+              <div class="small muted">${esc(p.user.email)}</div>
+              ${p.user.phone ? `<div class="small muted">${esc(p.user.phone)}</div>` : ''}
+            </td>
+            <td class="small">${when}</td>
+            <td><span class="status-pill ${cls}">${label}</span></td>
+            <td style="text-align:right">${actions}</td>
+          </tr>
+          <tr class="expand-row" id="detail-${p.id}" style="display:none">
+            <td colspan="6">
+              <div class="detail-grid">
+                <div><div class="k">Отрасль</div><div class="v">${esc(p.industry) || '—'}</div></div>
+                <div><div class="k">Регион</div><div class="v">${esc(p.region) || '—'}</div></div>
+                <div><div class="k">Год основания</div><div class="v">${esc(p.foundedYear) || '—'}</div></div>
+                <div><div class="k">Выручка</div><div class="v">${esc(p.revenue) || '—'}</div></div>
+                <div><div class="k">Сотрудников</div><div class="v">${esc(p.employees) || '—'}</div></div>
+                <div><div class="k">Сайт</div><div class="v">${p.website ? `<a href="${esc(p.website)}" target="_blank" style="color:var(--red)">${esc(p.website)}</a>` : '—'}</div></div>
+                <div><div class="k">Потребность в инвестициях</div><div class="v">${esc(p.investmentNeed) || '—'}</div></div>
+                <div><div class="k">Цель инвестиций</div><div class="v">${esc(p.investmentGoal) || '—'}</div></div>
+                <div><div class="k">Контакт</div><div class="v">${esc(p.contactPhone || p.user.phone || '—')}</div></div>
+              </div>
+              ${p.description ? `<div class="detail-desc">${esc(p.description)}</div>` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // row toggle
+      tbody.querySelectorAll('.toggle-row').forEach((tr) => {
+        tr.addEventListener('click', (e) => {
+          if (e.target.closest('button')) return; // don't toggle on action click
+          const d = document.getElementById('detail-' + tr.dataset.id);
+          d.style.display = d.style.display === 'none' ? 'table-row' : 'none';
+        });
+      });
+
+      // verify/reject
+      tbody.querySelectorAll('[data-act]').forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          const act = btn.dataset.act;
+          btn.disabled = true;
+          try {
+            if (act === 'verify') {
+              await AC.adminVerify(id);
+              showAlert('success', 'Профиль верифицирован');
+            } else {
+              const reason = prompt('Причина отклонения:');
+              if (!reason || reason.trim().length < 3) { btn.disabled = false; return; }
+              await AC.adminReject(id, reason.trim());
+              showAlert('success', 'Профиль отклонён');
+            }
+            await load();
+          } catch (err) {
+            showAlert('error', err.message);
+            btn.disabled = false;
+          }
+        });
+      });
+    } catch (err) {
+      if (err.status === 401) { AC.clearSession(); window.location.href = '/login.html'; return; }
+      if (err.status === 403) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--red)">Доступ только для модераторов. Ваш email должен быть в ADMIN_EMAILS.</td></tr>';
+        return;
+      }
+      showAlert('error', err.message);
+    }
+  }
+
+  document.querySelectorAll('.filter-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach((t) => t.classList.remove('on'));
+      tab.classList.add('on');
+      currentStatus = tab.dataset.status;
+      load();
+    });
+  });
+
+  document.getElementById('refresh-btn').addEventListener('click', load);
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await AC.logout();
+    window.location.href = '/login.html';
+  });
+
+  AC.me().then((m) => {
+    document.getElementById('user-info').textContent = m.user.email;
+  }).catch(() => {});
+
+  load();
+})();
+</script>
+</body>
+</html>

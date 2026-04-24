@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Регистрация — ATAMEKEN Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="tn-emb">A</div>
+      <div class="auth-brand-name">ATAMEKEN CLUB</div>
+      <div class="auth-brand-sub">Деловая экосистема · Казахстан</div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <h2>Регистрация</h2>
+        <p>Создайте аккаунт — регистрация бесплатна</p>
+      </div>
+
+      <div id="alert" class="alert"></div>
+
+      <form id="reg-form">
+        <div class="field">
+          <label>Тип участника</label>
+          <div class="role-grid">
+            <button type="button" class="role-opt on" data-role="SEEKER">Соискатель инвестиций</button>
+            <button type="button" class="role-opt" data-role="INVESTOR">Инвестор</button>
+            <button type="button" class="role-opt" data-role="FRANCHISE">Франчайзер / Франчайзи</button>
+            <button type="button" class="role-opt" data-role="SALE">Продавец / Покупатель бизнеса</button>
+          </div>
+          <input type="hidden" name="role" id="role-input" value="SEEKER"/>
+        </div>
+
+        <div class="form-grid">
+          <div class="field full">
+            <label for="fullName">ФИО</label>
+            <input type="text" id="fullName" name="fullName" required placeholder="Айбек Нұрланов"/>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email"/>
+          </div>
+          <div class="field">
+            <label for="phone">Телефон</label>
+            <input type="tel" id="phone" name="phone" placeholder="+7 701 000 0000"/>
+          </div>
+          <div class="field full">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Минимум 8 символов"/>
+            <div class="field-hint">Не менее 8 символов.</div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-red btn-block mt-1" id="submit-btn">Создать аккаунт</button>
+      </form>
+    </div>
+
+    <div class="auth-foot">
+      Уже есть аккаунт? <a href="/login.html">Войти</a>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+(function () {
+  // role picker
+  document.querySelectorAll('.role-opt').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.role-opt').forEach((b) => b.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById('role-input').value = btn.dataset.role;
+    });
+  });
+
+  const alertBox = document.getElementById('alert');
+  function showAlert(type, text) {
+    alertBox.className = 'alert alert-' + type + ' show';
+    alertBox.textContent = text;
+  }
+  function hideAlert() { alertBox.className = 'alert'; }
+
+  // already logged in → go to cabinet
+  if (AC.getToken()) window.location.href = '/cabinet.html';
+
+  document.getElementById('reg-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideAlert();
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Создаём...';
+
+    const payload = {
+      email: document.getElementById('email').value.trim().toLowerCase(),
+      password: document.getElementById('password').value,
+      role: document.getElementById('role-input').value,
+      fullName: document.getElementById('fullName').value.trim(),
+      phone: document.getElementById('phone').value.trim() || undefined,
+    };
+
+    try {
+      await AC.register(payload);
+      showAlert('success', 'Аккаунт создан. Перенаправляем...');
+      setTimeout(() => { window.location.href = '/cabinet.html'; }, 600);
+    } catch (err) {
+      showAlert('error', err.message || 'Не удалось зарегистрироваться');
+      btn.disabled = false;
+      btn.textContent = 'Создать аккаунт';
+    }
+  });
+})();
+</script>
+</body>
+</html>

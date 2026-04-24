@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Личный кабинет — ATAMEKEN Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+
+<div class="top-nav">
+  <a href="/cabinet.html" class="tn-logo">
+    <div class="tn-emb">A</div>
+    <div class="tn-name">ATAMEKEN CLUB</div>
+  </a>
+  <div class="tn-right">
+    <div class="tn-user" id="user-info">—</div>
+    <button class="btn btn-ghost small" id="logout-btn">Выйти</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="page-hd">
+    <div class="page-hd-left">
+      <h1>Профиль компании</h1>
+      <p>Заполните данные — они будут видны модераторам при проверке</p>
+    </div>
+    <div><span class="status-pill" id="status-pill">Загрузка...</span></div>
+  </div>
+
+  <div id="alert" class="alert"></div>
+
+  <div class="card">
+    <form id="profile-form">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="companyName">Название компании / проекта *</label>
+          <input type="text" id="companyName" required maxlength="200"/>
+        </div>
+        <div class="field">
+          <label for="bin">БИН / ИИН</label>
+          <input type="text" id="bin" maxlength="32"/>
+        </div>
+        <div class="field">
+          <label for="industry">Отрасль</label>
+          <input type="text" id="industry" placeholder="IT, Агро, HoReCa..." maxlength="120"/>
+        </div>
+        <div class="field">
+          <label for="region">Регион</label>
+          <input type="text" id="region" placeholder="Алматы, Астана..." maxlength="120"/>
+        </div>
+        <div class="field">
+          <label for="foundedYear">Год основания</label>
+          <input type="number" id="foundedYear" min="1900" max="2100"/>
+        </div>
+        <div class="field">
+          <label for="revenue">Годовая выручка</label>
+          <input type="text" id="revenue" placeholder="например, 1.2 млрд ₸/год" maxlength="120"/>
+        </div>
+        <div class="field">
+          <label for="employees">Сотрудников</label>
+          <input type="text" id="employees" placeholder="например, 50" maxlength="60"/>
+        </div>
+        <div class="field">
+          <label for="website">Сайт</label>
+          <input type="url" id="website" placeholder="https://..." maxlength="200"/>
+        </div>
+        <div class="field">
+          <label for="investmentNeed">Потребность в инвестициях</label>
+          <input type="text" id="investmentNeed" placeholder="например, 500 млн ₸" maxlength="120"/>
+        </div>
+        <div class="field">
+          <label for="investmentGoal">Цель инвестиций</label>
+          <input type="text" id="investmentGoal" placeholder="на что пойдут средства" maxlength="1000"/>
+        </div>
+
+        <div class="field full">
+          <label for="description">Описание компании *</label>
+          <textarea id="description" required maxlength="4000" placeholder="Расскажите, чем занимается компания, какие результаты, что ищете"></textarea>
+          <div class="field-hint">От 30 символов. Будет видно инвесторам.</div>
+        </div>
+
+        <div class="field full" style="border-top:1px solid var(--border);padding-top:1rem;margin-top:.5rem">
+          <label style="font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4)">Контакт для связи</label>
+        </div>
+        <div class="field">
+          <label for="contactName">Контактное лицо</label>
+          <input type="text" id="contactName" maxlength="120"/>
+        </div>
+        <div class="field">
+          <label for="contactPhone">Телефон</label>
+          <input type="tel" id="contactPhone" maxlength="32"/>
+        </div>
+        <div class="field full">
+          <label for="contactEmail">Email</label>
+          <input type="email" id="contactEmail"/>
+        </div>
+      </div>
+
+      <div class="flex-between mt-2">
+        <div class="small muted" id="save-hint">—</div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button type="submit" class="btn btn-out" id="save-btn">Сохранить черновик</button>
+          <button type="button" class="btn btn-red" id="submit-btn">Отправить на верификацию</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+(function () {
+  if (!AC.requireAuth('/login.html')) return;
+
+  const alertBox = document.getElementById('alert');
+  function showAlert(type, text) {
+    alertBox.className = 'alert alert-' + type + ' show';
+    alertBox.textContent = text;
+    if (type === 'success') setTimeout(() => { alertBox.className = 'alert'; }, 4000);
+  }
+
+  const pill = document.getElementById('status-pill');
+  function setStatus(status) {
+    const map = {
+      DRAFT: ['sp-draft', 'Черновик'],
+      SUBMITTED: ['sp-submitted', 'На проверке'],
+      VERIFIED: ['sp-verified', 'Верифицирован'],
+      REJECTED: ['sp-rejected', 'Отклонён'],
+    };
+    const [cls, label] = map[status] || ['sp-draft', 'Нет профиля'];
+    pill.className = 'status-pill ' + cls;
+    pill.textContent = label;
+  }
+
+  const fields = [
+    'companyName','bin','industry','region','foundedYear','revenue',
+    'employees','website','investmentNeed','investmentGoal','description',
+    'contactName','contactPhone','contactEmail',
+  ];
+
+  function fillForm(p) {
+    if (!p) return;
+    fields.forEach((f) => {
+      const el = document.getElementById(f);
+      if (el && p[f] !== null && p[f] !== undefined) el.value = p[f];
+    });
+  }
+
+  function readForm() {
+    const data = {};
+    fields.forEach((f) => {
+      const el = document.getElementById(f);
+      let v = (el.value || '').trim();
+      if (v === '') { data[f] = null; return; }
+      if (f === 'foundedYear') data[f] = Number(v);
+      else data[f] = v;
+    });
+    return data;
+  }
+
+  function lockIfSubmitted(status) {
+    const locked = status === 'SUBMITTED' || status === 'VERIFIED';
+    fields.forEach((f) => { document.getElementById(f).disabled = locked; });
+    document.getElementById('save-btn').disabled = locked;
+    document.getElementById('submit-btn').disabled = locked;
+    if (status === 'SUBMITTED') {
+      showAlert('info', 'Заявка отправлена на проверку. Модераторы свяжутся с вами.');
+    } else if (status === 'VERIFIED') {
+      showAlert('success', 'Компания верифицирована ✓');
+    }
+  }
+
+  async function loadProfile() {
+    try {
+      const me = await AC.me();
+      document.getElementById('user-info').textContent = me.user.email;
+      const { profile } = await AC.getProfile();
+      if (profile) {
+        fillForm(profile);
+        setStatus(profile.status);
+        lockIfSubmitted(profile.status);
+        if (profile.status === 'REJECTED' && profile.rejectedReason) {
+          showAlert('error', 'Заявка отклонена: ' + profile.rejectedReason);
+        }
+      } else {
+        setStatus(null);
+      }
+    } catch (err) {
+      if (err.status === 401) { AC.clearSession(); window.location.href = '/login.html'; return; }
+      showAlert('error', err.message);
+    }
+  }
+
+  document.getElementById('profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('save-btn');
+    btn.disabled = true; btn.textContent = 'Сохраняем...';
+    try {
+      const { profile } = await AC.saveProfile(readForm());
+      setStatus(profile.status);
+      showAlert('success', 'Черновик сохранён');
+      document.getElementById('save-hint').textContent = 'Обновлено ' + new Date().toLocaleTimeString('ru');
+    } catch (err) {
+      const msg = err.details ? JSON.stringify(err.details.fieldErrors || err.details) : err.message;
+      showAlert('error', msg);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Сохранить черновик';
+    }
+  });
+
+  document.getElementById('submit-btn').addEventListener('click', async () => {
+    if (!confirm('Отправить профиль на верификацию? После отправки редактирование будет заблокировано.')) return;
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true; btn.textContent = 'Отправляем...';
+    try {
+      // сначала сохраняем актуальные данные
+      await AC.saveProfile(readForm());
+      const { profile } = await AC.submitProfile();
+      setStatus(profile.status);
+      lockIfSubmitted(profile.status);
+      showAlert('success', 'Заявка отправлена модераторам');
+    } catch (err) {
+      showAlert('error', err.message);
+      btn.disabled = false; btn.textContent = 'Отправить на верификацию';
+    }
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await AC.logout();
+    window.location.href = '/login.html';
+  });
+
+  loadProfile();
+})();
+</script>
+</body>
+</html>
