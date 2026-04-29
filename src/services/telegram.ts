@@ -74,6 +74,9 @@ export async function notifyCartOrder(payload: {
   contact: string;
   comment?: string;
   items: { id: string; name: string }[];
+  userId?: string;
+  companyName?: string;
+  phone?: string;
 }): Promise<void> {
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_MODERATOR_CHAT_ID) {
     // eslint-disable-next-line no-console
@@ -81,11 +84,16 @@ export async function notifyCartOrder(payload: {
     return;
   }
   const itemsList = payload.items.map((it, idx) => `${idx + 1}. ${esc(it.name)}`).join('\n');
+  const authedTag = payload.userId ? '✅ <i>зарегистрированный пользователь</i>' : '⚪️ <i>гость (не залогинен)</i>';
   const text = [
     '<b>🛒 Новая заявка на услуги</b>',
+    authedTag,
     '',
     `<b>Клиент:</b> ${esc(payload.name)}`,
+    payload.companyName ? `<b>Компания:</b> ${esc(payload.companyName)}` : null,
     `<b>Контакт:</b> ${esc(payload.contact)}`,
+    payload.phone ? `<b>Телефон:</b> ${esc(payload.phone)}` : null,
+    payload.userId ? `<b>User ID:</b> <code>${esc(payload.userId)}</code>` : null,
     payload.comment ? `<b>Комментарий:</b> ${esc(payload.comment)}` : null,
     '',
     '<b>Услуги в корзине:</b>',

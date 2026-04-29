@@ -1587,9 +1587,14 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
   </div>
   <div id="cartList" class="cart-list"></div>
   <div class="cart-foot">
+    <div id="cartUserBlock" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.65rem .85rem;margin-bottom:.7rem;font-size:var(--t2)">
+      <div style="font-size:var(--t1);color:var(--ink4);margin-bottom:.15rem">Заявка от:</div>
+      <div id="cartUserName" style="font-weight:600;color:var(--ink)"></div>
+      <div id="cartUserEmail" style="font-size:var(--t1);color:var(--ink3)"></div>
+    </div>
     <form id="cartForm" class="cart-form">
-      <input type="text" name="name" placeholder="Ваше имя *" required/>
-      <input type="text" name="contact" placeholder="Телефон или email *" required/>
+      <input id="cartName" type="text" name="name" placeholder="Ваше имя *" required/>
+      <input id="cartContact" type="text" name="contact" placeholder="Телефон или email *" required/>
       <textarea name="comment" placeholder="Комментарий (необязательно)"></textarea>
       <button id="cartSubmit" type="submit" class="cart-submit" disabled>Отправить заявку менеджеру</button>
     </form>
@@ -1657,6 +1662,8 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 const CART_KEY = 'ac_cart_v1';
 const cartState = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } };
 const cartSave = (items) => localStorage.setItem(CART_KEY, JSON.stringify(items));
+const cartUser = () => { try { return JSON.parse(localStorage.getItem('ac_user') || 'null'); } catch { return null; } };
+const cartToken = () => localStorage.getItem('ac_access');
 
 function cartHas(id){ return cartState().some(it => it.id === id); }
 function cartAdd(id, name){
@@ -1719,7 +1726,25 @@ document.querySelectorAll('.svc-card[data-svc-id]').forEach(card => {
     cartRender();
   });
 });
-function cartOpen(){ document.getElementById('cartOverlay').classList.add('on'); document.getElementById('cartDrawer').classList.add('on'); }
+function cartApplyAuth(){
+  const u = cartUser();
+  const block = document.getElementById('cartUserBlock');
+  const form = document.getElementById('cartForm');
+  const nameI = document.getElementById('cartName');
+  const contactI = document.getElementById('cartContact');
+  if(u){
+    block.style.display = 'block';
+    document.getElementById('cartUserName').textContent = u.fullName || u.email;
+    document.getElementById('cartUserEmail').textContent = u.email || '';
+    nameI.required = false; nameI.style.display = 'none'; nameI.value = u.fullName || u.email || '';
+    contactI.required = false; contactI.style.display = 'none'; contactI.value = u.email || '';
+  } else {
+    block.style.display = 'none';
+    nameI.required = true; nameI.style.display = '';
+    contactI.required = true; contactI.style.display = '';
+  }
+}
+function cartOpen(){ cartApplyAuth(); document.getElementById('cartOverlay').classList.add('on'); document.getElementById('cartDrawer').classList.add('on'); }
 function cartClose(){ document.getElementById('cartOverlay').classList.remove('on'); document.getElementById('cartDrawer').classList.remove('on'); }
 document.getElementById('cartFab').addEventListener('click', cartOpen);
 document.getElementById('cartClose').addEventListener('click', cartClose);
@@ -1729,23 +1754,31 @@ document.getElementById('cartForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const items = cartState();
   if(items.length === 0){ alert('Корзина пуста'); return; }
+  const u = cartUser();
   const fd = new FormData(e.target);
   const payload = {
-    name: fd.get('name')?.trim(),
-    contact: fd.get('contact')?.trim(),
-    comment: fd.get('comment')?.trim(),
+    name: u ? (u.fullName || u.email) : (fd.get('name') || '').trim(),
+    contact: u ? (u.email || '') : (fd.get('contact') || '').trim(),
+    comment: (fd.get('comment') || '').trim(),
     items
   };
   if(!payload.name || !payload.contact){ alert('Укажите имя и контакт'); return; }
   const btn = document.getElementById('cartSubmit');
   btn.disabled = true; const prev = btn.textContent; btn.textContent = 'Отправляем...';
+  const headers = { 'Content-Type': 'application/json' };
+  const tok = cartToken();
+  if(tok) headers.Authorization = 'Bearer ' + tok;
   try {
     const res = await fetch('/services/cart-submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(payload)
     });
-    if(!res.ok) throw new Error('HTTP ' + res.status);
+    if(!res.ok){
+      let msg = 'HTTP ' + res.status;
+      try{ const data = await res.json(); if(data.error) msg = data.error; }catch{}
+      throw new Error(msg);
+    }
     cartSave([]);
     cartRender();
     cartClose();
@@ -1759,6 +1792,7 @@ document.getElementById('cartForm').addEventListener('submit', async (e) => {
 });
 
 cartRender();
+cartApplyAuth();
 </script>
 
 </body>
