@@ -342,6 +342,9 @@ nav.scrolled{box-shadow:var(--shadow)}
 .cn-list li::before{content:'✓';color:var(--red);font-weight:700;flex-shrink:0;font-size:.8rem;margin-top:.2rem}
 .cn-btn{display:block;width:100%;background:var(--red);color:#fff;border:none;padding:.72rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;transition:all .22s;border-radius:2px;margin-top:.5rem}
 .cn-btn:hover{background:var(--red2)}
+.cn-price-table{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.55rem .85rem;margin-top:.4rem;display:flex;flex-direction:column;gap:.25rem}
+.cn-price-row{display:flex;justify-content:space-between;align-items:baseline;font-size:var(--t1);color:var(--ink3)}
+.cn-price-row strong{font-family:'Cormorant Garamond',serif;font-size:var(--t4);color:var(--ink);font-weight:600}
 .pay-strip{background:var(--white);border:1px solid var(--border);padding:1.25rem 1.75rem;border-radius:4px;box-shadow:var(--shadow);margin-top:1rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
 .pay-strip-label{font-size:var(--t2);font-weight:600;color:var(--ink);white-space:nowrap}
 .pay-methods{display:flex;gap:.65rem;flex-wrap:wrap;align-items:center}
@@ -1352,54 +1355,69 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
     <div class="price-panel" id="panel-cn">
       <div class="cn-intro">
         <h3>Тарифы для зарубежных компаний</h3>
-        <p>Доступ к каталогу казахстанских проектов, компаний, товаров и сырья с ранжированием по отраслям. Тарифы дифференцированы по количеству доступных компаний.</p>
-        <p>Для зарубежных B2B-клиентов поддерживаются платёжные системы <strong>Alipay, WeChat Pay, UnionPay, SWIFT</strong>. Выставление счёта - автоматически на e-mail.</p>
+        <p>Сертификат участника на 1 год (онлайн) и доступ к базе компаний Казахстана, Узбекистана, Беларуси и других стран региона. Три уровня участия с разным набором сервисов.</p>
+        <p>Для B2B-клиентов поддерживаются платёжные системы <strong>Alipay, WeChat Pay, UnionPay, SWIFT</strong>. Выставление счёта - автоматически на e-mail.</p>
       </div>
       <div class="cn-grid">
+
+        <!-- СТАНДАРТ -->
         <div class="cn-card">
-          <div class="cn-badge">Базовый</div>
-          <div class="cn-name">Стартовый доступ</div>
+          <div class="cn-badge">Стандарт</div>
+          <div class="cn-name">Доступ к базе</div>
           <div class="cn-companies">5</div>
-          <div class="cn-companies-l">компаний из каталога</div>
-          <div class="cn-price">По запросу <span>/ мес.</span></div>
+          <div class="cn-companies-l">компаний открыто при оплате тарифа</div>
+          <div class="cn-price">от $100 <span>/ пакет</span></div>
           <ul class="cn-list">
-            <li>Фильтрация по 2 отраслям</li>
-            <li>Краткие профили компаний</li>
-            <li>Базовые контактные данные</li>
-            <li>Интерфейс на китайском</li>
+            <li>Сертификат участника на 1 год (онлайн)</li>
+            <li>Доступ к базе: Казахстан, Узбекистан, Беларусь и др.</li>
+            <li>5 компаний открыты сразу после оплаты</li>
+            <li>Расширение пакета по мере необходимости</li>
+            <li>Логистика, маркетинг, экспорт - по запросу, отдельно</li>
           </ul>
-          <button class="cn-btn">Запросить доступ</button>
+          <div class="cn-price-table">
+            <div class="cn-price-row"><span>+5 компаний</span><strong>$100</strong></div>
+            <div class="cn-price-row"><span>50 компаний</span><strong>$800</strong></div>
+            <div class="cn-price-row"><span>100 компаний</span><strong>$1 700</strong></div>
+          </div>
+          <button class="cn-btn" data-cn-plan="standard">Выбрать «Стандарт»</button>
         </div>
+
+        <!-- VIP -->
         <div class="cn-card best">
-          <div class="cn-badge">Бизнес</div>
-          <div class="cn-name">Расширенный доступ</div>
-          <div class="cn-companies">10</div>
-          <div class="cn-companies-l">компаний из каталога</div>
-          <div class="cn-price">По запросу <span>/ мес.</span></div>
+          <div class="cn-badge">VIP</div>
+          <div class="cn-name">Доступ к базе + полное сопровождение</div>
+          <div class="cn-companies">∞</div>
+          <div class="cn-companies-l">расширенный доступ к каталогу</div>
+          <div class="cn-price">Цена по запросу</div>
           <ul class="cn-list">
-            <li>Фильтрация по 5 отраслям</li>
-            <li>Полные профили с финпоказателями</li>
-            <li>Прямой контакт через платформу</li>
-            <li>Приглашение на деловые мероприятия</li>
-            <li>Поддержка на китайском языке</li>
+            <li>Сертификат участника на 1 год (онлайн)</li>
+            <li>Доступ к базе: Казахстан, Узбекистан, Беларусь и др.</li>
+            <li><strong>Логистика</strong> - подбор маршрутов и партнёров</li>
+            <li><strong>Маркетинг</strong> - продвижение и адаптация под рынок</li>
+            <li><strong>Экспорт</strong> - сопровождение поставок и сделок</li>
+            <li>Сопровождение менеджером проекта</li>
           </ul>
-          <button class="cn-btn">Запросить доступ</button>
+          <button class="cn-btn" data-cn-plan="vip">Запросить «VIP»</button>
         </div>
+
+        <!-- ПРЕМИУМ -->
         <div class="cn-card">
           <div class="cn-badge">Премиум</div>
-          <div class="cn-name">Полный доступ</div>
-          <div class="cn-companies">50</div>
-          <div class="cn-companies-l">компаний из каталога</div>
-          <div class="cn-price">По запросу <span>/ мес.</span></div>
+          <div class="cn-name">Личный представитель в Казахстане</div>
+          <div class="cn-companies">VIP+</div>
+          <div class="cn-companies-l">всё из VIP плюс выделенный представитель</div>
+          <div class="cn-price">$1 500 <span>/ месяц</span></div>
           <ul class="cn-list">
-            <li>Доступ ко всем отраслям без ограничений</li>
-            <li>Приоритетный показ новых компаний</li>
-            <li>Персональный менеджер</li>
-            <li>Организация переговоров и встреч</li>
-            <li>Пакет входа на рынок КЗ включён</li>
+            <li>Всё из тарифа VIP</li>
+            <li>Сертификат участника на 1 год (онлайн)</li>
+            <li><strong>Индивидуальный менеджер</strong> и поддержка 24/7</li>
+            <li>Представитель в Казахстане в формате полного сопровождения</li>
+            <li>Питание и аренда жилья включены в подписку</li>
+            <li>Логистика, маркетинг, экспорт - в комплекте</li>
           </ul>
-          <button class="cn-btn">Запросить доступ</button>
+          <button class="cn-btn" data-cn-plan="premium">Запросить «Премиум»</button>
         </div>
+
       </div>
       <div class="pay-strip">
         <div class="pay-strip-label">Способы оплаты:</div>
@@ -1708,6 +1726,24 @@ document.querySelectorAll('.price-tab').forEach(btn => {
     document.querySelectorAll('.price-panel').forEach(p => p.classList.remove('on'));
     btn.classList.add('on');
     document.getElementById('panel-' + btn.dataset.panel).classList.add('on');
+  });
+});
+
+// CN tariff buttons → add the chosen plan to cart and open it
+const CN_PLAN_NAMES = {
+  standard: 'Тариф «Стандарт» для зарубежных компаний (от $100)',
+  vip: 'Тариф «VIP» для зарубежных компаний (по запросу)',
+  premium: 'Тариф «Премиум» для зарубежных компаний ($1500/мес)',
+};
+document.querySelectorAll('[data-cn-plan]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const plan = btn.dataset.cnPlan;
+    const id = 'cn-plan-' + plan;
+    const name = CN_PLAN_NAMES[plan] || ('Тариф ' + plan);
+    if(!cartHas(id)){ cartAdd(id, name); }
+    cartRender();
+    cartOpen();
   });
 });
 
