@@ -68,3 +68,45 @@ export async function notifyModerators(profile: CompanyProfile, user: User): Pro
     throw new Error(`Telegram API error ${res.status}: ${body}`);
   }
 }
+
+export async function notifyCartOrder(payload: {
+  name: string;
+  contact: string;
+  comment?: string;
+  items: { id: string; name: string }[];
+}): Promise<void> {
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_MODERATOR_CHAT_ID) {
+    // eslint-disable-next-line no-console
+    console.warn('[telegram] Skipping cart-order — TELEGRAM_BOT_TOKEN or TELEGRAM_MODERATOR_CHAT_ID not configured');
+    return;
+  }
+  const itemsList = payload.items.map((it, idx) => `${idx + 1}. ${esc(it.name)}`).join('\n');
+  const text = [
+    '<b>🛒 Новая заявка на услуги</b>',
+    '',
+    `<b>Клиент:</b> ${esc(payload.name)}`,
+    `<b>Контакт:</b> ${esc(payload.contact)}`,
+    payload.comment ? `<b>Комментарий:</b> ${esc(payload.comment)}` : null,
+    '',
+    '<b>Услуги в корзине:</b>',
+    itemsList,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: env.TELEGRAM_MODERATOR_CHAT_ID,
+      text,
+      parse_mode: 'HTML',
+      disable_web_page_preview: true,
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Telegram API error ${res.status}: ${body}`);
+  }
+}

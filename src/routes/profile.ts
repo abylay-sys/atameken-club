@@ -11,7 +11,14 @@ const profileSchema = z.object({
   industry: z.string().max(120).optional().nullable(),
   region: z.string().max(120).optional().nullable(),
   description: z.string().max(4000).optional().nullable(),
+  descriptionFull: z.string().max(20000).optional().nullable(),
+  recommendation: z.string().max(2000).optional().nullable(),
   website: z.string().max(200).optional().nullable(),
+  instagram: z.string().max(200).optional().nullable(),
+  facebook: z.string().max(200).optional().nullable(),
+  linkedin: z.string().max(200).optional().nullable(),
+  telegram: z.string().max(200).optional().nullable(),
+  whatsapp: z.string().max(200).optional().nullable(),
   foundedYear: z.number().int().min(1900).max(2100).optional().nullable(),
   revenue: z.string().max(120).optional().nullable(),
   employees: z.string().max(60).optional().nullable(),
@@ -19,7 +26,7 @@ const profileSchema = z.object({
   investmentGoal: z.string().max(1000).optional().nullable(),
   contactName: z.string().max(120).optional().nullable(),
   contactPhone: z.string().max(32).optional().nullable(),
-  contactEmail: z.string().email().optional().nullable(),
+  contactEmail: z.string().email().optional().nullable().or(z.literal('')),
 });
 
 export default async function profileRoutes(app: FastifyInstance) {

@@ -234,6 +234,43 @@ nav.scrolled{box-shadow:var(--shadow)}
 .svc-tag.cn{background:rgba(200,40,42,.08);color:var(--red)}
 .svc-tag.all{background:var(--bg2);color:var(--ink3)}
 .svc-price{font-size:var(--t2);color:var(--ink2);font-weight:500;border-top:1px solid var(--border);padding-top:.65rem;margin-top:.1rem}
+.svc-card::after{display:none}
+.svc-section-title{font-family:'Cormorant Garamond',serif;font-size:var(--t6);color:var(--ink);margin-top:1rem;margin-bottom:.4rem}
+.svc-section-sub{font-size:var(--t2);color:var(--ink3);margin-bottom:1.5rem;max-width:780px}
+.svc-chev{margin-bottom:.4rem}
+.svc-add{margin-top:.5rem;background:var(--white);color:var(--red);border:1.5px solid var(--red);padding:.55rem 1rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.45rem}
+.svc-add:hover{background:var(--red);color:#fff}
+.svc-add.added{background:var(--green);border-color:var(--green);color:#fff}
+.svc-add.added::before{content:'✓ '}
+
+/* CART WIDGET */
+.cart-fab{position:fixed;bottom:24px;right:24px;background:var(--red);color:#fff;border:none;border-radius:50%;width:60px;height:60px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(200,40,42,.4);z-index:300;transition:transform .2s}
+.cart-fab.on{display:flex}
+.cart-fab:hover{transform:scale(1.08)}
+.cart-fab svg{width:24px;height:24px}
+.cart-fab .cart-count{position:absolute;top:-4px;right:-4px;background:var(--ink);color:#fff;border-radius:10px;font-size:.7rem;font-weight:700;padding:.15rem .45rem;min-width:20px;text-align:center}
+.cart-overlay{position:fixed;inset:0;background:rgba(15,22,32,.5);z-index:350;display:none;backdrop-filter:blur(2px)}
+.cart-overlay.on{display:block}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,92vw);background:#fff;z-index:360;transform:translateX(100%);transition:transform .3s ease;display:flex;flex-direction:column;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
+.cart-drawer.on{transform:none}
+.cart-hd{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cart-hd h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem}
+.cart-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--ink3);padding:0;line-height:1}
+.cart-list{flex:1;overflow-y:auto;padding:1rem 1.5rem}
+.cart-item{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;padding:.85rem 0;border-bottom:1px solid var(--border)}
+.cart-item:last-child{border-bottom:none}
+.cart-item-name{font-size:var(--t2);font-weight:500;color:var(--ink)}
+.cart-item-price{font-size:var(--t1);color:var(--ink4);margin-top:.15rem}
+.cart-item-rm{background:none;border:none;color:var(--red);cursor:pointer;font-size:1.1rem;padding:.2rem .4rem;line-height:1}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--ink4)}
+.cart-foot{padding:1rem 1.5rem;border-top:1px solid var(--border)}
+.cart-form{display:flex;flex-direction:column;gap:.6rem;margin-bottom:.85rem}
+.cart-form input,.cart-form textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);padding:.55rem .8rem;font-family:'Inter',sans-serif;font-size:var(--t2);outline:none;border-radius:2px}
+.cart-form input:focus,.cart-form textarea:focus{border-color:var(--red);background:#fff}
+.cart-form textarea{resize:vertical;min-height:60px}
+.cart-submit{width:100%;background:var(--red);color:#fff;border:none;padding:.7rem;font-family:'Inter',sans-serif;font-size:var(--t2);font-weight:600;cursor:pointer;border-radius:2px;transition:all .2s}
+.cart-submit:hover{background:var(--red2)}
+.cart-submit:disabled{opacity:.6;cursor:not-allowed}
 .partners-strip{margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid var(--border)}
 .partners-strip h3{font-family:'Cormorant Garamond',serif;font-size:var(--t6);color:var(--ink);margin-bottom:1.5rem}
 .partners-logos{display:flex;flex-wrap:wrap;gap:1px;background:var(--border)}
@@ -442,6 +479,13 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
 .bdg-ct-kz{background:rgba(6,148,162,.1);color:#0891b2;border-color:rgba(6,148,162,.35)}
 .bdg-ct1{background:rgba(15,118,110,.1);color:#0f766e;border-color:rgba(15,118,110,.3)}
 .bdg-halal{background:rgba(21,128,61,.12);color:#15803d;border-color:rgba(21,128,61,.35)}
+/* New 7-chevron system (Резидент + 6 верификаций) */
+.bdg-v-form{background:rgba(22,163,74,.12);color:#16a34a;border-color:rgba(22,163,74,.4)}
+.bdg-v-bp{background:rgba(234,88,12,.1);color:#ea580c;border-color:rgba(234,88,12,.35)}
+.bdg-v-fin{background:rgba(26,111,196,.12);color:#1A6FC4;border-color:rgba(26,111,196,.35)}
+.bdg-v-ctr{background:rgba(6,148,162,.1);color:#0891b2;border-color:rgba(6,148,162,.35)}
+.bdg-audit-co{background:rgba(109,40,217,.1);color:#7c3aed;border-color:rgba(109,40,217,.3)}
+.bdg-audit-pr{background:rgba(200,40,42,.08);color:#C8282A;border-color:rgba(200,40,42,.35)}
 
 /* INACTIVE (grey) */
 .bdg-off{background:var(--bg2);color:var(--border2);border-color:var(--border)}
@@ -480,31 +524,7 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
 <nav id="nav">
   <a href="#" class="logo">
     <div class="logo-emblem">
-      <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="52" height="52">
-        <!-- Outer circle -->
-        <circle cx="30" cy="30" r="28.5" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.5"/>
-        <!-- Circular text path -->
-        <defs>
-          <path id="circ" d="M30,30 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0"/>
-        </defs>
-        <text font-family="Inter,Arial,sans-serif" font-size="4.8" font-weight="600" fill="#C5963A" letter-spacing="0.9">
-          <textPath href="#circ" startOffset="3%">ATAMEKEN Club • Business Community •</textPath>
-        </text>
-        <!-- Bridge arch -->
-        <path d="M10 38 Q30 16 50 38" stroke="#C5963A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-        <!-- Bridge deck -->
-        <line x1="8" y1="38" x2="52" y2="38" stroke="#C5963A" stroke-width="1.8" stroke-linecap="round"/>
-        <!-- Bridge pillars -->
-        <line x1="22" y1="38" x2="22" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
-        <line x1="38" y1="38" x2="38" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
-        <!-- Bridge cables -->
-        <line x1="30" y1="18.5" x2="22" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
-        <line x1="30" y1="18.5" x2="38" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
-        <line x1="30" y1="18.5" x2="15" y2="38" stroke="#C5963A" stroke-width="0.7" stroke-linecap="round" opacity="0.6"/>
-        <line x1="30" y1="18.5" x2="45" y2="38" stroke="#C5963A" stroke-width="0.7" stroke-linecap="round" opacity="0.6"/>
-        <!-- Top pin -->
-        <circle cx="30" cy="18.5" r="1.4" fill="#C5963A"/>
-      </svg>
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
     </div>
     <div class="logo-text">
       <span class="logo-main">ATAMEKEN CLUB</span>
@@ -791,13 +811,13 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
           <div class="badge-strip">
           <span class="bdg bdg-off">
             <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
-            ATAMEKEN Club
+            Резидент ATAMEKEN Club
             <span class="bdg-tip">Значок не присвоен. Компания пока не является Резидентом Бизнес-сообщества «ATAMEKEN Club».</span>
           </span>
           <span class="bdg bdg-verified">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
-            Верифицирована
-            <span class="bdg-tip">Франшиза прошла первичный комплаенс.</span>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
           </span>
           <span class="bdg bdg-ct-kz">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
@@ -829,23 +849,23 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
           <div class="badge-strip">
           <span class="bdg bdg-off">
             <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
-            ATAMEKEN Club
+            Резидент ATAMEKEN Club
             <span class="bdg-tip">Значок не присвоен. Компания пока не является Резидентом Бизнес-сообщества «ATAMEKEN Club».</span>
           </span>
           <span class="bdg bdg-verified">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
-            Верифицирован
-            <span class="bdg-tip">Компания прошла первичный комплаенс: проверка регистрации, контактов и публичного следа.</span>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
           </span>
           <span class="bdg bdg-fin-audit">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            Фин. аудит
-            <span class="bdg-tip">Проведён финансовый аудит компании. Отчётность и финансовая модель проверены независимым аудитором.</span>
+            Верификация Фин.модели
+            <span class="bdg-tip">Финансовая модель верифицирована независимым аудитором.</span>
           </span>
           <span class="bdg bdg-off">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="1" width="8" height="10" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7" x2="8" y2="7"/></svg>
-            Аудит бизнес-плана
-            <span class="bdg-tip">Значок не присвоен. Аудит бизнес-плана ещё не проводился.</span>
+            Верификация БП
+            <span class="bdg-tip">Значок не присвоен. Верификация бизнес-плана не проводилась.</span>
           </span>
         </div>
           <div class="pcard-meta">
@@ -868,18 +888,18 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
           <div class="badge-strip">
           <span class="bdg bdg-club">
             <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
-            ATAMEKEN Club
+            Резидент ATAMEKEN Club
             <span class="bdg-tip">Является Резидентом Бизнес-сообщества «ATAMEKEN Club». Приоритетное отображение в каталоге.</span>
           </span>
           <span class="bdg bdg-verified">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
-            Верифицирован
-            <span class="bdg-tip">Компания прошла первичный комплаенс.</span>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
           </span>
           <span class="bdg bdg-bp-audit">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="1" width="8" height="10" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7" x2="8" y2="7"/></svg>
-            Аудит бизнес-плана
-            <span class="bdg-tip">Бизнес-план прошёл независимую проверку: допущения, юнит-экономика, логика монетизации.</span>
+            Верификация БП
+            <span class="bdg-tip">Бизнес-план верифицирован: проверены допущения, юнит-экономика и логика монетизации.</span>
           </span>
         </div>
           <div class="pcard-meta">
@@ -901,23 +921,23 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
           <div class="badge-strip">
           <span class="bdg bdg-off">
             <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
-            ATAMEKEN Club
+            Резидент ATAMEKEN Club
             <span class="bdg-tip">Значок не присвоен.</span>
           </span>
           <span class="bdg bdg-verified">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
-            Верифицирован
-            <span class="bdg-tip">Бизнес прошёл первичный комплаенс.</span>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
           </span>
           <span class="bdg bdg-buh-audit">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 9V5l4-4 4 4v4"/><rect x="4" y="7" width="4" height="4"/></svg>
-            Бухг. аудит
-            <span class="bdg-tip">Проведён бухгалтерский аудит: проверка первичных документов, учётной политики и соответствия стандартам.</span>
+            Финаудит Компании
+            <span class="bdg-tip">Финансовый аудит компании пройден: проверены первичные документы, учётная политика и соответствие стандартам.</span>
           </span>
           <span class="bdg bdg-fin-audit">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            Фин. аудит
-            <span class="bdg-tip">Проведён финансовый аудит. Отчётность проверена независимым аудитором.</span>
+            Верификация Фин.модели
+            <span class="bdg-tip">Финансовый аудит компании пройден: отчётность проверена независимым аудитором.</span>
           </span>
         </div>
           <div class="pcard-meta">
@@ -939,13 +959,13 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
           <div class="badge-strip">
           <span class="bdg bdg-club">
             <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
-            ATAMEKEN Club
+            Резидент ATAMEKEN Club
             <span class="bdg-tip">Является Резидентом Бизнес-сообщества «ATAMEKEN Club». Приоритетное отображение в каталоге.</span>
           </span>
           <span class="bdg bdg-verified">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
-            Верифицирована
-            <span class="bdg-tip">Компания прошла первичный комплаенс.</span>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
           </span>
           <span class="bdg bdg-ct-kz">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
@@ -1006,10 +1026,74 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
       </div>
     </div>
 
+    <h3 class="svc-section-title reveal">Верификация и шевроны</h3>
+    <p class="svc-section-sub reveal">Каждая услуга добавляет соответствующий шеврон в ваш профиль. Шевроны видны в каталоге и повышают доверие со стороны инвесторов и покупателей.</p>
+
+    <div class="svc-grid" id="svcGridChevrons">
+      <div class="svc-card" data-svc-id="club-resident" data-svc-name="Резидент Бизнес-сообщества «ATAMEKEN Club»">
+        <div class="svc-chev"><span class="bdg bdg-club"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>Резидент ATAMEKEN Club</span></div>
+        <div class="svc-name">Резидентство в Бизнес-сообществе</div>
+        <div class="svc-desc">Членство в Клубе с выдачей сертификата Резидента. Приоритет в каталоге, доступ к закрытым B2B-встречам офлайн и Реестру Резидентов.</div>
+        <div class="svc-price">Условия по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="v-form" data-svc-name="Верификация анкеты">
+        <div class="svc-chev"><span class="bdg bdg-v-form"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>Верификация анкеты</span></div>
+        <div class="svc-name">Верификация анкеты</div>
+        <div class="svc-desc">Проверка регистрационных данных, контактов, публичного следа и учредителей. Базовый комплаенс-чекап перед публикацией карточки в каталоге.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="v-bp" data-svc-name="Верификация БП">
+        <div class="svc-chev"><span class="bdg bdg-v-bp"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="1" width="8" height="10" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7" x2="8" y2="7"/></svg>Верификация БП</span></div>
+        <div class="svc-name">Верификация бизнес-плана</div>
+        <div class="svc-desc">Независимая проверка бизнес-плана: допущения, юнит-экономика, логика монетизации, реалистичность прогнозов и инвестиционная привлекательность.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="v-fin" data-svc-name="Верификация финансовой модели">
+        <div class="svc-chev"><span class="bdg bdg-v-fin"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>Верификация Фин.модели</span></div>
+        <div class="svc-name">Верификация финансовой модели</div>
+        <div class="svc-desc">Проверка финансовой модели: P&amp;L, Cash Flow, Balance Sheet, юнит-экономика, сценарии. Подготовка питч-версии для инвесторов.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="v-ctr" data-svc-name="Верификация договоров">
+        <div class="svc-chev"><span class="bdg bdg-v-ctr"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 1h6l2 2v8H3z"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="7" x2="9" y2="7"/></svg>Верификация Договоров</span></div>
+        <div class="svc-name">Верификация договоров</div>
+        <div class="svc-desc">Проверка договоров поставок, сырья, дистрибьюции и иных коммерческих соглашений. Юридический анализ рисков и реальности партнёрств.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="audit-co" data-svc-name="Финансовый аудит компании">
+        <div class="svc-chev"><span class="bdg bdg-audit-co"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 9V5l4-4 4 4v4"/><rect x="4" y="7" width="4" height="4"/></svg>Финаудит Компании</span></div>
+        <div class="svc-name">Финансовый аудит компании</div>
+        <div class="svc-desc">Полный финансовый аудит: бухгалтерская отчётность, учётная политика, первичные документы, соответствие стандартам. Подготовка к сделкам M&amp;A.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="audit-pr" data-svc-name="Аудит проекта">
+        <div class="svc-chev"><span class="bdg bdg-audit-pr"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="4.5"/><polyline points="4 6 5.5 7.5 8 4.5"/></svg>Аудит Проекта</span></div>
+        <div class="svc-name">Аудит проекта</div>
+        <div class="svc-desc">Комплексный аудит проекта: команда, продукт, рынок, юнит-экономика, юридическая структура. Заключение для инвестора или стратегического партнёра.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+    </div>
+
+    <h3 class="svc-section-title reveal" style="margin-top:3rem">Дополнительные деловые услуги</h3>
+    <p class="svc-section-sub reveal">Сопровождение, аналитика, юр. и фин. поддержка. Выберите нужное и оставьте заявку - менеджер свяжется и согласует условия.</p>
+
     <div class="svc-filter reveal" id="svcFilter">
       <button class="svc-f-btn on" data-svc="all">Все услуги</button>
       <button class="svc-f-btn" data-svc="kz">Для КЗ рынка</button>
-      <button class="svc-f-btn" data-svc="cn">Для китайских компаний</button>
+      <button class="svc-f-btn" data-svc="cn">Для зарубежных</button>
       <button class="svc-f-btn" data-svc="legal">Юридические</button>
       <button class="svc-f-btn" data-svc="fin">Финансовые</button>
       <button class="svc-f-btn" data-svc="research">Аналитика и исследования</button>
@@ -1017,85 +1101,90 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
 
     <div class="svc-grid" id="svcGrid">
 
-      <a class="svc-card" data-svc="kz cn legal" href="services.html">
+      <div class="svc-card" data-svc="kz cn legal" data-svc-id="visa" data-svc-name="Визовая поддержка">
         <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><circle cx="12" cy="14" r="2"/></svg></div>
         <div class="svc-name">Визовая поддержка</div>
-        <div class="svc-desc">Получение бизнес-виз, инвесторских виз и ВНЖ Казахстана. Оформление для иностранных сотрудников, командировок и деловых поездок. Партнёр: Жазира.</div>
-        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag all">Иностранные компании</span></div>
-        <div class="svc-price">По запросу · Индивидуально</div>
-      </a>
+        <div class="svc-desc">Бизнес-визы, инвесторские визы и ВНЖ Казахстана. Оформление для иностранных сотрудников и деловых поездок.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
-      <a class="svc-card" data-svc="kz cn legal" href="services.html">
+      <div class="svc-card" data-svc="kz cn legal" data-svc-id="customs" data-svc-name="Таможенное оформление">
         <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 3h22l-2 13H3L1 3z"/><path d="M1 3l2 13M22 3l-2 13M8 3v13M16 3v13"/></svg></div>
         <div class="svc-name">Таможенное оформление</div>
-        <div class="svc-desc">Таможенное сопровождение и очистка грузов на казахстанских КПП. Импорт/экспорт, сертификация товаров, работа с документами. Партнёр: Жазира.</div>
-        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag kz">КЗ рынок</span></div>
-        <div class="svc-price">По запросу · По объёму груза</div>
-      </a>
+        <div class="svc-desc">Очистка грузов на казахстанских КПП. Импорт/экспорт, сертификация товаров.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
-      <a class="svc-card" data-svc="kz cn research" href="services.html">
+      <div class="svc-card" data-svc="kz cn research" data-svc-id="market" data-svc-name="Анализ рынка">
         <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
         <div class="svc-name">Анализ рынка</div>
-        <div class="svc-desc">Исследования рынка Казахстана и стран ЦА: ёмкость, конкуренты, потребители, регуляторика. Включая энергетический сектор. Отраслевые отчёты под запрос.</div>
-        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag all">Энергетика</span><span class="svc-tag kz">КЗ рынок</span></div>
-        <div class="svc-price">от 200 000 KZT</div>
-      </a>
+        <div class="svc-desc">Исследования рынка Казахстана и стран ЦА: ёмкость, конкуренты, потребители, регуляторика.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
-      <a class="svc-card" data-svc="kz cn" href="services.html">
+      <div class="svc-card" data-svc="kz cn" data-svc-id="packaging" data-svc-name="Упаковка и вывод продукта на рынок">
         <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <div class="svc-name">Упаковка и вывод продукта на рынок</div>
-        <div class="svc-desc">Адаптация продукта для казахстанского рынка: маркировка, упаковка, сертификация, регистрация торговых марок. Перевод и локализация материалов.</div>
-        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag kz">КЗ рынок</span></div>
-        <div class="svc-price">По запросу · Пакетно</div>
-      </a>
+        <div class="svc-name">Упаковка и вывод продукта</div>
+        <div class="svc-desc">Адаптация продукта для рынка КЗ: маркировка, упаковка, сертификация, регистрация торговых марок.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
-      <a class="svc-card" data-svc="kz cn fin" href="services.html">
+      <div class="svc-card" data-svc="kz cn fin" data-svc-id="cert" data-svc-name="Сертификация (ISO, халяль, экспорт)">
         <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-        <div class="svc-name">Аудит и сертификация</div>
-        <div class="svc-desc">Независимый аудит компаний и проектов. Получение сертификатов соответствия, ISO, халяль, экспортных разрешений. Подготовка к международным сделкам.</div>
-        <div class="svc-tags"><span class="svc-tag all">Сертификаты</span><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag cn">Экспорт в КНР</span></div>
-        <div class="svc-price">По запросу</div>
-      </a>
+        <div class="svc-name">Сертификация (ISO, халяль, экспорт)</div>
+        <div class="svc-desc">Получение сертификатов соответствия, ISO, халяль, экспортных разрешений. Подготовка к международным сделкам.</div>
+        <div class="svc-tags"><span class="svc-tag all">Сертификаты</span><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag cn">Экспорт</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
-      <a class="svc-card" data-svc="kz cn legal fin" href="services.html">
+      <div class="svc-card" data-svc="kz cn legal fin" data-svc-id="acc-legal" data-svc-name="Бухгалтерия и юридическая поддержка">
         <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-        <div class="svc-name">Бухгалтерия и юридическая поддержка</div>
-        <div class="svc-desc">Ведение бухгалтерского учёта, налоговое сопровождение, регистрация компаний, составление договоров и корпоративные документы по праву РК.</div>
+        <div class="svc-name">Бухгалтерия и юр. поддержка</div>
+        <div class="svc-desc">Бухгалтерский учёт, налоговое сопровождение, регистрация компаний, договоры по праву РК.</div>
         <div class="svc-tags"><span class="svc-tag kz">КЗ право</span><span class="svc-tag legal">Юридические</span><span class="svc-tag fin">Финансовые</span></div>
-        <div class="svc-price">от 50 000 KZT / мес.</div>
-      </a>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
-      <a class="svc-card" data-svc="cn" href="services.html">
+      <div class="svc-card" data-svc="cn" data-svc-id="entry-pkg" data-svc-name="Пакет входа для иностранных компаний">
         <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
-        <div class="svc-name">Пакет входа для иностранных компаний</div>
-        <div class="svc-desc">Комплексная поддержка выхода на рынок КЗ: ИИН, банковская карта, прописка, iCUNAC, визовое сопровождение, бизнес-план, подбор жилья и авиабилеты. Расширяемый перечень по запросу.</div>
-        <div class="svc-tags"><span class="svc-tag cn">Для КНР</span><span class="svc-tag all">«Под ключ»</span></div>
-        <div class="svc-price">Пакетная цена · По запросу</div>
-      </a>
+        <div class="svc-name">Пакет входа на рынок РК</div>
+        <div class="svc-desc">Комплекс: ИИН, банковская карта, прописка, iCUNAC, визовое сопровождение, бизнес-план, подбор жилья и авиабилеты.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag all">«Под ключ»</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
-      <a class="svc-card" data-svc="kz cn fin research" href="services.html">
+      <div class="svc-card" data-svc="kz cn fin research" data-svc-id="bp-dev" data-svc-name="Разработка бизнес-плана и юнит-экономики">
         <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
-        <div class="svc-name">Бизнес-план и юнит-экономика</div>
-        <div class="svc-desc">Разработка и проверка бизнес-плана с юнит-экономикой для казахстанских и международных стандартов. Включая подготовку для банков и инвесторов.</div>
-        <div class="svc-tags"><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag cn">Для КНР</span><span class="svc-tag fin">Финансовые</span></div>
-        <div class="svc-price">от 100 000 KZT</div>
-      </a>
+        <div class="svc-name">Разработка БП и юнит-экономики</div>
+        <div class="svc-desc">Подготовка бизнес-плана с юнит-экономикой по казахстанским и международным стандартам. Для банков и инвесторов.</div>
+        <div class="svc-tags"><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag fin">Финансовые</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
-      <a class="svc-card" data-svc="kz cn research" href="services.html">
-        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-        <div class="svc-name">Верификация договоров намерений</div>
-        <div class="svc-desc">Проверка договоров намерений с поставщиками и потребителями перед заключением сделок.</div>
-        <div class="svc-tags"><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag legal">Юридические</span></div>
-        <div class="svc-price">По запросу</div>
-      </a>
+      <div class="svc-card" data-svc="kz cn fin" data-svc-id="fin-model-dev" data-svc-name="Разработка финансовой модели">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="14" x2="15" y2="14"/></svg></div>
+        <div class="svc-name">Разработка фин. модели</div>
+        <div class="svc-desc">Полная финансовая модель: P&amp;L, Cash Flow, Balance Sheet, сценарный анализ, питч-версия для инвесторов.</div>
+        <div class="svc-tags"><span class="svc-tag fin">Финансовые</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
 
     </div>
 
-    <!-- services subpage link -->
-    <div class="cat-more reveal" style="margin-top:2.5rem">
-      <p>Здесь представлены основные направления. Полный каталог услуг - на отдельной странице.</p>
-      <a href="services.html" class="btn-red">Все услуги подробно</a>
-    </div>
+    <p class="svc-section-sub reveal" style="margin-top:1.5rem;text-align:center">Цены по согласованию. После добавления услуг в корзину менеджер свяжется и согласует условия и сроки.</p>
   </div>
 </section>
 
@@ -1470,21 +1559,8 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
 <footer>
   <div class="f-logo">
     <div class="f-logo-emb">
-    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="38" height="38">
-      <circle cx="30" cy="30" r="28.5" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.5"/>
-      <defs><path id="fcirc" d="M30,30 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0"/></defs>
-      <text font-family="Inter,Arial,sans-serif" font-size="4.8" font-weight="600" fill="#C5963A" letter-spacing="0.9">
-        <textPath href="#fcirc" startOffset="3%">ATAMEKEN Club • Business Community •</textPath>
-      </text>
-      <path d="M10 38 Q30 16 50 38" stroke="#C5963A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-      <line x1="8" y1="38" x2="52" y2="38" stroke="#C5963A" stroke-width="1.8" stroke-linecap="round"/>
-      <line x1="22" y1="38" x2="22" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
-      <line x1="38" y1="38" x2="38" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
-      <line x1="30" y1="18.5" x2="22" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
-      <line x1="30" y1="18.5" x2="38" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
-      <circle cx="30" cy="18.5" r="1.4" fill="#C5963A"/>
-    </svg>
-  </div>
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="38" height="38" style="display:block;border-radius:50%"/>
+    </div>
     <div class="f-logo-text">ATAMEKEN CLUB<span>Бизнес-сообщество · г. Алматы</span></div>
   </div>
   <div class="f-mid">
@@ -1547,4 +1623,143 @@ document.querySelectorAll('.price-tab').forEach(btn => {
 // Lang buttons (UI only)
 document.querySelectorAll('.lang-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.lang-btn').forEach(b => b.class
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+  });
+});
+
+// ═══════════════════════════════════════════
+// CART (services)
+// ═══════════════════════════════════════════
+const CART_KEY = 'ac_cart_v1';
+const cartState = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } };
+const cartSave = (items) => localStorage.setItem(CART_KEY, JSON.stringify(items));
+
+function cartHas(id){ return cartState().some(it => it.id === id); }
+function cartAdd(id, name){
+  const items = cartState();
+  if(items.some(it => it.id === id)) return;
+  items.push({ id, name });
+  cartSave(items);
+}
+function cartRemove(id){
+  cartSave(cartState().filter(it => it.id !== id));
+}
+function cartRender(){
+  const items = cartState();
+  const fab = document.getElementById('cartFab');
+  const count = document.getElementById('cartCount');
+  const list = document.getElementById('cartList');
+  const submit = document.getElementById('cartSubmit');
+  if(items.length === 0){
+    fab.classList.remove('on');
+    list.innerHTML = '<div class="cart-empty">Корзина пуста.<br/>Добавьте услуги выше.</div>';
+    if(submit) submit.disabled = true;
+  } else {
+    fab.classList.add('on');
+    count.textContent = items.length;
+    list.innerHTML = items.map(it => `
+      <div class="cart-item">
+        <div>
+          <div class="cart-item-name">${it.name}</div>
+          <div class="cart-item-price">Цена по запросу</div>
+        </div>
+        <button class="cart-item-rm" onclick="cartRemove('${it.id}'); cartRender(); cartSyncBtns();">×</button>
+      </div>
+    `).join('');
+    if(submit) submit.disabled = false;
+  }
+  cartSyncBtns();
+}
+function cartSyncBtns(){
+  document.querySelectorAll('.svc-card[data-svc-id]').forEach(card => {
+    const id = card.dataset.svcId;
+    const btn = card.querySelector('[data-add]');
+    if(!btn) return;
+    if(cartHas(id)){
+      btn.classList.add('added');
+      btn.textContent = 'В корзине';
+    } else {
+      btn.classList.remove('added');
+      btn.textContent = 'Добавить в корзину';
+    }
+  });
+}
+document.querySelectorAll('.svc-card[data-svc-id]').forEach(card => {
+  const btn = card.querySelector('[data-add]');
+  if(!btn) return;
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = card.dataset.svcId;
+    const name = card.dataset.svcName;
+    if(cartHas(id)){ cartRemove(id); } else { cartAdd(id, name); }
+    cartRender();
+  });
+});
+function cartOpen(){ document.getElementById('cartOverlay').classList.add('on'); document.getElementById('cartDrawer').classList.add('on'); }
+function cartClose(){ document.getElementById('cartOverlay').classList.remove('on'); document.getElementById('cartDrawer').classList.remove('on'); }
+document.getElementById('cartFab').addEventListener('click', cartOpen);
+document.getElementById('cartClose').addEventListener('click', cartClose);
+document.getElementById('cartOverlay').addEventListener('click', cartClose);
+
+document.getElementById('cartForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const items = cartState();
+  if(items.length === 0){ alert('Корзина пуста'); return; }
+  const fd = new FormData(e.target);
+  const payload = {
+    name: fd.get('name')?.trim(),
+    contact: fd.get('contact')?.trim(),
+    comment: fd.get('comment')?.trim(),
+    items
+  };
+  if(!payload.name || !payload.contact){ alert('Укажите имя и контакт'); return; }
+  const btn = document.getElementById('cartSubmit');
+  btn.disabled = true; const prev = btn.textContent; btn.textContent = 'Отправляем...';
+  try {
+    const res = await fetch('/services/cart-submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    cartSave([]);
+    cartRender();
+    cartClose();
+    alert('Заявка отправлена! Менеджер свяжется в ближайшее время.');
+    e.target.reset();
+  } catch(err){
+    alert('Не удалось отправить: ' + err.message);
+  } finally {
+    btn.textContent = prev; btn.disabled = false;
+  }
+});
+
+cartRender();
+</script>
+
+<!-- CART WIDGET -->
+<button id="cartFab" class="cart-fab" aria-label="Корзина услуг">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l3 12h12l2-8H6"/></svg>
+  <span class="cart-count" id="cartCount">0</span>
+</button>
+<div id="cartOverlay" class="cart-overlay"></div>
+<aside id="cartDrawer" class="cart-drawer" aria-label="Корзина">
+  <div class="cart-hd">
+    <h3>Корзина услуг</h3>
+    <button id="cartClose" class="cart-close" aria-label="Закрыть">×</button>
+  </div>
+  <div id="cartList" class="cart-list"></div>
+  <div class="cart-foot">
+    <form id="cartForm" class="cart-form">
+      <input type="text" name="name" placeholder="Ваше имя *" required/>
+      <input type="text" name="contact" placeholder="Телефон или email *" required/>
+      <textarea name="comment" placeholder="Комментарий (необязательно)"></textarea>
+      <button id="cartSubmit" type="submit" class="cart-submit" disabled>Отправить заявку менеджеру</button>
+    </form>
+    <p style="font-size:.7rem;color:var(--ink4);text-align:center;margin:0">Менеджер свяжется в течение 1 рабочего дня и согласует условия.</p>
+  </div>
+</aside>
+
+</body>
+</html>

@@ -234,21 +234,8 @@ strong{color:var(--ink);font-weight:600}
 <div class="top-nav">
   <a href="index.html" class="tn-logo">
     <div class="tn-emb">
-    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
-      <circle cx="30" cy="30" r="28.5" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.5"/>
-      <defs><path id="cc" d="M30,30 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0"/></defs>
-      <text font-family="Inter,Arial,sans-serif" font-size="4.8" font-weight="600" fill="#C5963A" letter-spacing="0.9">
-        <textPath href="#cc" startOffset="3%">ATAMEKEN Club • Business Community •</textPath>
-      </text>
-      <path d="M10 38 Q30 16 50 38" stroke="#C5963A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-      <line x1="8" y1="38" x2="52" y2="38" stroke="#C5963A" stroke-width="1.8" stroke-linecap="round"/>
-      <line x1="22" y1="38" x2="22" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
-      <line x1="38" y1="38" x2="38" y2="43" stroke="#C5963A" stroke-width="1.6" stroke-linecap="round"/>
-      <line x1="30" y1="18.5" x2="22" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
-      <line x1="30" y1="18.5" x2="38" y2="38" stroke="#C5963A" stroke-width="0.9" stroke-linecap="round"/>
-      <circle cx="30" cy="18.5" r="1.4" fill="#C5963A"/>
-    </svg>
-  </div>
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="34" height="34" style="display:block;border-radius:50%"/>
+    </div>
     <span class="tn-name">ATAMEKEN CLUB</span>
   </a>
   <div class="tn-right">
@@ -858,7 +845,7 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
 
   const ROLE_TO_TYPE = { SEEKER: 'seeker', INVESTOR: 'investor', FRANCHISE: 'franchise', SALE: 'sale' };
   const ROLE_LABEL = { SEEKER: 'Соискатель инвестиций', INVESTOR: 'Инвестор', FRANCHISE: 'Франчайзер / Франчайзи', SALE: 'Продавец / Покупатель бизнеса' };
-  const PROFILE_FIELDS = ['companyName','bin','industry','region','description','website','foundedYear','revenue','employees','investmentNeed','investmentGoal','contactName','contactPhone','contactEmail'];
+  const PROFILE_FIELDS = ['companyName','bin','industry','region','description','descriptionFull','recommendation','website','instagram','facebook','linkedin','telegram','whatsapp','foundedYear','revenue','employees','investmentNeed','investmentGoal','contactName','contactPhone','contactEmail'];
 
   const $ = (id) => document.getElementById(id);
 

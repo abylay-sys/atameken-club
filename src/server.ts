@@ -6,6 +6,7 @@ import { env } from './lib/env';
 import authRoutes from './routes/auth';
 import profileRoutes from './routes/profile';
 import adminRoutes from './routes/admin';
+import servicesRoutes from './routes/services';
 
 async function buildApp() {
   const app = Fastify({
@@ -35,6 +36,7 @@ async function buildApp() {
   await app.register(authRoutes, { prefix: '/auth' });
   await app.register(profileRoutes, { prefix: '/profile' });
   await app.register(adminRoutes, { prefix: '/admin' });
+  await app.register(servicesRoutes, { prefix: '/services' });
 
   await app.register(fastifyStatic, {
     root: path.join(process.cwd(), 'public'),

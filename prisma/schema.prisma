@@ -47,8 +47,15 @@ model CompanyProfile {
   bin           String?
   industry      String?
   region        String?
-  description   String?
+  description     String?  // короткая выжимка для публичного каталога
+  descriptionFull String?  // полное описание (видно только админам)
+  recommendation  String?  // рекомендация бизнес-клуба / Ассоциации / Союза / ОЮЛ
   website       String?
+  instagram     String?
+  facebook      String?
+  linkedin      String?
+  telegram      String?
+  whatsapp      String?
   foundedYear   Int?
   revenue       String?
   employees     String?
