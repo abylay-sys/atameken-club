@@ -123,6 +123,16 @@ nav.scrolled{box-shadow:var(--shadow)}
 .hc-lock{display:flex;align-items:center;gap:.4rem;margin-top:.65rem;font-size:.7rem;color:var(--ink3)}
 .hc-lock svg{width:11px;height:11px;color:var(--red)}
 .verified-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(22,163,74,.1);color:#16a34a;font-size:.7rem;font-weight:600;padding:.2rem .65rem;border-radius:2px;margin-top:.5rem}
+/* Hero card chevrons */
+.hc-chevrons{display:flex;gap:.35rem;margin:.55rem 0 .15rem;align-items:center}
+.hc-chev{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+.hc-chev svg{width:13px;height:13px}
+.hc-chev-form{background:#16a34a}
+.hc-chev-bp{background:#1A6FC4}
+.hc-chev-fin{background:#ea580c}
+.hc-chev-ctr{background:#16a34a;border:1.5px solid #15803d}
+.hc-chev-audit{background:#1A6FC4;border:1.5px solid #1d4ed8}
+.hc-chev-club{background:linear-gradient(135deg,#1A3A6B,#2455A4);color:#C5963A;border:1.5px solid #C5963A;box-shadow:0 0 0 1px rgba(197,150,58,.25)}
 .verified-badge svg{width:11px;height:11px}
 
 /* ─── TICKER ─── */
@@ -581,16 +591,15 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         <div class="hc hc-1">
           <div class="hc-tag gold">Инвест-проект</div>
           <div class="hc-title">Агропромышленный хаб «Степной»</div>
-          <div class="hc-meta">
-            <span class="hc-chip r">Pre-A раунд</span>
-            <span class="hc-chip g">Казахстан</span>
+          <div class="hc-chevrons">
+            <span class="hc-chev hc-chev-form" title="Верификация анкеты"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="3 8 7 12 13 5"/></svg></span>
+            <span class="hc-chev hc-chev-bp" title="Верификация бизнес-плана"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="3 8 7 12 13 5"/></svg></span>
+            <span class="hc-chev hc-chev-fin" title="Верификация Фин.модели"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="3 8 7 12 13 5"/></svg></span>
+            <span class="hc-chev hc-chev-ctr" title="Верификация договоров"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="3 8 7 12 13 5"/></svg></span>
+            <span class="hc-chev hc-chev-audit" title="Финаудит компании"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="3 8 7 12 13 5"/></svg></span>
+            <span class="hc-chev hc-chev-club" title="Резидент Бизнес-сообщества «ATAMEKEN Club»"><svg viewBox="0 0 16 16" fill="currentColor"><polygon points="8 1 10 6 15 6 11.5 9 12.5 14 8 11.5 3.5 14 4.5 9 1 6 6 6"/></svg></span>
           </div>
           <div class="hc-price">от 150 млн KZT <span>мин. чек</span></div>
-          <div class="verified-badge">
-            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
-            Верифицирован · ATAMEKEN Club
-          </div>
-          <div class="hc-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg> Досье только после верификации</div>
         </div>
         <div class="hc hc-2">
           <div class="hc-tag red">Мероприятие</div>
