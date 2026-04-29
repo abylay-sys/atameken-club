@@ -200,6 +200,33 @@ nav.scrolled{box-shadow:var(--shadow)}
 .step-box.highlight{background:var(--ink);border-top:3px solid var(--red)}
 .step-box.highlight .step-num{color:var(--red);opacity:.35}
 .step-box.highlight .step-phase{color:rgba(255,255,255,.5)}
+
+/* SNAKE LAYOUT (6 шагов) */
+.steps-snake{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;padding:.5rem 0}
+.snake-line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.step-cell{position:relative;z-index:2;background:#fff;border:1.5px solid var(--border);padding:1.6rem 1.25rem 1.4rem;border-radius:6px;display:flex;flex-direction:column;align-items:center;gap:.65rem;text-align:center;transition:all .3s;min-height:200px;justify-content:flex-start}
+.step-cell:hover{border-color:var(--red);box-shadow:0 8px 24px rgba(200,40,42,.14);transform:translateY(-3px)}
+.step-cell:hover .step-circle{background:var(--red);color:#fff;transform:scale(1.05)}
+.step-cell.active{background:var(--ink);border-color:var(--ink)}
+.step-cell.active .step-circle{background:var(--red);border-color:var(--red);color:#fff}
+.step-cell.active .step-title{color:#fff}
+.step-cell.active .step-cell-tag{color:rgba(255,255,255,.55)}
+.step-cell.active:hover{box-shadow:0 8px 24px rgba(15,22,32,.3)}
+.step-cell-tag{font-size:var(--t0);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.step-circle{width:62px;height:62px;border-radius:50%;background:#fff;border:2.5px solid var(--red);color:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:500;transition:all .3s;box-shadow:0 2px 8px rgba(200,40,42,.08)}
+.step-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:var(--ink);line-height:1.25;margin-top:.15rem}
+/* Snake path: 1,2,3 top — 6,5,4 bottom (reverse) */
+.steps-snake .step-cell:nth-child(2){grid-area:1/1}
+.steps-snake .step-cell:nth-child(3){grid-area:1/2}
+.steps-snake .step-cell:nth-child(4){grid-area:1/3}
+.steps-snake .step-cell:nth-child(5){grid-area:2/3}
+.steps-snake .step-cell:nth-child(6){grid-area:2/2}
+.steps-snake .step-cell:nth-child(7){grid-area:2/1}
+@media(max-width:900px){
+  .steps-snake{grid-template-columns:1fr}
+  .steps-snake .step-cell{grid-area:auto !important}
+  .snake-line{display:none}
+}
 .step-box.highlight h3{color:#fff}
 .step-box.highlight p{color:rgba(255,255,255,.6)}
 
@@ -803,42 +830,39 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         </div>
       </div>
     </div>
-    <div class="steps-grid reveal">
-      <div class="step-box">
-        <div class="step-phase">Шаг 1</div>
-        <div class="step-num">01</div>
-        <h3>Регистрация</h3>
-        <p>Создайте аккаунт на платформе. Укажите тип участника: соискатель инвестиций, инвестор, франчайзер, продавец бизнеса, продавец или покупатель товаров и сырья. Занимает 2 минуты.</p>
+    <div class="steps-snake reveal">
+      <svg class="snake-line" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M 16.7 17 H 83.3 V 43 H 16.7" fill="none" stroke="#C8282A" stroke-width="0.4" stroke-dasharray="1.6 1.2" stroke-linecap="round" opacity=".5"/>
+      </svg>
+      <div class="step-cell">
+        <div class="step-cell-tag">Шаг 1</div>
+        <span class="step-circle">1</span>
+        <div class="step-title">Регистрация</div>
       </div>
-      <div class="step-box">
-        <div class="step-phase">Шаг 2</div>
-        <div class="step-num">02</div>
-        <h3>Заполнение анкеты</h3>
-        <p>Заполните профиль компании или проекта: краткое описание, отрасль, стадия, цель. Приложите презентацию или другие материалы для закрытого досье.</p>
+      <div class="step-cell">
+        <div class="step-cell-tag">Шаг 2</div>
+        <span class="step-circle">2</span>
+        <div class="step-title">Заполнение анкеты</div>
       </div>
-      <div class="step-box highlight">
-        <div class="step-phase">Шаг 3</div>
-        <div class="step-num">03</div>
-        <h3>Проверка и комплаенс</h3>
-        <p>Оператор платформы проверяет данные и организует подписание пакета документов. После подписания открывается доступ к закрытому каталогу.</p>
+      <div class="step-cell active">
+        <div class="step-cell-tag">Шаг 3</div>
+        <span class="step-circle">3</span>
+        <div class="step-title">Проверка и комплаенс</div>
       </div>
-      <div class="step-box">
-        <div class="step-phase">Шаг 4</div>
-        <div class="step-num">04</div>
-        <h3>Публикация карточки</h3>
-        <p>Ваш публичный профиль появляется в верифицированном каталоге платформы. Полные данные видны только верифицированным участникам.</p>
+      <div class="step-cell">
+        <div class="step-cell-tag">Шаг 4</div>
+        <span class="step-circle">4</span>
+        <div class="step-title">Публикация карточки</div>
       </div>
-      <div class="step-box">
-        <div class="step-phase">Шаг 5</div>
-        <div class="step-num">05</div>
-        <h3>Верификация и статусы</h3>
-        <p>По желанию: получите статус «Проверенная компания» или «Проверенный проект», закажите аудит бизнес-плана или финансовой модели.</p>
+      <div class="step-cell">
+        <div class="step-cell-tag">Шаг 5</div>
+        <span class="step-circle">5</span>
+        <div class="step-title">Верификация и статусы</div>
       </div>
-      <div class="step-box">
-        <div class="step-phase">Шаг 6</div>
-        <div class="step-num">06</div>
-        <h3>Доступ к Реестру и B2B-встречам офлайн</h3>
-        <p>Реестр верифицированных Резидентов «ATAMEKEN Club», закрытые B2B-встречи офлайн, питч-сессии и бизнес-миссии. Используйте личный кабинет для прямых деловых контактов.</p>
+      <div class="step-cell">
+        <div class="step-cell-tag">Шаг 6</div>
+        <span class="step-circle">6</span>
+        <div class="step-title">Доступ к Реестру<br/>и B2B-встречам</div>
       </div>
     </div>
   </div>
