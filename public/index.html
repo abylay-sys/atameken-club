@@ -132,7 +132,24 @@ nav.scrolled{box-shadow:var(--shadow)}
 .hc-shield-amber{color:#f59e0b}
 .hc-shield-emerald{color:#15803d}
 .hc-shield-navy{color:#1d4ed8}
-.hc-shield-club{filter:drop-shadow(0 2px 4px rgba(197,150,58,.45))}
+.hc-shield-club{filter:drop-shadow(0 2px 4px rgba(197,150,58,.45));position:relative}
+.hc-shield{position:relative}
+.hc-shield-tip{
+  display:none;position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);
+  background:#fff;color:var(--ink);font-size:.78rem;font-weight:500;letter-spacing:.01em;
+  text-transform:none;padding:.6rem .9rem;border-radius:6px;border:1.5px solid var(--ink);
+  white-space:normal;text-align:center;line-height:1.35;width:200px;
+  z-index:200;box-shadow:0 6px 18px rgba(0,0,0,.12);pointer-events:none;
+}
+.hc-shield-tip::before{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-1px);
+  border:7px solid transparent;border-top-color:var(--ink);
+}
+.hc-shield-tip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-3.5px);
+  border:6px solid transparent;border-top-color:#fff;
+}
+.hc-shield:hover .hc-shield-tip{display:block}
 .verified-badge svg{width:11px;height:11px}
 
 /* ─── TICKER ─── */
@@ -601,7 +618,7 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
             <span class="hc-shield hc-shield-navy" title="Финаудит компании">
               <svg viewBox="0 0 32 32"><path d="M16 2 L28 6 L28 16 Q28 25 16 30 Q4 25 4 16 L4 6 Z" fill="currentColor" stroke="rgba(0,0,0,.1)" stroke-width="1"/><polyline points="10 16 14.5 20 22 12.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
-            <span class="hc-shield hc-shield-club" title="Резидент Бизнес-сообщества «ATAMEKEN Club»">
+            <span class="hc-shield hc-shield-club">
               <svg viewBox="0 0 32 32">
                 <path d="M16 2 L28 6 L28 16 Q28 25 16 30 Q4 25 4 16 L4 6 Z" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.4"/>
                 <!-- laurel left -->
@@ -611,6 +628,7 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
                 <!-- star -->
                 <polygon points="16 9 17.6 13 21.5 13 18.5 15.5 19.6 19.5 16 17.3 12.4 19.5 13.5 15.5 10.5 13 14.4 13" fill="#C5963A"/>
               </svg>
+              <span class="hc-shield-tip">Является Резидентом Бизнес-сообщества «ATAMEKEN&nbsp;Club»</span>
             </span>
           </div>
           <div class="hc-price">от 150 млн KZT <span>мин. чек</span></div>
