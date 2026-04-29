@@ -218,7 +218,7 @@ nav.scrolled{box-shadow:var(--shadow)}
 .svc-f-btn.on{background:var(--red);border-color:var(--red);color:#fff}
 .svc-f-btn:not(.on):hover{border-color:var(--red);color:var(--red)}
 .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
-.svc-card{background:var(--white);border:1px solid var(--border);padding:1.75rem;border-radius:4px;box-shadow:var(--shadow);transition:all .25s;display:flex;flex-direction:column;gap:.75rem;text-decoration:none;color:inherit;cursor:pointer;position:relative}
+.svc-card{background:var(--white);border:1px solid var(--border);padding:1.75rem;border-radius:4px;box-shadow:var(--shadow);transition:all .25s;display:flex;flex-direction:column;gap:.75rem;text-decoration:none;color:inherit;position:relative}
 .svc-card::after{content:'Подробнее →';position:absolute;bottom:1.35rem;right:1.35rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;color:var(--red);opacity:0;transition:opacity .2s}
 .svc-card:hover::after{opacity:1}
 .svc-card:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
@@ -1574,6 +1574,29 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
   </div>
 </footer>
 
+<!-- CART WIDGET -->
+<button id="cartFab" class="cart-fab" aria-label="Корзина услуг">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l3 12h12l2-8H6"/></svg>
+  <span class="cart-count" id="cartCount">0</span>
+</button>
+<div id="cartOverlay" class="cart-overlay"></div>
+<aside id="cartDrawer" class="cart-drawer" aria-label="Корзина">
+  <div class="cart-hd">
+    <h3>Корзина услуг</h3>
+    <button id="cartClose" class="cart-close" aria-label="Закрыть">×</button>
+  </div>
+  <div id="cartList" class="cart-list"></div>
+  <div class="cart-foot">
+    <form id="cartForm" class="cart-form">
+      <input type="text" name="name" placeholder="Ваше имя *" required/>
+      <input type="text" name="contact" placeholder="Телефон или email *" required/>
+      <textarea name="comment" placeholder="Комментарий (необязательно)"></textarea>
+      <button id="cartSubmit" type="submit" class="cart-submit" disabled>Отправить заявку менеджеру</button>
+    </form>
+    <p style="font-size:.7rem;color:var(--ink4);text-align:center;margin:0">Менеджер свяжется в течение 1 рабочего дня и согласует условия.</p>
+  </div>
+</aside>
+
 <script>
 // Nav scroll
 const nav = document.getElementById('nav');
@@ -1737,29 +1760,6 @@ document.getElementById('cartForm').addEventListener('submit', async (e) => {
 
 cartRender();
 </script>
-
-<!-- CART WIDGET -->
-<button id="cartFab" class="cart-fab" aria-label="Корзина услуг">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l3 12h12l2-8H6"/></svg>
-  <span class="cart-count" id="cartCount">0</span>
-</button>
-<div id="cartOverlay" class="cart-overlay"></div>
-<aside id="cartDrawer" class="cart-drawer" aria-label="Корзина">
-  <div class="cart-hd">
-    <h3>Корзина услуг</h3>
-    <button id="cartClose" class="cart-close" aria-label="Закрыть">×</button>
-  </div>
-  <div id="cartList" class="cart-list"></div>
-  <div class="cart-foot">
-    <form id="cartForm" class="cart-form">
-      <input type="text" name="name" placeholder="Ваше имя *" required/>
-      <input type="text" name="contact" placeholder="Телефон или email *" required/>
-      <textarea name="comment" placeholder="Комментарий (необязательно)"></textarea>
-      <button id="cartSubmit" type="submit" class="cart-submit" disabled>Отправить заявку менеджеру</button>
-    </form>
-    <p style="font-size:.7rem;color:var(--ink4);text-align:center;margin:0">Менеджер свяжется в течение 1 рабочего дня и согласует условия.</p>
-  </div>
-</aside>
 
 </body>
 </html>
