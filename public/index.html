@@ -175,6 +175,9 @@ nav.scrolled{box-shadow:var(--shadow)}
 .who-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.4rem}
 .who-list li{font-size:var(--t1);color:var(--ink3);display:flex;gap:.5rem;align-items:flex-start;line-height:1.5}
 .who-list li::before{content:'·';color:var(--red);font-size:1.2rem;line-height:1;flex-shrink:0;margin-top:-.05rem}
+.who-lead{list-style:none;display:flex;flex-direction:column;gap:.55rem;margin:0;padding:0}
+.who-lead li{display:flex;gap:.65rem;align-items:flex-start;font-size:var(--t3);color:var(--ink2);line-height:1.55}
+.who-lead li svg{width:18px;height:18px;flex-shrink:0;color:var(--red);margin-top:.2rem}
 
 /* ─── HOW ─── */
 #how{background:var(--bg)}
@@ -667,7 +670,11 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
           <h2>Шесть типов участников,<br/>один личный кабинет</h2>
         </div>
         <div class="sh-right">
-          <p>У каждого типа участника - свой личный кабинет, настроенный под конкретные задачи. Базовая регистрация бесплатна. Доступ к закрытому каталогу открывается после верификации.</p>
+          <ul class="who-lead">
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="3 8 7 12 13 5"/></svg>У каждого типа участника - свой личный кабинет</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="3 8 7 12 13 5"/></svg>Базовая регистрация <strong style="color:var(--red);font-weight:600">бесплатна</strong></li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="3 8 7 12 13 5"/></svg>Доступ к закрытому каталогу после верификации</li>
+          </ul>
         </div>
       </div>
     </div>
