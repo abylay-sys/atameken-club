@@ -1603,6 +1603,69 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
 </aside>
 
 <script>
+// ═══════════════════════════════════════════
+// Auth-aware UI: разблокируем карточки каталога для залогиненных и
+// меняем CTA в шапке («Войти» → «В кабинет») если есть токен.
+// ═══════════════════════════════════════════
+(function applyAuthUI(){
+  const token = localStorage.getItem('ac_access');
+  const userRaw = localStorage.getItem('ac_user');
+  let user = null; try { user = JSON.parse(userRaw || 'null'); } catch {}
+
+  // 1) Replace top "Войти" link with cabinet shortcut
+  document.querySelectorAll('a.btn-red[href="/login.html"], a[href="/login.html"]').forEach(a => {
+    if(token){ a.href = '/cabinet.html'; if(a.textContent.trim()==='Войти') a.textContent = 'Кабинет'; }
+  });
+  if(token){
+    document.querySelectorAll('a.btn-red[href="/register.html"]').forEach(a => {
+      // Hero/CTA "Зарегистрироваться/Пройти верификацию" → kabin/verify
+      if(/Регистрац|верифика/i.test(a.textContent)){ a.href = '/verify.html'; }
+    });
+  }
+
+  // 2) Cards: by default catalog cards are .locked .blurred. We will:
+  //    - Anonymous: leave as is.
+  //    - Logged in but not VERIFIED: keep blur but change lock message to anchor at /verify.html
+  //    - Logged in AND VERIFIED: fully unlock (remove blur + hide lock-panel)
+  function setLockedState(state){
+    document.querySelectorAll('.pcard.locked').forEach(card => {
+      const panel = card.querySelector('.lock-panel');
+      if(state === 'verified'){
+        card.classList.remove('locked','blurred');
+        if(panel) panel.style.display = 'none';
+      } else if(state === 'pending'){
+        if(panel){
+          const a = panel.querySelector('a');
+          const p = panel.querySelector('p');
+          if(a){ a.href = '/verify.html'; a.textContent = 'Статус заявки'; }
+          if(p) p.textContent = 'Заявка на верификацию рассматривается. Доступ к полным досье откроется после одобрения.';
+        }
+      } else if(state === 'draft'){
+        if(panel){
+          const a = panel.querySelector('a');
+          const p = panel.querySelector('p');
+          if(a){ a.href = '/verify.html'; a.textContent = 'Заполнить анкету'; }
+          if(p) p.textContent = 'Заполните анкету верификации, чтобы открыть полные досье проектов.';
+        }
+      }
+    });
+  }
+
+  if(!token){ /* anonymous — leave defaults */ return; }
+
+  // Optimistically show pending state, then resolve real status from /profile
+  setLockedState('draft');
+  fetch('/profile', { headers: { Authorization: 'Bearer ' + token } })
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(data => {
+      const st = data?.profile?.status;
+      if(st === 'VERIFIED'){ setLockedState('verified'); }
+      else if(st === 'SUBMITTED'){ setLockedState('pending'); }
+      else { setLockedState('draft'); }
+    })
+    .catch(() => { /* keep draft state on error */ });
+})();
+
 // Nav scroll
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
