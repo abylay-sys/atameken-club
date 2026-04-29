@@ -201,31 +201,27 @@ nav.scrolled{box-shadow:var(--shadow)}
 .step-box.highlight .step-num{color:var(--red);opacity:.35}
 .step-box.highlight .step-phase{color:rgba(255,255,255,.5)}
 
-/* SNAKE LAYOUT (6 шагов) */
-.steps-snake{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;padding:.5rem 0}
-.snake-line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
-.step-cell{position:relative;z-index:2;background:#fff;border:1.5px solid var(--border);padding:1.6rem 1.25rem 1.4rem;border-radius:6px;display:flex;flex-direction:column;align-items:center;gap:.65rem;text-align:center;transition:all .3s;min-height:200px;justify-content:flex-start}
-.step-cell:hover{border-color:var(--red);box-shadow:0 8px 24px rgba(200,40,42,.14);transform:translateY(-3px)}
-.step-cell:hover .step-circle{background:var(--red);color:#fff;transform:scale(1.05)}
-.step-cell.active{background:var(--ink);border-color:var(--ink)}
-.step-cell.active .step-circle{background:var(--red);border-color:var(--red);color:#fff}
-.step-cell.active .step-title{color:#fff}
-.step-cell.active .step-cell-tag{color:rgba(255,255,255,.55)}
-.step-cell.active:hover{box-shadow:0 8px 24px rgba(15,22,32,.3)}
-.step-cell-tag{font-size:var(--t0);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
-.step-circle{width:62px;height:62px;border-radius:50%;background:#fff;border:2.5px solid var(--red);color:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:500;transition:all .3s;box-shadow:0 2px 8px rgba(200,40,42,.08)}
-.step-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:var(--ink);line-height:1.25;margin-top:.15rem}
-/* Snake path: 1,2,3 top — 6,5,4 bottom (reverse) */
-.steps-snake .step-cell:nth-child(2){grid-area:1/1}
-.steps-snake .step-cell:nth-child(3){grid-area:1/2}
-.steps-snake .step-cell:nth-child(4){grid-area:1/3}
-.steps-snake .step-cell:nth-child(5){grid-area:2/3}
-.steps-snake .step-cell:nth-child(6){grid-area:2/2}
-.steps-snake .step-cell:nth-child(7){grid-area:2/1}
+/* WAVE LAYOUT (6 шагов) */
+.steps-wave{position:relative;height:380px;margin:1rem 0;max-width:1200px}
+.wave-bg{position:absolute;left:0;right:0;top:90px;width:100%;height:200px;pointer-events:none;z-index:1}
+.wave-step{position:absolute;top:160px;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:0;width:170px}
+.ws-circle{display:flex;width:64px;height:64px;border-radius:50%;background:#fff;border:3px solid var(--red);color:var(--red);align-items:center;justify-content:center;font-size:1.9rem;font-family:'Cormorant Garamond',serif;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,.1);transition:all .3s;cursor:default}
+.wave-step:hover .ws-circle{background:var(--red);color:#fff;transform:scale(1.08)}
+.ws-circle-active{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 6px 18px rgba(200,40,42,.4)}
+.ws-label{position:absolute;left:50%;transform:translateX(-50%);text-align:center;width:170px}
+.ws-label.above{bottom:90px}
+.ws-label.below{top:90px}
+.ws-tag{font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.25rem}
+.ws-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.25}
+.steps-mobile{display:none;list-style:none;padding:0;margin:0;counter-reset:steps}
 @media(max-width:900px){
-  .steps-snake{grid-template-columns:1fr}
-  .steps-snake .step-cell{grid-area:auto !important}
-  .snake-line{display:none}
+  .steps-wave{height:auto}
+  .wave-bg,.wave-step{display:none}
+  .steps-mobile{display:flex;flex-direction:column;gap:.85rem}
+  .steps-mobile li{display:flex;gap:1rem;align-items:center;background:#fff;border:1px solid var(--border);border-radius:6px;padding:.95rem 1rem;transition:all .2s}
+  .steps-mobile li:hover{border-color:var(--red);box-shadow:0 3px 10px rgba(200,40,42,.1)}
+  .steps-mobile li > span{display:flex;width:42px;height:42px;border-radius:50%;background:var(--red);color:#fff;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;flex-shrink:0}
+  .steps-mobile li strong{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink)}
 }
 .step-box.highlight h3{color:#fff}
 .step-box.highlight p{color:rgba(255,255,255,.6)}
@@ -830,40 +826,68 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         </div>
       </div>
     </div>
-    <div class="steps-snake reveal">
-      <svg class="snake-line" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M 16.7 17 H 83.3 V 43 H 16.7" fill="none" stroke="#C8282A" stroke-width="0.4" stroke-dasharray="1.6 1.2" stroke-linecap="round" opacity=".5"/>
+    <div class="steps-wave reveal">
+      <svg class="wave-bg" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+        <!-- 5 arcs alternating up/down between 6 circles at x=100,300,500,700,900,1100; y=100 -->
+        <path d="M 100 100 Q 200 20 300 100"   stroke="#C8282A" stroke-width="16" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <path d="M 300 100 Q 400 180 500 100"  stroke="#1A3A6B" stroke-width="16" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <path d="M 500 100 Q 600 20 700 100"   stroke="#C8282A" stroke-width="16" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <path d="M 700 100 Q 800 180 900 100"  stroke="#1A3A6B" stroke-width="16" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <path d="M 900 100 Q 1000 20 1100 100" stroke="#C8282A" stroke-width="16" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
       </svg>
-      <div class="step-cell">
-        <div class="step-cell-tag">Шаг 1</div>
-        <span class="step-circle">1</span>
-        <div class="step-title">Регистрация</div>
+
+      <div class="wave-step" style="left:8.33%">
+        <div class="ws-label above">
+          <div class="ws-tag">Шаг 1</div>
+          <div class="ws-title">Регистрация</div>
+        </div>
+        <span class="ws-circle">1</span>
       </div>
-      <div class="step-cell">
-        <div class="step-cell-tag">Шаг 2</div>
-        <span class="step-circle">2</span>
-        <div class="step-title">Заполнение анкеты</div>
+      <div class="wave-step" style="left:25%">
+        <div class="ws-label below">
+          <div class="ws-tag">Шаг 2</div>
+          <div class="ws-title">Заполнение анкеты</div>
+        </div>
+        <span class="ws-circle">2</span>
       </div>
-      <div class="step-cell active">
-        <div class="step-cell-tag">Шаг 3</div>
-        <span class="step-circle">3</span>
-        <div class="step-title">Проверка и комплаенс</div>
+      <div class="wave-step" style="left:41.67%">
+        <div class="ws-label above">
+          <div class="ws-tag">Шаг 3</div>
+          <div class="ws-title">Проверка и комплаенс</div>
+        </div>
+        <span class="ws-circle ws-circle-active">3</span>
       </div>
-      <div class="step-cell">
-        <div class="step-cell-tag">Шаг 4</div>
-        <span class="step-circle">4</span>
-        <div class="step-title">Публикация карточки</div>
+      <div class="wave-step" style="left:58.33%">
+        <div class="ws-label below">
+          <div class="ws-tag">Шаг 4</div>
+          <div class="ws-title">Публикация карточки</div>
+        </div>
+        <span class="ws-circle">4</span>
       </div>
-      <div class="step-cell">
-        <div class="step-cell-tag">Шаг 5</div>
-        <span class="step-circle">5</span>
-        <div class="step-title">Верификация и статусы</div>
+      <div class="wave-step" style="left:75%">
+        <div class="ws-label above">
+          <div class="ws-tag">Шаг 5</div>
+          <div class="ws-title">Верификация и статусы</div>
+        </div>
+        <span class="ws-circle">5</span>
       </div>
-      <div class="step-cell">
-        <div class="step-cell-tag">Шаг 6</div>
-        <span class="step-circle">6</span>
-        <div class="step-title">Доступ к Реестру<br/>и B2B-встречам</div>
+      <div class="wave-step" style="left:91.67%">
+        <div class="ws-label below">
+          <div class="ws-tag">Шаг 6</div>
+          <div class="ws-title">Доступ к Реестру<br/>и B2B-встречам</div>
+        </div>
+        <span class="ws-circle">6</span>
       </div>
+
+      <!-- Mobile fallback list (shown only on small screens) -->
+      <ol class="steps-mobile">
+        <li><span>1</span><div><strong>Регистрация</strong></div></li>
+        <li><span>2</span><div><strong>Заполнение анкеты</strong></div></li>
+        <li><span>3</span><div><strong>Проверка и комплаенс</strong></div></li>
+        <li><span>4</span><div><strong>Публикация карточки</strong></div></li>
+        <li><span>5</span><div><strong>Верификация и статусы</strong></div></li>
+        <li><span>6</span><div><strong>Доступ к Реестру и B2B-встречам</strong></div></li>
+      </ol>
     </div>
   </div>
 </section>
