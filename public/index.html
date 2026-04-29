@@ -172,9 +172,17 @@ nav.scrolled{box-shadow:var(--shadow)}
 .who-icon-wrap{width:44px;height:44px;background:var(--red-dim);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;color:var(--red)}
 .who-title{font-family:'Cormorant Garamond',serif;font-size:var(--t5);color:var(--ink);margin-bottom:.5rem}
 .who-desc{font-size:var(--t2);color:var(--ink3);margin-bottom:1.1rem;flex:1;line-height:1.65}
-.who-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.4rem}
+.who-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;margin:.65rem 0 0}
 .who-list li{font-size:var(--t1);color:var(--ink3);display:flex;gap:.5rem;align-items:flex-start;line-height:1.5}
 .who-list li::before{content:'·';color:var(--red);font-size:1.2rem;line-height:1;flex-shrink:0;margin-top:-.05rem}
+.who-details{margin-bottom:1rem}
+.who-details summary{list-style:none}
+.who-details summary::-webkit-details-marker{display:none}
+.who-toggle{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;font-size:var(--t2);font-weight:500;color:var(--ink2);background:var(--bg);border:1px solid var(--border);padding:.45rem .85rem;border-radius:3px;transition:all .2s;user-select:none;width:fit-content}
+.who-toggle:hover{border-color:var(--red);color:var(--red)}
+.who-toggle svg{width:13px;height:13px;transition:transform .25s}
+.who-details[open] .who-toggle{border-color:var(--red);color:var(--red)}
+.who-details[open] .who-toggle svg{transform:rotate(180deg)}
 .who-lead{list-style:none;display:flex;flex-direction:column;gap:.55rem;margin:0;padding:0}
 .who-lead li{display:flex;gap:.65rem;align-items:flex-start;font-size:var(--t3);color:var(--ink2);line-height:1.55}
 .who-lead li svg{width:18px;height:18px;flex-shrink:0;color:var(--red);margin-top:.2rem}
@@ -686,13 +694,16 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         </div>
         <div class="who-title">Соискатели инвестиций</div>
         <p class="who-desc">Стартапы, инвест-проекты и растущие компании, которые ищут финансирование, партнёров или дистрибьюторов.</p>
-        <ul class="who-list">
+        <details class="who-details">
+          <summary class="who-toggle">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg></summary>
+          <ul class="who-list">
           <li>Публичная карточка и закрытое досье для инвесторов</li>
           <li>Статусы «Проверенная компания» и «Проверенный проект»</li>
           <li>Питч-сессии и закрытые встречи с инвесторами</li>
           <li>Аудит бизнес-плана и финансовой модели</li>
           <li>Перевод презентации на английский и китайский</li>
         </ul>
+        </details>
         <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Разместить проект</a>
       </div>
       <div class="who-card">
@@ -701,13 +712,16 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         </div>
         <div class="who-title">Инвесторы</div>
         <p class="who-desc">Частные инвесторы, фонды, семейные офисы и корпоративные инвестподразделения.</p>
-        <ul class="who-list">
+        <details class="who-details">
+          <summary class="who-toggle">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg></summary>
+          <ul class="who-list">
           <li>Поток верифицированных проектов с полными досье</li>
           <li>Фильтрация по отрасли, стадии, географии, чеку</li>
           <li>Финансовые модели, команда, документы проекта</li>
           <li>Прямой контакт с командой через платформу</li>
           <li>Приоритет на питч-сессиях и деловой ужин для инвесторов</li>
         </ul>
+        </details>
         <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Войти как инвестор</a>
       </div>
       <div class="who-card">
@@ -716,13 +730,16 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         </div>
         <div class="who-title">Франчайзеры и франчайзи</div>
         <p class="who-desc">Владельцы франшиз, ищущие масштабирование на новых рынках, и предприниматели, выбирающие бизнес-модель.</p>
-        <ul class="who-list">
+        <details class="who-details">
+          <summary class="who-toggle">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg></summary>
+          <ul class="who-list">
           <li>Каталог верифицированных франшиз с финмоделями</li>
           <li>ROI-калькуляторы и сроки окупаемости</li>
           <li>Верификация надёжности франчайзера</li>
           <li>Подбор франшизы под бюджет и регион</li>
           <li>Юридическое сопровождение франшизного договора</li>
         </ul>
+        </details>
         <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Смотреть франшизы</a>
       </div>
       <div class="who-card">
@@ -731,13 +748,16 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         </div>
         <div class="who-title">Продавцы и покупатели бизнеса</div>
         <p class="who-desc">Собственники, продающие действующий бизнес, и покупатели, ищущие компании с подтверждёнными показателями.</p>
-        <ul class="who-list">
+        <details class="who-details">
+          <summary class="who-toggle">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg></summary>
+          <ul class="who-list">
           <li>Конфиденциальное размещение без лишней огласки</li>
           <li>Верификация реальности финансовых показателей</li>
           <li>Независимый аудит компании перед сделкой</li>
           <li>Консалтинговое сопровождение до закрытия</li>
           <li>Комиссия за сопровождение - по индивидуальному запросу</li>
         </ul>
+        </details>
         <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Разместить / найти бизнес</a>
       </div>
       <div class="who-card">
@@ -746,13 +766,16 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         </div>
         <div class="who-title">Продавцы товаров и сырья</div>
         <p class="who-desc">Производители, дистрибьюторы и трейдеры. Размещение товарных позиций и сырьевых партий с верификацией происхождения и качества.</p>
-        <ul class="who-list">
+        <details class="who-details">
+          <summary class="who-toggle">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg></summary>
+          <ul class="who-list">
           <li>Каталог товарных позиций и сырьевых партий</li>
           <li>Сертификаты СТ-КЗ, СТ-1, происхождения и качества</li>
           <li>Прямой выход на оптовых покупателей и трейдеров</li>
           <li>Верификация поставок и договоров</li>
           <li>Включение в реестр поставщиков платформы</li>
         </ul>
+        </details>
         <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Разместить товар / сырьё</a>
       </div>
       <div class="who-card">
@@ -761,13 +784,16 @@ footer{background:var(--ink2);padding:2rem 3rem;display:flex;align-items:center;
         </div>
         <div class="who-title">Покупатели товаров и сырья</div>
         <p class="who-desc">Оптовые покупатели, торговые сети, производства и экспортёры. Поиск проверенных поставщиков из Казахстана и зарубежья.</p>
-        <ul class="who-list">
+        <details class="who-details">
+          <summary class="who-toggle">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg></summary>
+          <ul class="who-list">
           <li>Доступ к каталогу верифицированных поставщиков</li>
           <li>Запрос коммерческих предложений напрямую</li>
           <li>Проверка договоров поставки и сырья</li>
           <li>Логистическое и таможенное сопровождение</li>
           <li>Сделки B2B с гарантией качества и происхождения</li>
         </ul>
+        </details>
         <a href="/register.html" class="btn-link" style="margin-top:auto;padding-top:.75rem">Найти поставщика</a>
       </div>
     </div>
