@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Верификация профиля — ATAMEKEN Club</title>
+<title>Верификация профиля - ATAMEKEN Club</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
@@ -145,7 +145,7 @@ strong{color:var(--ink);font-weight:600}
     </a>
     <a href="#" id="btn-logout" class="tn-back">Выйти</a>
     <div class="tn-user">
-      <div class="tn-avatar" id="avatarText">—</div>
+      <div class="tn-avatar" id="avatarText">-</div>
       <span id="userNameDisplay">Загрузка…</span>
     </div>
   </div>
@@ -200,7 +200,7 @@ strong{color:var(--ink);font-weight:600}
           <div class="field full"><label>Полное наименование компании / проекта *</label><input id="pf-companyName" type="text" placeholder="ТОО «Название» или Проект «Название»"/></div>
           <div class="field"><label>Год основания</label><input id="pf-foundedYear" type="number" min="1900" max="2100" placeholder="2019"/></div>
           <div class="field"><label>Отрасль *</label>
-            <select id="pf-industry"><option value="">—</option><option>Агропром</option><option>IT / FinTech</option><option>Недвижимость</option><option>Логистика</option><option>Энергетика</option><option>HoReCa</option><option>Строительство</option><option>Медицина</option><option>Другое</option></select>
+            <select id="pf-industry"><option value="">-</option><option>Агропром</option><option>IT / FinTech</option><option>Недвижимость</option><option>Логистика</option><option>Энергетика</option><option>HoReCa</option><option>Строительство</option><option>Медицина</option><option>Другое</option></select>
           </div>
           <div class="field"><label>Страна / город *</label><input id="pf-region" type="text" placeholder="Алматы, Казахстан"/></div>
           <div class="field"><label>БИН / регистрационный номер *</label><input id="pf-bin" type="text" placeholder="000000000000"/></div>
@@ -241,11 +241,11 @@ strong{color:var(--ink);font-weight:600}
         </div>
         <div class="step-row">
           <div class="step-num">3</div>
-          <div><div class="step-title">Подписание документов</div><div class="step-text">Меморандум, NDA и договор об использовании данных — онлайн или офлайн.</div></div>
+          <div><div class="step-title">Подписание документов</div><div class="step-text">Меморандум, NDA и договор об использовании данных - онлайн или офлайн.</div></div>
         </div>
         <div class="step-row">
           <div class="step-num">4</div>
-          <div><div class="step-title">Публикация карточки</div><div class="step-text">Ваш профиль появляется в каталоге. Полные данные — только для верифицированных инвесторов.</div></div>
+          <div><div class="step-title">Публикация карточки</div><div class="step-text">Ваш профиль появляется в каталоге. Полные данные - только для верифицированных инвесторов.</div></div>
         </div>
       </div>
     </div>
@@ -273,7 +273,7 @@ strong{color:var(--ink);font-weight:600}
   const PROFILE_FIELDS = ['companyName','bin','industry','region','description','website','foundedYear','revenue','employees','investmentNeed','investmentGoal','contactName','contactPhone','contactEmail'];
 
   function initials(name) {
-    if (!name) return '—';
+    if (!name) return '-';
     const parts = name.trim().split(/\s+/);
     return (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
   }
@@ -360,7 +360,7 @@ strong{color:var(--ink);font-weight:600}
     $('btn-save-profile').disabled = locked;
     $('btn-submit-verify').disabled = locked;
     if (locked) {
-      $('btn-submit-verify').textContent = profile.status === 'VERIFIED' ? 'Профиль верифицирован' : 'Отправлено — ожидает проверки';
+      $('btn-submit-verify').textContent = profile.status === 'VERIFIED' ? 'Профиль верифицирован' : 'Отправлено - ожидает проверки';
     }
   }
 
