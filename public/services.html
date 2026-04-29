@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Каталог услуг - Бизнес-сообщество «ATAMEKEN Club»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/landing.css"/>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <a href="/" class="logo">
+    <div class="logo-emblem">
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
+    </div>
+    <div class="logo-text">
+      <span class="logo-main">Бизнес-сообщество</span>
+      <span class="logo-sub-name">«ATAMEKEN Club»</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/index.html#who">Участникам</a></li>
+    <li><a href="/index.html#how">Верификация</a></li>
+    <li style="display:none"><a href="#catalog">Проекты</a></li>
+    <li><a href="/services.html">Услуги</a></li>
+    <li><a href="/events.html">Мероприятия</a></li>
+    <li><a href="/pricing.html">Тарифы</a></li>
+    <li><a href="/partners.html">Партнёрам</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button class="lang-btn active">RU</button>
+      <button class="lang-btn">KZ</button>
+      <button class="lang-btn">EN</button>
+      <button class="lang-btn">中文</button>
+    </div>
+    <a href="/login.html" class="btn-red" style="padding:.48rem 1.2rem;font-size:.75rem">Войти</a>
+  </div>
+</nav>
+
+<main style="padding-top:1rem">
+<!-- ══ КАТАЛОГ УСЛУГ ══ -->
+<section id="services" class="bg-gray">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Каталог услуг</span>
+          <h2>Деловые услуги<br/>для компаний и инвесторов</h2>
+        </div>
+        <div class="sh-right">
+          <p>Публикуются только услуги, готовые к оказанию прямо сейчас. Каталог пополняется. Для иностранных компаний - пакетная модель входа на рынок Казахстана.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="svc-section-title reveal">Верификация и шевроны</h3>
+    <p class="svc-section-sub reveal">Каждая услуга добавляет соответствующий шеврон в ваш профиль. Шевроны видны в каталоге и повышают доверие со стороны инвесторов и покупателей.</p>
+
+    <div class="svc-grid" id="svcGridChevrons">
+      <div class="svc-card" data-svc-id="club-resident" data-svc-name="Резидент Бизнес-сообщества «ATAMEKEN Club»">
+        <div class="svc-chev"><span class="bdg bdg-club"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>Резидент ATAMEKEN Club</span></div>
+        <div class="svc-name">Резидентство в Бизнес-сообществе</div>
+        <div class="svc-desc">Членство в Клубе с выдачей сертификата Резидента. Приоритет в каталоге, доступ к закрытым B2B-встречам офлайн и Реестру Резидентов.</div>
+        <div class="svc-price">Условия по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="v-form" data-svc-name="Верификация анкеты">
+        <div class="svc-chev"><span class="bdg bdg-v-form"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>Верификация анкеты</span></div>
+        <div class="svc-name">Верификация анкеты</div>
+        <div class="svc-desc">Проверка регистрационных данных, контактов, публичного следа и учредителей. Базовый комплаенс-чекап перед публикацией карточки в каталоге.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="v-bp" data-svc-name="Верификация БП">
+        <div class="svc-chev"><span class="bdg bdg-v-bp"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="1" width="8" height="10" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7" x2="8" y2="7"/></svg>Верификация БП</span></div>
+        <div class="svc-name">Верификация бизнес-плана</div>
+        <div class="svc-desc">Независимая проверка бизнес-плана: допущения, юнит-экономика, логика монетизации, реалистичность прогнозов и инвестиционная привлекательность.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="v-fin" data-svc-name="Верификация финансовой модели">
+        <div class="svc-chev"><span class="bdg bdg-v-fin"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>Верификация Фин.модели</span></div>
+        <div class="svc-name">Верификация финансовой модели</div>
+        <div class="svc-desc">Проверка финансовой модели: P&amp;L, Cash Flow, Balance Sheet, юнит-экономика, сценарии. Подготовка питч-версии для инвесторов.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="v-ctr" data-svc-name="Верификация договоров">
+        <div class="svc-chev"><span class="bdg bdg-v-ctr"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 1h6l2 2v8H3z"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="7" x2="9" y2="7"/></svg>Верификация Договоров</span></div>
+        <div class="svc-name">Верификация договоров</div>
+        <div class="svc-desc">Проверка договоров поставок, сырья, дистрибьюции и иных коммерческих соглашений. Юридический анализ рисков и реальности партнёрств.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="audit-co" data-svc-name="Финансовый аудит компании">
+        <div class="svc-chev"><span class="bdg bdg-audit-co"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 9V5l4-4 4 4v4"/><rect x="4" y="7" width="4" height="4"/></svg>Финаудит Компании</span></div>
+        <div class="svc-name">Финансовый аудит компании</div>
+        <div class="svc-desc">Полный финансовый аудит: бухгалтерская отчётность, учётная политика, первичные документы, соответствие стандартам. Подготовка к сделкам M&amp;A.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc-id="audit-pr" data-svc-name="Аудит проекта">
+        <div class="svc-chev"><span class="bdg bdg-audit-pr"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="4.5"/><polyline points="4 6 5.5 7.5 8 4.5"/></svg>Аудит Проекта</span></div>
+        <div class="svc-name">Аудит проекта</div>
+        <div class="svc-desc">Комплексный аудит проекта: команда, продукт, рынок, юнит-экономика, юридическая структура. Заключение для инвестора или стратегического партнёра.</div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+    </div>
+
+    <h3 class="svc-section-title reveal" style="margin-top:3rem">Дополнительные деловые услуги</h3>
+    <p class="svc-section-sub reveal">Сопровождение, аналитика, юр. и фин. поддержка. Выберите нужное и оставьте заявку - менеджер свяжется и согласует условия.</p>
+
+    <div class="svc-filter reveal" id="svcFilter">
+      <button class="svc-f-btn on" data-svc="all">Все услуги</button>
+      <button class="svc-f-btn" data-svc="kz">Для КЗ рынка</button>
+      <button class="svc-f-btn" data-svc="cn">Для зарубежных</button>
+      <button class="svc-f-btn" data-svc="legal">Юридические</button>
+      <button class="svc-f-btn" data-svc="fin">Финансовые</button>
+      <button class="svc-f-btn" data-svc="research">Аналитика и исследования</button>
+    </div>
+
+    <div class="svc-grid" id="svcGrid">
+
+      <div class="svc-card" data-svc="kz cn legal" data-svc-id="visa" data-svc-name="Визовая поддержка">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><circle cx="12" cy="14" r="2"/></svg></div>
+        <div class="svc-name">Визовая поддержка</div>
+        <div class="svc-desc">Бизнес-визы, инвесторские визы и ВНЖ Казахстана. Оформление для иностранных сотрудников и деловых поездок.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc="kz cn legal" data-svc-id="customs" data-svc-name="Таможенное оформление">
+        <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 3h22l-2 13H3L1 3z"/><path d="M1 3l2 13M22 3l-2 13M8 3v13M16 3v13"/></svg></div>
+        <div class="svc-name">Таможенное оформление</div>
+        <div class="svc-desc">Очистка грузов на казахстанских КПП. Импорт/экспорт, сертификация товаров.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc="kz cn research" data-svc-id="market" data-svc-name="Анализ рынка">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="svc-name">Анализ рынка</div>
+        <div class="svc-desc">Исследования рынка Казахстана и стран ЦА: ёмкость, конкуренты, потребители, регуляторика.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc="kz cn" data-svc-id="packaging" data-svc-name="Упаковка и вывод продукта на рынок">
+        <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="svc-name">Упаковка и вывод продукта</div>
+        <div class="svc-desc">Адаптация продукта для рынка КЗ: маркировка, упаковка, сертификация, регистрация торговых марок.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc="kz cn fin" data-svc-id="cert" data-svc-name="Сертификация (ISO, халяль, экспорт)">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="svc-name">Сертификация (ISO, халяль, экспорт)</div>
+        <div class="svc-desc">Получение сертификатов соответствия, ISO, халяль, экспортных разрешений. Подготовка к международным сделкам.</div>
+        <div class="svc-tags"><span class="svc-tag all">Сертификаты</span><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag cn">Экспорт</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc="kz cn legal fin" data-svc-id="acc-legal" data-svc-name="Бухгалтерия и юридическая поддержка">
+        <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="svc-name">Бухгалтерия и юр. поддержка</div>
+        <div class="svc-desc">Бухгалтерский учёт, налоговое сопровождение, регистрация компаний, договоры по праву РК.</div>
+        <div class="svc-tags"><span class="svc-tag kz">КЗ право</span><span class="svc-tag legal">Юридические</span><span class="svc-tag fin">Финансовые</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc="cn" data-svc-id="entry-pkg" data-svc-name="Пакет входа для иностранных компаний">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
+        <div class="svc-name">Пакет входа на рынок РК</div>
+        <div class="svc-desc">Комплекс: ИИН, банковская карта, прописка, iCUNAC, визовое сопровождение, бизнес-план, подбор жилья и авиабилеты.</div>
+        <div class="svc-tags"><span class="svc-tag cn">Зарубежные</span><span class="svc-tag all">«Под ключ»</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc="kz cn fin research" data-svc-id="bp-dev" data-svc-name="Разработка бизнес-плана и юнит-экономики">
+        <div class="svc-icon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+        <div class="svc-name">Разработка БП и юнит-экономики</div>
+        <div class="svc-desc">Подготовка бизнес-плана с юнит-экономикой по казахстанским и международным стандартам. Для банков и инвесторов.</div>
+        <div class="svc-tags"><span class="svc-tag kz">КЗ рынок</span><span class="svc-tag fin">Финансовые</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+      <div class="svc-card" data-svc="kz cn fin" data-svc-id="fin-model-dev" data-svc-name="Разработка финансовой модели">
+        <div class="svc-icon r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="14" x2="15" y2="14"/></svg></div>
+        <div class="svc-name">Разработка фин. модели</div>
+        <div class="svc-desc">Полная финансовая модель: P&amp;L, Cash Flow, Balance Sheet, сценарный анализ, питч-версия для инвесторов.</div>
+        <div class="svc-tags"><span class="svc-tag fin">Финансовые</span><span class="svc-tag kz">КЗ рынок</span></div>
+        <div class="svc-price">Цена по запросу</div>
+        <button class="svc-add" data-add>Добавить в корзину</button>
+      </div>
+
+    </div>
+
+    <p class="svc-section-sub reveal" style="margin-top:1.5rem;text-align:center">Цены по согласованию. После добавления услуг в корзину менеджер свяжется и согласует условия и сроки.</p>
+  </div>
+</section>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="f-logo">
+    <div class="f-logo-emb">
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="38" height="38" style="display:block;border-radius:50%"/>
+    </div>
+    <div class="f-logo-text" style="line-height:1.1">Бизнес-сообщество<br/>«ATAMEKEN Club»<span style="margin-top:.3rem">г. Алматы, Казахстан</span></div>
+  </div>
+  <div class="f-mid">
+    <p>© 2025 ТОО «ATAMEKEN Web». Все права защищены.</p>
+    <p>Бизнес-сообщество «ATAMEKEN Club» · Казахстан</p>
+  </div>
+  <div class="f-right">
+    <a href="mailto:info@atameken.club">info@atameken.club</a>
+    <a href="tel:+77000000000">+7 (700) 000-00-00</a>
+    <a href="#">г. Алматы, Казахстан</a>
+  </div>
+</footer>
+
+<script src="/assets/api.js"></script>
+<script>
+// Auth-aware nav: replace «Войти» → «Кабинет» if logged in
+(function(){
+  if(localStorage.getItem('ac_access')){
+    document.querySelectorAll('a[href="/login.html"]').forEach(a => {
+      a.href = '/cabinet.html';
+      if(a.textContent.trim() === 'Войти') a.textContent = 'Кабинет';
+    });
+  }
+})();
+// Reveal observer
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.06});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Services filter
+document.querySelectorAll('.svc-f-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.svc-f-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const f = btn.dataset.svc;
+    document.querySelectorAll('#svcGrid .svc-card').forEach(c => {
+      if(f === 'all') { c.style.display = 'flex'; return; }
+      c.style.display = c.dataset.svc.split(' ').includes(f) ? 'flex' : 'none';
+    });
+  });
+});
+// Cart wiring (lightweight, points to same backend)
+const CART_KEY = 'ac_cart_v1';
+const cartState = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } };
+const cartSave = (items) => localStorage.setItem(CART_KEY, JSON.stringify(items));
+const cartHas = (id) => cartState().some(it => it.id === id);
+function cartAdd(id,name){ const items = cartState(); if(items.some(it=>it.id===id)) return; items.push({id,name}); cartSave(items); }
+function cartRemove(id){ cartSave(cartState().filter(it=>it.id!==id)); }
+function cartSyncBtns(){
+  document.querySelectorAll('.svc-card[data-svc-id]').forEach(card => {
+    const id = card.dataset.svcId; const btn = card.querySelector('[data-add]');
+    if(!btn) return;
+    if(cartHas(id)){ btn.classList.add('added'); btn.textContent = 'В корзине'; }
+    else { btn.classList.remove('added'); btn.textContent = 'Добавить в корзину'; }
+  });
+}
+document.querySelectorAll('.svc-card[data-svc-id]').forEach(card => {
+  const btn = card.querySelector('[data-add]'); if(!btn) return;
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const id = card.dataset.svcId, name = card.dataset.svcName;
+    if(cartHas(id)){ cartRemove(id); } else { cartAdd(id,name); }
+    cartSyncBtns();
+    alert(cartHas(id) ? 'Добавлено в корзину. Перейдите на главную, чтобы оформить.' : 'Удалено из корзины.');
+  });
+});
+cartSyncBtns();
+
+</script>
+
+</body>
+</html>
