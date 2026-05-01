@@ -8,6 +8,47 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/assets/landing.css"/>
+<style>
+  /* Residents page */
+  .res-intro{max-width:880px;margin-bottom:2rem}
+  .res-intro h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);color:var(--ink);line-height:1.15;margin:0 0 1rem;font-weight:500}
+  .res-intro p{color:var(--ink2);line-height:1.7;font-size:var(--t2);margin:0 0 1rem}
+  .res-paths{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+  .res-path{background:#fff;border:1px solid var(--border);border-top:3px solid var(--red);border-radius:6px;padding:1.75rem 1.85rem;box-shadow:var(--shadow);transition:all .25s}
+  .res-path:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+  .res-path-tag{font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem}
+  .res-path h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);font-weight:500;margin:0 0 1rem;line-height:1.25}
+  .res-path ol{margin:0;padding-left:1.4rem;display:flex;flex-direction:column;gap:.65rem}
+  .res-path ol li{color:var(--ink2);line-height:1.55;font-size:.85rem;padding-left:.25rem}
+  .res-path ol li::marker{color:var(--red);font-weight:700}
+  /* Form */
+  .res-form-section{margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid var(--border)}
+  .res-form-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.75rem}
+  .res-form-head h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,2.8vw,2.2rem);color:var(--ink);font-weight:500;margin:0;line-height:1.2}
+  .res-form-head p{font-size:.85rem;color:var(--ink3);max-width:440px;margin:0;line-height:1.55}
+  .res-form{background:#fff;border:1px solid var(--border);border-radius:8px;padding:2rem 2.25rem;box-shadow:var(--shadow)}
+  .res-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem 1.25rem}
+  .res-field{display:flex;flex-direction:column;gap:.4rem}
+  .res-field.full{grid-column:1/-1}
+  .res-field label{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+  .res-field input,.res-field select,.res-field textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);padding:.68rem .9rem;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:400;outline:none;transition:border-color .22s;border-radius:3px;appearance:none}
+  .res-field input:focus,.res-field select:focus,.res-field textarea:focus{border-color:var(--red);background:#fff}
+  .res-field textarea{resize:vertical;min-height:90px;line-height:1.5}
+  .res-field-hint{font-size:.7rem;color:var(--ink3);margin-top:-.1rem}
+  .res-submit{margin-top:1.5rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+  .res-submit-btn{padding:.85rem 2rem;background:var(--red);color:#fff;border:none;border-radius:3px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:all .22s}
+  .res-submit-btn:hover{background:var(--red2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,40,42,.25)}
+  .res-submit-btn:disabled{background:#cbd5e1;cursor:not-allowed;transform:none;box-shadow:none}
+  .res-submit-note{font-size:.75rem;color:var(--ink3);max-width:380px;line-height:1.45}
+  .res-status{margin-top:1rem;padding:.85rem 1.1rem;border-radius:4px;font-size:.85rem;display:none}
+  .res-status.success{background:rgba(34,197,94,.1);color:#16a34a;border:1px solid rgba(34,197,94,.3);display:block}
+  .res-status.error{background:rgba(200,40,42,.08);color:var(--red);border:1px solid rgba(200,40,42,.25);display:block}
+  @media(max-width:780px){
+    .res-paths{grid-template-columns:1fr}
+    .res-form-grid{grid-template-columns:1fr}
+    .res-form{padding:1.5rem 1.25rem}
+  }
+</style>
 </head>
 <body>
 
@@ -52,10 +93,131 @@
 <main style="padding-top:1rem">
 <section id="residents">
   <div class="inner">
-    <div class="reveal">
+    <div class="res-intro reveal">
       <div class="red-bar"></div>
-      <span class="tag" style="display:block;margin-bottom:.85rem">Реестр Резидентов</span>
-      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);color:var(--ink);line-height:1.15;margin:0 0 1rem;font-weight:500">Резиденты</h1>
+      <span class="tag" style="display:block;margin-bottom:.85rem">Как стать Резидентом</span>
+      <h1>Сайт открыт для всех,<br/>Резидентство — закрытое</h1>
+      <p>Сайт — это открытая платформа для всех, а Резидентство в Клубе — закрытое. Резиденты «ATAMEKEN Club» принимаются исключительно по рекомендации одной из перечисленных ниже организаций. Это базовая мера, обеспечивающая надёжность и репутационную защиту всех участников Клуба.</p>
+    </div>
+
+    <div class="res-paths reveal">
+      <div class="res-path">
+        <div class="res-path-tag">Путь 1</div>
+        <h3>Для казахстанских компаний</h3>
+        <ol>
+          <li>По рекомендации Национальной Палаты предпринимателей Республики Казахстан.</li>
+          <li>По рекомендации Палаты предпринимателей города Алматы.</li>
+          <li>По рекомендации Ассоциаций, Союзов, Профсоюзов, Бизнес-клубов (иных ОЮЛ), являющихся Партнёрами «ATAMEKEN Club».</li>
+        </ol>
+      </div>
+      <div class="res-path">
+        <div class="res-path-tag">Путь 2</div>
+        <h3>Для компаний не из Республики Казахстан</h3>
+        <ol>
+          <li>По рекомендации Посольства, Генерального Консульства, Консульства, иных официальных дипломатических представительств иностранных государств, расположенных на территории Республики Казахстан.</li>
+          <li>По рекомендации Торгово-промышленных Палат, Внешнеторговых Палат, Ассоциаций, Союзов, Профсоюзов, Бизнес-клубов (иных ОЮЛ), являющихся Партнёрами «ATAMEKEN Club».</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="res-form-section reveal">
+      <div class="res-form-head">
+        <h2>Анкета на Резидентство</h2>
+        <p>Заполните анкету — мы свяжемся в течение 2 рабочих дней и направим следующие шаги по верификации.</p>
+      </div>
+
+      <form class="res-form" id="resForm" novalidate>
+        <div class="res-form-grid">
+          <div class="res-field full">
+            <label for="r-name">Название компании</label>
+            <input type="text" id="r-name" name="name" required placeholder="ТОО «Пример»"/>
+          </div>
+          <div class="res-field">
+            <label for="r-form">Форма учреждения</label>
+            <input type="text" id="r-form" name="form" placeholder="ТОО / АО / ИП / LLC..."/>
+          </div>
+          <div class="res-field">
+            <label for="r-bin">БИН / Регистрационный номер</label>
+            <input type="text" id="r-bin" name="bin" placeholder="000000000000"/>
+          </div>
+          <div class="res-field">
+            <label for="r-founded">Дата основания</label>
+            <input type="text" id="r-founded" name="founded" placeholder="дд.мм.гггг"/>
+          </div>
+          <div class="res-field">
+            <label for="r-oked">ОКЭД (основной)</label>
+            <input type="text" id="r-oked" name="oked" placeholder="01.11"/>
+          </div>
+
+          <div class="res-field">
+            <label for="r-ceo-name">Ф.И.О. руководителя</label>
+            <input type="text" id="r-ceo-name" name="ceoName" placeholder="Иванов Иван Иванович"/>
+          </div>
+          <div class="res-field">
+            <label for="r-ceo-contact">Контакты руководителя</label>
+            <input type="text" id="r-ceo-contact" name="ceoContact" placeholder="+7 (700) 000-00-00 · email@company.kz"/>
+          </div>
+          <div class="res-field">
+            <label for="r-mgr-name">Ф.И.О. менеджера / контактного лица</label>
+            <input type="text" id="r-mgr-name" name="mgrName" placeholder="Иванов Иван Иванович"/>
+          </div>
+          <div class="res-field">
+            <label for="r-mgr-contact">Контакты менеджера</label>
+            <input type="text" id="r-mgr-contact" name="mgrContact" placeholder="+7 (700) 000-00-00 · email@company.kz"/>
+          </div>
+
+          <div class="res-field full">
+            <label for="r-overview">Обзорная информация о компании</label>
+            <textarea id="r-overview" name="overview" placeholder="Чем занимается компания, ключевые рынки, клиенты, география работы..."></textarea>
+          </div>
+
+          <div class="res-field">
+            <label for="r-headcount">Количество сотрудников</label>
+            <input type="text" id="r-headcount" name="headcount" placeholder="например, 47"/>
+          </div>
+          <div class="res-field">
+            <label for="r-size">Размер бизнеса</label>
+            <select id="r-size" name="size">
+              <option value="" disabled selected>Выберите размер</option>
+              <option>Микро</option>
+              <option>Малый</option>
+              <option>Средний</option>
+              <option>Крупный</option>
+            </select>
+          </div>
+          <div class="res-field">
+            <label for="r-revenue">Годовой оборот</label>
+            <input type="text" id="r-revenue" name="revenue" placeholder="например, 1,2 млрд KZT"/>
+          </div>
+          <div class="res-field">
+            <label for="r-volume">Объёмы производства в год</label>
+            <input type="text" id="r-volume" name="volume" placeholder="например, 8 000 тонн / 12 000 ед."/>
+          </div>
+
+          <div class="res-field full">
+            <label for="r-products">Расширенное описание реализуемых товаров / услуг</label>
+            <textarea id="r-products" name="products" placeholder="Опишите ключевые продукты, услуги, преимущества, целевые сегменты..."></textarea>
+          </div>
+
+          <div class="res-field full">
+            <label for="r-info">Дополнительная информация (сайт, соцсети и т.д.)</label>
+            <textarea id="r-info" name="info" placeholder="Сайт компании, ссылки на соцсети, профили на специализированных площадках..."></textarea>
+          </div>
+
+          <div class="res-field full">
+            <label for="r-recommender">Кем рекомендовано</label>
+            <input type="text" id="r-recommender" name="recommender" placeholder="Название Палаты / Ассоциации / Бизнес-клуба / Посольства"/>
+            <div class="res-field-hint">Резидентство возможно только по рекомендации одной из аккредитованных организаций (см. выше).</div>
+          </div>
+        </div>
+
+        <div class="res-submit">
+          <button type="submit" class="res-submit-btn" id="resSubmit">Отправить заявку</button>
+          <span class="res-submit-note">После отправки откроется ваш почтовый клиент с заполненным письмом на info@atameken.club. Также копия данных останется у вас.</span>
+        </div>
+
+        <div class="res-status" id="resStatus"></div>
+      </form>
     </div>
   </div>
 </section>
@@ -97,6 +259,60 @@ const io = new IntersectionObserver(es => es.forEach(e => {
   if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
 }), {threshold:.06});
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ── Residents form: compose mailto with all fields filled in
+(function(){
+  const form = document.getElementById('resForm');
+  if(!form) return;
+  const status = document.getElementById('resStatus');
+  const submit = document.getElementById('resSubmit');
+  const FIELDS = [
+    ['name',         'Название компании'],
+    ['form',         'Форма учреждения'],
+    ['bin',          'БИН / рег. номер'],
+    ['founded',      'Дата основания'],
+    ['oked',         'ОКЭД'],
+    ['ceoName',      'Ф.И.О. руководителя'],
+    ['ceoContact',   'Контакты руководителя'],
+    ['mgrName',      'Ф.И.О. менеджера'],
+    ['mgrContact',   'Контакты менеджера'],
+    ['overview',     'Обзорная информация'],
+    ['headcount',    'Количество сотрудников'],
+    ['size',         'Размер бизнеса'],
+    ['revenue',      'Годовой оборот'],
+    ['volume',       'Объёмы производства'],
+    ['products',     'Товары / услуги'],
+    ['info',         'Доп. информация'],
+    ['recommender',  'Рекомендатель'],
+  ];
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    status.className = 'res-status';
+    status.textContent = '';
+    const data = new FormData(form);
+    const name = (data.get('name') || '').toString().trim();
+    if(!name){
+      status.className = 'res-status error';
+      status.textContent = 'Укажите хотя бы название компании, чтобы мы могли с вами связаться.';
+      return;
+    }
+    const lines = ['Заявка на Резидентство «ATAMEKEN Club»', '— — —', ''];
+    FIELDS.forEach(([key, label]) => {
+      const v = (data.get(key) || '').toString().trim();
+      if(v) lines.push(label + ':\n' + v + '\n');
+    });
+    const subject = 'Заявка на Резидентство — ' + name;
+    const body = lines.join('\n');
+    const mailto = 'mailto:info@atameken.club?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    // Open email client
+    window.location.href = mailto;
+    // Show success
+    submit.disabled = true;
+    submit.textContent = 'Заявка подготовлена';
+    status.className = 'res-status success';
+    status.textContent = 'Открылся ваш почтовый клиент с готовым письмом на info@atameken.club. Если этого не произошло — отправьте копию вручную на тот же адрес.';
+  });
+})();
 </script>
 <script src="/assets/i18n.js"></script>
 </body>
