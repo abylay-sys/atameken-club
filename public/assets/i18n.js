@@ -15,6 +15,8 @@
   //     replace via innerHTML for those known headings.
   const D = {
     // ── NAV
+    'Главная':                 { kk: 'Басты бет',              en: 'Home' },
+    'Резиденты':               { kk: 'Резиденттер',            en: 'Residents' },
     'О нас':                   { kk: 'Біз туралы',             en: 'About us' },
     'Участникам':              { kk: 'Қатысушыларға',          en: 'For members' },
     'Верификация':             { kk: 'Тексеру',                en: 'Verification' },

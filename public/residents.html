@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Резиденты - Бизнес-сообщество «ATAMEKEN Club»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/landing.css"/>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <a href="/" class="logo">
+    <div class="logo-emblem">
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
+    </div>
+    <div class="logo-text">
+      <span class="logo-main">Бизнес-сообщество</span>
+      <span class="logo-sub-name">«ATAMEKEN Club»</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/index.html">Главная</a></li>
+    <li><a href="/index.html#catalog">Проекты</a></li>
+    <li><a href="/events.html">Календарь</a></li>
+    <li><a href="/pricing.html">Тарифы</a></li>
+    <li><a href="/services.html">Дополнительные услуги</a></li>
+    <li><a href="/partners.html">Партнеры</a></li>
+    <li><a href="/residents.html">Резиденты</a></li>
+    <li><a href="/about.html">О нас</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-dd" id="langDD">
+      <button class="lang-dd-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-dd-current">RU</span>
+        <svg class="lang-dd-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 5 6 8 9 5"/></svg>
+      </button>
+      <div class="lang-switch">
+        <button class="lang-btn active">RU</button>
+        <button class="lang-btn">KZ</button>
+        <button class="lang-btn">EN</button>
+        <button class="lang-btn">中文</button>
+      </div>
+    </div>
+    <a href="/login.html" class="btn-red" style="padding:.48rem 1.2rem;font-size:.75rem">Войти</a>
+  </div>
+</nav>
+
+<main style="padding-top:1rem">
+<section id="residents">
+  <div class="inner">
+    <div class="reveal">
+      <div class="red-bar"></div>
+      <span class="tag" style="display:block;margin-bottom:.85rem">Реестр Резидентов</span>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);color:var(--ink);line-height:1.15;margin:0 0 1rem;font-weight:500">Резиденты</h1>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="f-logo">
+    <div class="f-logo-emb">
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
+    </div>
+    <div class="f-logo-text">
+      <span class="f-logo-main">Бизнес-сообщество</span>
+      <span class="f-logo-sub-name">«ATAMEKEN Club»</span>
+    </div>
+  </div>
+  <div class="f-mid">
+    <p>© 2025 ТОО «ATAMEKEN Club». Все права защищены.</p>
+    <p>Бизнес-сообщество «ATAMEKEN Club» · Казахстан</p>
+  </div>
+  <div class="f-right">
+    <a href="mailto:info@atameken.club">info@atameken.club</a>
+    <a href="tel:+77000000000">+7 (700) 000-00-00</a>
+    <a href="#">г. Алматы, Казахстан</a>
+  </div>
+</footer>
+
+<script src="/assets/api.js"></script>
+<script>
+(function(){
+  if(localStorage.getItem('ac_access')){
+    document.querySelectorAll('a[href="/login.html"]').forEach(a => {
+      a.href = '/cabinet.html';
+      if(a.textContent.trim() === 'Войти') a.textContent = 'Кабинет';
+    });
+  }
+})();
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.06});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+<script src="/assets/i18n.js"></script>
+</body>
+</html>
