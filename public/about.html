@@ -36,6 +36,17 @@
   .ab-cta-box h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;font-weight:500;margin:0 0 .35rem;line-height:1.2}
   .ab-cta-box p{color:rgba(255,255,255,.6);font-size:.85rem;margin:0;max-width:560px}
   .ab-cta-box .btn-red{padding:.75rem 1.5rem;font-size:.85rem}
+  /* About content */
+  .ab-content{max-width:880px;margin-top:1rem}
+  .ab-content h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,2.4vw,1.85rem);color:var(--ink);margin:2.25rem 0 .85rem;font-weight:500;line-height:1.2}
+  .ab-content h2:first-of-type{margin-top:1.75rem}
+  .ab-content p{color:var(--ink2);line-height:1.7;font-size:var(--t2);margin:0 0 1rem}
+  .ab-lead{font-size:1.05rem !important;color:var(--ink) !important;line-height:1.65 !important;margin-bottom:1.5rem !important}
+  .ab-list{list-style:none;padding:0;margin:.5rem 0 1.5rem;display:flex;flex-direction:column;gap:.6rem}
+  .ab-list li{position:relative;padding-left:1.4rem;color:var(--ink2);line-height:1.6;font-size:var(--t2)}
+  .ab-list li::before{content:'';position:absolute;left:0;top:.55rem;width:6px;height:6px;background:var(--red);border-radius:50%}
+  .ab-summary{background:#fff;border:1px solid var(--border);border-left:3px solid var(--red);border-radius:4px;padding:1.4rem 1.6rem;margin-top:2rem;box-shadow:var(--shadow)}
+  .ab-summary p{margin:0;font-size:var(--t2);color:var(--ink2);line-height:1.7;font-style:italic}
   @media(max-width:900px){
     .ab-stats{grid-template-columns:repeat(2,1fr)}
     .ab-pillars{grid-template-columns:1fr}
@@ -89,7 +100,39 @@
     <div class="ab-hero reveal">
       <div class="red-bar"></div>
       <span class="tag" style="display:block;margin-bottom:.85rem">О нас</span>
-      <h1>О нас</h1>
+      <h1>Уникальная площадка<br/>для международного сотрудничества</h1>
+    </div>
+
+    <div class="ab-content reveal">
+      <p class="ab-lead">Бизнес-сообщество «ATAMEKEN Club» — это уникальная площадка, которая создавалась на базе Палаты предпринимателей «Атамекен». Основная задача — предоставить надёжный, безопасный и эффективный инструмент для международного сотрудничества компаниям, заинтересованным в этом и имеющим для этого предпосылки.</p>
+
+      <h2>Почему отдельная площадка</h2>
+      <p>В соответствии с законом Республики Казахстан, все предприниматели Казахстана автоматически становятся членами Палаты в момент своей регистрации — таких компаний более 4 миллионов. Как курирующая организация, Палата имеет ряд ограничений:</p>
+      <ul class="ab-list">
+        <li>обязана в равной степени защищать права всех предпринимателей Казахстана;</li>
+        <li>предоставлять равный доступ к информации и взаимодействию всем предпринимателям Казахстана;</li>
+        <li>не имеет права принимать в Резиденты иностранные компании;</li>
+        <li>внешне-экономическая деятельность не является приоритетом.</li>
+      </ul>
+
+      <h2>Что мы делаем</h2>
+      <p>Бизнес-сообщество «ATAMEKEN Club» ориентируется на те сферы, в которых полномочия и возможности Палаты ограничены. Мы имеем право принимать только надёжных, эффективных, договороспособных и ориентированных на международное сотрудничество предпринимателей. Мы можем принимать в качестве Резидентов иностранные компании.</p>
+      <p>Каждая компания, входящая в Реестр, должна предоставить рекомендацию от следующих организаций:</p>
+      <ul class="ab-list">
+        <li>Аккредитованные Бизнес-клубы Казахстана;</li>
+        <li>Аккредитованные отраслевые Ассоциации Казахстана;</li>
+        <li>Палата Предпринимателей «Атамекен»;</li>
+        <li>Внешнеторговая Палата Казахстана;</li>
+        <li>Торгово-промышленные или Внешнеторговые палаты (или их аналоги) зарубежных стран;</li>
+        <li>Дипломатические службы (Посольства, Генеральные Консульства, Консульства) зарубежных стран.</li>
+      </ul>
+
+      <h2>Верификация надёжности</h2>
+      <p>Для получения доступа к информации о потенциальных партнёрах на сайте (сайт в данный момент находится в стадии разработки) и для участия в B2B-встречах с иностранными делегациями предприниматели обязаны пройти верификацию надёжности — через налоговые органы, проверку отсутствия судебных дел в отношении компании, отсутствия в списках неблагонадёжных компаний, а также отсутствия в списке недобросовестных поставщиков по госзакупкам.</p>
+
+      <div class="ab-summary">
+        <p>Совокупность мер, применяемых для вступления в Реестр Бизнес-сообщества «ATAMEKEN Club», призвана обеспечить максимальную безопасность и надёжность в поиске партнёров для иностранных компаний, заинтересованных во взаимодействии с бизнесом Казахстана и реализации совместных проектов и/или совершении торговых и иных бизнес-операций.</p>
+      </div>
     </div>
   </div>
 </section>
