@@ -8,6 +8,93 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/assets/landing.css"/>
+<style>
+  /* ── CALENDAR ── */
+  .cal-layout{display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:flex-start}
+  .cal-main{background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow);padding:1.75rem}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:1rem}
+  .cal-head-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);font-weight:500;text-transform:capitalize}
+  .cal-nav{display:flex;align-items:center;gap:.4rem}
+  .cal-nav-btn{width:34px;height:34px;border-radius:4px;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink2);transition:all .2s}
+  .cal-nav-btn:hover{border-color:var(--red);color:var(--red)}
+  .cal-nav-btn svg{width:14px;height:14px}
+  .cal-today-btn{padding:0 .9rem;height:34px;border-radius:4px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:.78rem;font-weight:500;color:var(--ink2);font-family:'Inter',sans-serif;transition:all .2s}
+  .cal-today-btn:hover{border-color:var(--red);color:var(--red)}
+  .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem;margin-bottom:.5rem}
+  .cal-weekday{font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);text-align:center;padding:.4rem 0}
+  .cal-weekday.weekend{color:var(--red)}
+  .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem}
+  .cal-day{position:relative;aspect-ratio:1/1;border:1px solid var(--border);border-radius:4px;background:#fff;display:flex;flex-direction:column;padding:.45rem .55rem;cursor:default;transition:all .2s;min-height:60px}
+  .cal-day.other-month{background:#FAFAFA;color:var(--border2)}
+  .cal-day.other-month .cal-day-num{color:var(--border2)}
+  .cal-day.today{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+  .cal-day.has-event{cursor:pointer;border-color:rgba(200,40,42,.35)}
+  .cal-day.has-event:hover{background:#FFF8F8;border-color:var(--red);transform:translateY(-1px);box-shadow:0 4px 10px rgba(200,40,42,.12)}
+  .cal-day-num{font-size:.95rem;font-weight:500;color:var(--ink)}
+  .cal-day.today .cal-day-num{color:var(--red);font-weight:700}
+  .cal-day.weekend .cal-day-num{color:var(--red)}
+  .cal-badge{position:absolute;top:.3rem;right:.3rem;background:var(--red);color:#fff;border-radius:50%;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;padding:0 4px;box-shadow:0 2px 6px rgba(200,40,42,.45);line-height:1}
+  .cal-day.past .cal-badge{background:#94A3B8;box-shadow:0 2px 6px rgba(148,163,184,.4)}
+  .cal-day.past .cal-day-num{color:var(--ink3)}
+  .cal-day-dots{display:flex;gap:3px;margin-top:auto;flex-wrap:wrap}
+  .cal-day-dot{width:5px;height:5px;border-radius:50%;background:var(--red)}
+  .cal-day.past .cal-day-dot{background:#CBD5E1}
+
+  /* Tooltip */
+  .cal-pop{position:absolute;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:1rem 1.1rem;width:300px;z-index:50;font-family:'Inter',sans-serif;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .15s,transform .15s}
+  .cal-pop.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  .cal-pop-date{font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:.4rem}
+  .cal-pop-event + .cal-pop-event{margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border)}
+  .cal-pop-kind{font-size:.7rem;color:var(--ink3);margin-bottom:.2rem;letter-spacing:.04em}
+  .cal-pop-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);margin-bottom:.4rem;line-height:1.25}
+  .cal-pop-where{font-size:.75rem;color:var(--ink2);display:flex;align-items:center;gap:.35rem;margin-bottom:.4rem}
+  .cal-pop-where svg{width:11px;height:11px;flex-shrink:0}
+  .cal-pop-desc{font-size:.78rem;color:var(--ink3);line-height:1.5}
+  .cal-pop-status{display:inline-block;font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;margin-top:.45rem}
+  .cal-pop-status.open{background:rgba(34,197,94,.12);color:#16a34a}
+  .cal-pop-status.closed{background:rgba(148,163,184,.18);color:#475569}
+  .cal-pop-status.past{background:rgba(148,163,184,.12);color:#94a3b8}
+
+  /* Sidebar */
+  .cal-side{display:flex;flex-direction:column;gap:1rem}
+  .cal-side-block{background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow);overflow:hidden}
+  .cal-side-head{padding:.95rem 1.1rem;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;font-family:'Inter',sans-serif;transition:background .2s}
+  .cal-side-head:hover{background:#FAFBFC}
+  .cal-side-title{font-size:.78rem;font-weight:600;color:var(--ink);letter-spacing:.02em}
+  .cal-side-count{font-size:.7rem;font-weight:600;color:#fff;background:var(--red);border-radius:10px;padding:.1rem .5rem;margin-left:.4rem}
+  .cal-side-chev{transition:transform .25s;color:var(--ink3)}
+  .cal-side-block.collapsed .cal-side-chev{transform:rotate(-90deg)}
+  .cal-side-list{max-height:480px;overflow-y:auto;padding:.5rem .55rem .65rem;transition:max-height .3s}
+  .cal-side-block.collapsed .cal-side-list{max-height:0;padding:0;overflow:hidden}
+  .cal-evt{display:flex;gap:.7rem;padding:.65rem .55rem;border-radius:4px;align-items:flex-start;cursor:pointer;transition:background .15s}
+  .cal-evt:hover{background:#FAFBFC}
+  .cal-evt + .cal-evt{border-top:1px solid var(--border)}
+  .cal-evt-date{flex-shrink:0;width:42px;text-align:center;font-family:'Cormorant Garamond',serif;line-height:1}
+  .cal-evt-day{font-size:1.3rem;color:var(--ink);font-weight:500}
+  .cal-evt-mo{font-size:.62rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;margin-top:.15rem}
+  .cal-evt-info{min-width:0;flex:1}
+  .cal-evt-kind{font-size:.62rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.1rem}
+  .cal-evt-title{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--ink);line-height:1.25;margin-bottom:.18rem}
+  .cal-evt-where{font-size:.72rem;color:var(--ink3)}
+  .cal-evt.past{opacity:.45}
+  .cal-evt.past .cal-evt-day,.cal-evt.past .cal-evt-title{color:var(--ink3)}
+  .cal-side-empty{padding:1.5rem 1rem;text-align:center;color:var(--ink3);font-size:.82rem}
+
+  @media(max-width:980px){
+    .cal-layout{grid-template-columns:1fr}
+    .cal-day{min-height:50px;padding:.35rem .4rem}
+    .cal-day-num{font-size:.85rem}
+    .cal-pop{width:280px}
+  }
+  @media(max-width:560px){
+    .cal-main{padding:1rem}
+    .cal-head-title{font-size:1.3rem}
+    .cal-day{min-height:42px;padding:.3rem}
+    .cal-day-num{font-size:.78rem}
+    .cal-badge{min-width:15px;height:15px;font-size:.55rem;top:.18rem;right:.18rem}
+    .cal-weekday{font-size:.6rem;padding:.3rem 0}
+  }
+</style>
 </head>
 <body>
 
@@ -43,7 +130,7 @@
 </nav>
 
 <main style="padding-top:1rem">
-<!-- ══ МЕРОПРИЯТИЯ ══ -->
+<!-- ══ КАЛЕНДАРЬ ══ -->
 <section id="calendar">
   <div class="inner">
     <div class="sh reveal">
@@ -51,58 +138,56 @@
         <div>
           <div class="red-bar"></div>
           <span class="tag" style="display:block;margin-bottom:.75rem">Деловые мероприятия</span>
-          <h2>Закрытые встречи<br/>и деловые события</h2>
+          <h2>Календарь<br/>деловых событий</h2>
         </div>
         <div class="sh-right">
           <p>Форумы, инвестиционные ужины, питч-сессии и бизнес-миссии. Закрытые встречи и деловые события доступны только для Резидентов «ATAMEKEN Club» с действующим сертификатом.</p>
         </div>
       </div>
     </div>
-    <div class="cal-grid reveal">
-      <div class="cal-card">
-        <div class="cal-date"><div class="cal-day">14</div><div class="cal-mo">Сент</div></div>
-        <div class="cal-sep"></div>
-        <div class="cal-info">
-          <div class="cal-kind">Форум · Нетворкинг</div>
-          <div class="cal-title">ATAMEKEN Club Forum 2025</div>
-          <div class="cal-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>Алматы, The Ritz-Carlton</div>
-          <p class="cal-desc">Ежегодный форум. B2B-встречи, панельные дискуссии, закрытые переговоры с инвесторами из КЗ, ОАЭ и Европы. Бесплатно для верифицированных.</p>
+
+    <div class="cal-layout reveal">
+      <div class="cal-main">
+        <div class="cal-head">
+          <div class="cal-head-title" id="calTitle"></div>
+          <div class="cal-nav">
+            <button class="cal-today-btn" id="calToday">Сегодня</button>
+            <button class="cal-nav-btn" id="calPrev" aria-label="Предыдущий месяц">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="10 3 5 8 10 13"/></svg>
+            </button>
+            <button class="cal-nav-btn" id="calNext" aria-label="Следующий месяц">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="cal-status"><span class="s-open">Открыт</span></div>
-      </div>
-      <div class="cal-card">
-        <div class="cal-date"><div class="cal-day">22</div><div class="cal-mo">Окт</div></div>
-        <div class="cal-sep"></div>
-        <div class="cal-info">
-          <div class="cal-kind">Закрытый ужин · Инвестиции</div>
-          <div class="cal-title">UAE–Kazakhstan деловой ужин для инвесторов</div>
-          <div class="cal-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>Дубай, ОАЭ</div>
-          <p class="cal-desc">12 команд, 1 стол, 3 часа переговоров. Только для участников со статусом «Проверенная компания».</p>
+        <div class="cal-weekdays">
+          <div class="cal-weekday">Пн</div>
+          <div class="cal-weekday">Вт</div>
+          <div class="cal-weekday">Ср</div>
+          <div class="cal-weekday">Чт</div>
+          <div class="cal-weekday">Пт</div>
+          <div class="cal-weekday weekend">Сб</div>
+          <div class="cal-weekday weekend">Вс</div>
         </div>
-        <div class="cal-status"><span class="s-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg>Закрыто</span></div>
+        <div class="cal-days" id="calDays"></div>
       </div>
-      <div class="cal-card">
-        <div class="cal-date"><div class="cal-day">08</div><div class="cal-mo">Нояб</div></div>
-        <div class="cal-sep"></div>
-        <div class="cal-info">
-          <div class="cal-kind">Бизнес-миссия · Экспорт</div>
-          <div class="cal-title">Central Asia Business Mission - Берлин</div>
-          <div class="cal-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>Берлин, Германия - 3 дня</div>
-          <p class="cal-desc">Встречи с европейскими дистрибьюторами. B2B-переговоры, 20 минут на пару. Только для верифицированных экспортёров.</p>
+
+      <aside class="cal-side">
+        <div class="cal-side-block" id="sideMonth">
+          <div class="cal-side-head" data-toggle="sideMonth">
+            <div><span class="cal-side-title" id="sideMonthTitle">Мероприятия за месяц</span><span class="cal-side-count" id="sideMonthCount">0</span></div>
+            <svg class="cal-side-chev" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </div>
+          <div class="cal-side-list" id="sideMonthList"></div>
         </div>
-        <div class="cal-status"><span class="s-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg>Закрыто</span></div>
-      </div>
-      <div class="cal-card">
-        <div class="cal-date"><div class="cal-day">18</div><div class="cal-mo">Дек</div></div>
-        <div class="cal-sep"></div>
-        <div class="cal-info">
-          <div class="cal-kind">Питч-сессия · Инвесторы</div>
-          <div class="cal-title">Атамекен Investor Day Q4</div>
-          <div class="cal-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>Алматы · Полдня</div>
-          <p class="cal-desc">7 минут питч + 10 минут вопросы, до 12 команд. Инвесторы получают досье заранее. Только для верифицированных проектов.</p>
+        <div class="cal-side-block collapsed" id="sideYear">
+          <div class="cal-side-head" data-toggle="sideYear">
+            <div><span class="cal-side-title" id="sideYearTitle">Все мероприятия</span><span class="cal-side-count" id="sideYearCount">0</span></div>
+            <svg class="cal-side-chev" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </div>
+          <div class="cal-side-list" id="sideYearList"></div>
         </div>
-        <div class="cal-status"><span class="s-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg>Закрыто</span></div>
-      </div>
+      </aside>
     </div>
   </div>
 </section>
@@ -112,9 +197,12 @@
 <footer>
   <div class="f-logo">
     <div class="f-logo-emb">
-      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="38" height="38" style="display:block;border-radius:50%"/>
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
     </div>
-    <div class="f-logo-text" style="line-height:1.1">Бизнес-сообщество<br/>«ATAMEKEN Club»<span style="margin-top:.3rem">г. Алматы, Казахстан</span></div>
+    <div class="f-logo-text">
+      <span class="f-logo-main">Бизнес-сообщество</span>
+      <span class="f-logo-sub-name">«ATAMEKEN Club»</span>
+    </div>
   </div>
   <div class="f-mid">
     <p>© 2025 ТОО «ATAMEKEN Web». Все права защищены.</p>
@@ -129,7 +217,7 @@
 
 <script src="/assets/api.js"></script>
 <script>
-// Auth-aware nav: replace «Войти» → «Кабинет» if logged in
+// Auth-aware nav
 (function(){
   if(localStorage.getItem('ac_access')){
     document.querySelectorAll('a[href="/login.html"]').forEach(a => {
@@ -144,6 +232,235 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), {threshold:.06});
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+// ══ CALENDAR ══
+(function(){
+  const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const MONTHS_SHORT = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+
+  // Demo events (replace with API later). Dates in YYYY-MM-DD.
+  const events = [
+    {date:'2026-04-12', title:'ATAMEKEN Spring Connect', kind:'Нетворкинг', where:'Алматы, The Ritz-Carlton', desc:'Весенний нетворкинг для резидентов клуба.', status:'past'},
+    {date:'2026-04-26', title:'Q1 Investor Roundtable', kind:'Питч-сессия · Инвесторы', where:'Алматы · Полдня', desc:'Закрытая питч-сессия для инвесторов и проектов раунда seed/Series A.', status:'past'},
+    {date:'2026-05-14', title:'ATAMEKEN Club Forum 2026', kind:'Форум · Нетворкинг', where:'Алматы, The Ritz-Carlton', desc:'Ежегодный форум. B2B-встречи, панельные дискуссии, закрытые переговоры с инвесторами из КЗ, ОАЭ и Европы.', status:'open'},
+    {date:'2026-05-14', title:'After-party Forum 2026', kind:'Закрытый ужин', where:'Алматы, Esentai', desc:'Неформальный ужин участников форума.', status:'closed'},
+    {date:'2026-05-22', title:'UAE–Kazakhstan деловой ужин', kind:'Закрытый ужин · Инвестиции', where:'Дубай, ОАЭ', desc:'12 команд, 1 стол, 3 часа переговоров. Только для участников со статусом «Проверенная компания».', status:'closed'},
+    {date:'2026-06-08', title:'Central Asia Business Mission', kind:'Бизнес-миссия · Экспорт', where:'Берлин, Германия — 3 дня', desc:'Встречи с европейскими дистрибьюторами. B2B-переговоры, 20 минут на пару. Только для верифицированных экспортёров.', status:'closed'},
+    {date:'2026-06-19', title:'FinTech Roundtable', kind:'Круглый стол', where:'Алматы', desc:'Регуляторные изменения, Open Banking, MFCA — для FinTech-проектов.', status:'open'},
+    {date:'2026-07-04', title:'Almaty SME Day', kind:'День открытых дверей', where:'Алматы, Almaty Tower', desc:'День малого и среднего бизнеса. Стенды партнёров, питчи, нетворкинг.', status:'open'},
+    {date:'2026-07-18', title:'Атамекен Investor Day Q3', kind:'Питч-сессия · Инвесторы', where:'Алматы · Полдня', desc:'7 минут питч + 10 минут вопросы, до 12 команд. Инвесторы получают досье заранее.', status:'closed'},
+    {date:'2026-08-22', title:'Eurasia Trade Mission', kind:'Бизнес-миссия · Экспорт', where:'Стамбул, Турция', desc:'Бизнес-миссия в Турцию для экспортёров продовольствия и стройматериалов.', status:'closed'},
+    {date:'2026-09-10', title:'ATAMEKEN Club Forum Astana', kind:'Форум · Нетворкинг', where:'Астана, EXPO', desc:'Расширенная сессия форума в Астане. Госструктуры, фонды, частные инвесторы.', status:'open'},
+    {date:'2026-10-15', title:'China Inbound Week', kind:'Бизнес-миссия · Импорт', where:'Алматы — 5 дней', desc:'Делегация компаний из КНР: производство, IT, агро. B2B-встречи в течение недели.', status:'open'},
+    {date:'2026-11-08', title:'Investor Day Q4', kind:'Питч-сессия · Инвесторы', where:'Алматы', desc:'Финальная питч-сессия года. Топ-12 проектов раунда.', status:'closed'},
+    {date:'2026-12-04', title:'Year-End Gala', kind:'Закрытый ужин', where:'Алматы, Ritz-Carlton', desc:'Гала-ужин клуба. Подведение итогов года, награждения.', status:'closed'},
+  ];
+
+  // ── State
+  const TODAY = new Date('2026-05-01T00:00:00');
+  TODAY.setHours(0,0,0,0);
+  let viewYear = TODAY.getFullYear();
+  let viewMonth = TODAY.getMonth(); // 0-based
+
+  const calTitle = document.getElementById('calTitle');
+  const calDays = document.getElementById('calDays');
+  const sideMonthList = document.getElementById('sideMonthList');
+  const sideYearList = document.getElementById('sideYearList');
+  const sideMonthTitle = document.getElementById('sideMonthTitle');
+  const sideMonthCount = document.getElementById('sideMonthCount');
+  const sideYearCount = document.getElementById('sideYearCount');
+
+  function pad(n){return n<10?'0'+n:''+n;}
+  function ymd(y,m,d){return y+'-'+pad(m+1)+'-'+pad(d);}
+  function parseYMD(s){const p=s.split('-');return new Date(+p[0], +p[1]-1, +p[2]);}
+  function eventsByDate(s){return events.filter(e=>e.date===s);}
+  function isPast(s){const d=parseYMD(s);d.setHours(0,0,0,0);return d.getTime()<TODAY.getTime();}
+
+  // ── Tooltip
+  let pop = null;
+  function ensurePop(){
+    if(pop) return pop;
+    pop = document.createElement('div');
+    pop.className = 'cal-pop';
+    document.body.appendChild(pop);
+    return pop;
+  }
+  function showPop(target, list, dateStr){
+    const p = ensurePop();
+    const dt = parseYMD(dateStr);
+    const dateLabel = dt.getDate()+' '+MONTHS[dt.getMonth()].toLowerCase()+' '+dt.getFullYear();
+    let html = '<div class="cal-pop-date">'+dateLabel+'</div>';
+    list.forEach(ev=>{
+      const past = isPast(ev.date);
+      const statusCls = past ? 'past' : (ev.status==='open'?'open':'closed');
+      const statusLbl = past ? 'Прошло' : (ev.status==='open'?'Открыт':'Закрыто');
+      html += '<div class="cal-pop-event">'+
+        '<div class="cal-pop-kind">'+ev.kind+'</div>'+
+        '<div class="cal-pop-title">'+ev.title+'</div>'+
+        '<div class="cal-pop-where"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.3 4.5 8 4.5 8s4.5-4.7 4.5-8c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>'+ev.where+'</div>'+
+        '<div class="cal-pop-desc">'+ev.desc+'</div>'+
+        '<span class="cal-pop-status '+statusCls+'">'+statusLbl+'</span>'+
+        '</div>';
+    });
+    p.innerHTML = html;
+    // position
+    const rect = target.getBoundingClientRect();
+    const popW = 300;
+    let left = rect.left + window.scrollX + rect.width/2 - popW/2;
+    if(left < 8) left = 8;
+    if(left + popW > window.innerWidth - 8) left = window.innerWidth - popW - 8;
+    let top = rect.bottom + window.scrollY + 8;
+    p.style.left = left + 'px';
+    p.style.top = top + 'px';
+    p.classList.add('show');
+  }
+  function hidePop(){ if(pop) pop.classList.remove('show'); }
+
+  // ── Render calendar
+  function render(){
+    const first = new Date(viewYear, viewMonth, 1);
+    const startWeekday = (first.getDay() + 6) % 7; // Mon=0
+    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+    const prevMonthDays = new Date(viewYear, viewMonth, 0).getDate();
+    calTitle.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+
+    let html = '';
+    const totalCells = Math.ceil((startWeekday + daysInMonth) / 7) * 7;
+    for(let i=0;i<totalCells;i++){
+      let dayNum, cellY, cellM, otherMonth = false;
+      if(i < startWeekday){
+        dayNum = prevMonthDays - startWeekday + i + 1;
+        cellY = viewMonth===0 ? viewYear-1 : viewYear;
+        cellM = viewMonth===0 ? 11 : viewMonth-1;
+        otherMonth = true;
+      } else if(i >= startWeekday + daysInMonth){
+        dayNum = i - startWeekday - daysInMonth + 1;
+        cellY = viewMonth===11 ? viewYear+1 : viewYear;
+        cellM = viewMonth===11 ? 0 : viewMonth+1;
+        otherMonth = true;
+      } else {
+        dayNum = i - startWeekday + 1;
+        cellY = viewYear; cellM = viewMonth;
+      }
+      const ds = ymd(cellY, cellM, dayNum);
+      const evs = eventsByDate(ds);
+      const wd = i % 7;
+      const isWeekend = wd >= 5;
+      const cellDate = new Date(cellY, cellM, dayNum); cellDate.setHours(0,0,0,0);
+      const isToday = cellDate.getTime() === TODAY.getTime();
+      const past = cellDate.getTime() < TODAY.getTime();
+      const cls = ['cal-day'];
+      if(otherMonth) cls.push('other-month');
+      if(isToday) cls.push('today');
+      if(isWeekend) cls.push('weekend');
+      if(past && !isToday) cls.push('past');
+      if(evs.length) cls.push('has-event');
+      let inner = '<span class="cal-day-num">'+dayNum+'</span>';
+      if(evs.length){
+        inner += '<span class="cal-badge">'+evs.length+'</span>';
+        if(evs.length > 1){
+          let dots = '<div class="cal-day-dots">';
+          for(let k=0;k<Math.min(evs.length,4);k++) dots += '<span class="cal-day-dot"></span>';
+          dots += '</div>';
+          inner += dots;
+        }
+      }
+      html += '<div class="'+cls.join(' ')+'" data-date="'+ds+'">'+inner+'</div>';
+    }
+    calDays.innerHTML = html;
+
+    // attach events
+    calDays.querySelectorAll('.cal-day.has-event').forEach(el=>{
+      el.addEventListener('mouseenter', ()=>{
+        const ds = el.dataset.date;
+        const list = eventsByDate(ds);
+        showPop(el, list, ds);
+      });
+      el.addEventListener('mouseleave', hidePop);
+      el.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const ds = el.dataset.date;
+        const list = eventsByDate(ds);
+        showPop(el, list, ds);
+      });
+    });
+
+    renderSide();
+  }
+
+  function renderSide(){
+    sideMonthTitle.textContent = 'Мероприятия в '+MONTHS[viewMonth].toLowerCase();
+    const monthEvts = events
+      .filter(e=>{const d=parseYMD(e.date);return d.getFullYear()===viewYear && d.getMonth()===viewMonth;})
+      .sort((a,b)=>a.date.localeCompare(b.date));
+    sideMonthCount.textContent = monthEvts.length;
+    sideMonthList.innerHTML = monthEvts.length
+      ? monthEvts.map(renderSideItem).join('')
+      : '<div class="cal-side-empty">В этом месяце мероприятий нет</div>';
+
+    const yearEvts = events
+      .filter(e=>parseYMD(e.date).getFullYear()===viewYear)
+      .sort((a,b)=>a.date.localeCompare(b.date));
+    sideYearCount.textContent = yearEvts.length;
+    sideYearList.innerHTML = yearEvts.length
+      ? yearEvts.map(renderSideItem).join('')
+      : '<div class="cal-side-empty">В этом году мероприятий нет</div>';
+
+    // attach hover/click on side items
+    document.querySelectorAll('.cal-evt').forEach(el=>{
+      el.addEventListener('mouseenter', ()=>{
+        const ds = el.dataset.date;
+        const list = eventsByDate(ds);
+        showPop(el, list, ds);
+      });
+      el.addEventListener('mouseleave', hidePop);
+      el.addEventListener('click', ()=>{
+        const ds = el.dataset.date;
+        const d = parseYMD(ds);
+        viewYear = d.getFullYear(); viewMonth = d.getMonth();
+        render();
+      });
+    });
+  }
+
+  function renderSideItem(ev){
+    const d = parseYMD(ev.date);
+    const past = isPast(ev.date);
+    return '<div class="cal-evt'+(past?' past':'')+'" data-date="'+ev.date+'">'
+      + '<div class="cal-evt-date"><div class="cal-evt-day">'+d.getDate()+'</div><div class="cal-evt-mo">'+MONTHS_SHORT[d.getMonth()]+'</div></div>'
+      + '<div class="cal-evt-info">'
+      +   '<div class="cal-evt-kind">'+ev.kind+'</div>'
+      +   '<div class="cal-evt-title">'+ev.title+'</div>'
+      +   '<div class="cal-evt-where">'+ev.where+'</div>'
+      + '</div>'
+      + '</div>';
+  }
+
+  // ── Wire controls
+  document.getElementById('calPrev').addEventListener('click', ()=>{
+    if(viewMonth===0){viewMonth=11;viewYear--;} else viewMonth--;
+    render();
+  });
+  document.getElementById('calNext').addEventListener('click', ()=>{
+    if(viewMonth===11){viewMonth=0;viewYear++;} else viewMonth++;
+    render();
+  });
+  document.getElementById('calToday').addEventListener('click', ()=>{
+    viewYear = TODAY.getFullYear(); viewMonth = TODAY.getMonth();
+    render();
+  });
+  document.querySelectorAll('.cal-side-head').forEach(h=>{
+    h.addEventListener('click', ()=>{
+      const id = h.dataset.toggle;
+      document.getElementById(id).classList.toggle('collapsed');
+    });
+  });
+  // hide pop when clicking elsewhere
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.cal-day') && !e.target.closest('.cal-evt') && !e.target.closest('.cal-pop')) hidePop();
+  });
+
+  render();
+})();
 </script>
 
 </body>
