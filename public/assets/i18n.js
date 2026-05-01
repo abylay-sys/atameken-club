@@ -132,7 +132,7 @@
     'Зарегистрироваться и открыть каталог': { kk: 'Тіркеліп, каталогты ашу', en: 'Sign up and open the catalog' },
 
     // ── FOOTER
-    '© 2025 ТОО «ATAMEKEN Web». Все права защищены.': { kk: '© 2025 «ATAMEKEN Web» ЖШС. Барлық құқықтар қорғалған.', en: '© 2025 ATAMEKEN Web LLP. All rights reserved.' },
+    '© 2025 ТОО «ATAMEKEN Club». Все права защищены.': { kk: '© 2025 «ATAMEKEN Club» ЖШС. Барлық құқықтар қорғалған.', en: '© 2025 ATAMEKEN Club LLP. All rights reserved.' },
     'Бизнес-сообщество «ATAMEKEN Club» · Казахстан': { kk: '«ATAMEKEN Club» бизнес-қауымдастығы · Қазақстан', en: '«ATAMEKEN Club» business community · Kazakhstan' },
     'г. Алматы, Казахстан':    { kk: 'Алматы қ., Қазақстан',   en: 'Almaty, Kazakhstan' },
 
