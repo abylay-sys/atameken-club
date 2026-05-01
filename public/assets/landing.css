@@ -156,7 +156,7 @@ nav.scrolled{box-shadow:var(--shadow)}
 
 /* ─── WHO ─── */
 #who{}
-.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem}
 .who-card{background:var(--white);border:1px solid var(--border);padding:2rem;border-radius:4px;transition:all .25s;display:flex;flex-direction:column;box-shadow:var(--shadow)}
 .who-card:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
 .who-icon-wrap{width:44px;height:44px;background:var(--red-dim);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;color:var(--red)}
