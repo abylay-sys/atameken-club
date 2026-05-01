@@ -69,10 +69,19 @@ nav.scrolled{box-shadow:var(--shadow)}
 .nav-links a{font-size:var(--t1);font-weight:500;letter-spacing:.04em;color:var(--ink3);transition:color .2s}
 .nav-links a:hover{color:var(--red)}
 .nav-right{display:flex;align-items:center;gap:.75rem}
-.lang-switch{display:flex;gap:0;border:1px solid var(--border);border-radius:2px;overflow:hidden}
-.lang-btn{padding:.3rem .55rem;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
-.lang-btn.active,.lang-btn:hover{background:var(--red);color:#fff}
-.lang-btn+.lang-btn{border-left:1px solid var(--border)}
+/* Language dropdown */
+.lang-dd{position:relative;font-family:'Inter',sans-serif}
+.lang-dd-toggle{display:flex;align-items:center;gap:.35rem;padding:.35rem .55rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);background:#fff;border:1px solid var(--border);border-radius:3px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;min-width:54px;justify-content:center}
+.lang-dd-toggle:hover{border-color:var(--red);color:var(--red)}
+.lang-dd-chev{width:9px;height:9px;transition:transform .25s}
+.lang-dd.open .lang-dd-chev{transform:rotate(180deg)}
+.lang-switch{position:absolute;top:calc(100% + 4px);right:0;display:none;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:3px;box-shadow:0 6px 20px rgba(0,0,0,.08);overflow:hidden;z-index:1000;min-width:84px}
+.lang-dd.open .lang-switch{display:flex}
+.lang-btn{padding:.55rem .85rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);background:#fff;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;text-align:left}
+.lang-btn:hover{background:var(--bg);color:var(--red)}
+.lang-btn.active{background:var(--red);color:#fff}
+.lang-btn.active:hover{background:var(--red);color:#fff}
+.lang-btn+.lang-btn{border-top:1px solid var(--border)}
 
 /* ─── HERO ─── */
 #hero{background:var(--white);padding:5.5rem 3rem 3rem;display:flex;align-items:center;overflow:hidden;position:relative}

@@ -15,6 +15,7 @@
   //     replace via innerHTML for those known headings.
   const D = {
     // ── NAV
+    'О нас':                   { kk: 'Біз туралы',             en: 'About us' },
     'Участникам':              { kk: 'Қатысушыларға',          en: 'For members' },
     'Верификация':             { kk: 'Тексеру',                en: 'Verification' },
     'Проекты':                 { kk: 'Жобалар',                en: 'Projects' },
@@ -279,12 +280,17 @@
 
   // Buttons are always in fixed order: RU, KZ, EN, 中文
   const LANG_ORDER = ['ru', 'kk', 'en', 'zh'];
+  const LANG_LABELS = { ru: 'RU', kk: 'KZ', en: 'EN', zh: '中文' };
 
   function setActiveButton(lang) {
     const idx = LANG_ORDER.indexOf(lang);
     document.querySelectorAll('.lang-switch').forEach((sw) => {
       const buttons = sw.querySelectorAll('.lang-btn');
       buttons.forEach((b, i) => b.classList.toggle('active', i === idx));
+    });
+    // Update dropdown current label
+    document.querySelectorAll('.lang-dd-current').forEach((el) => {
+      el.textContent = LANG_LABELS[lang] || 'RU';
     });
     const htmlLang = lang === 'kk' ? 'kk' : (lang === 'en' ? 'en' : (lang === 'zh' ? 'zh' : 'ru'));
     document.documentElement.setAttribute('lang', htmlLang);
@@ -305,13 +311,48 @@
   }
 
   function wireUp() {
+    // Lang option buttons (inside dropdown menu)
     document.querySelectorAll('.lang-switch').forEach((sw) => {
       const buttons = sw.querySelectorAll('.lang-btn');
       buttons.forEach((btn, i) => {
         btn.addEventListener('click', () => {
           const lang = LANG_ORDER[i] || 'ru';
           applyLang(lang);
+          // close any open dropdown
+          document.querySelectorAll('.lang-dd.open').forEach((dd) => dd.classList.remove('open'));
+          const tgl = sw.parentElement && sw.parentElement.querySelector('.lang-dd-toggle');
+          if (tgl) tgl.setAttribute('aria-expanded', 'false');
         });
+      });
+    });
+    // Dropdown toggle
+    document.querySelectorAll('.lang-dd-toggle').forEach((tgl) => {
+      tgl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const dd = tgl.closest('.lang-dd');
+        if (!dd) return;
+        // Close other dropdowns
+        document.querySelectorAll('.lang-dd.open').forEach((d) => { if (d !== dd) d.classList.remove('open'); });
+        const open = dd.classList.toggle('open');
+        tgl.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+    // Click outside closes dropdown
+    document.addEventListener('click', (e) => {
+      if (e.target.closest && e.target.closest('.lang-dd')) return;
+      document.querySelectorAll('.lang-dd.open').forEach((dd) => {
+        dd.classList.remove('open');
+        const tgl = dd.querySelector('.lang-dd-toggle');
+        if (tgl) tgl.setAttribute('aria-expanded', 'false');
+      });
+    });
+    // Esc closes
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('.lang-dd.open').forEach((dd) => {
+        dd.classList.remove('open');
+        const tgl = dd.querySelector('.lang-dd-toggle');
+        if (tgl) tgl.setAttribute('aria-expanded', 'false');
       });
     });
     let saved = 'ru';
