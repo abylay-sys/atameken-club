@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Проекты - Бизнес-сообщество «ATAMEKEN Club»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/landing.css"/>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <a href="/" class="logo">
+    <div class="logo-emblem">
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
+    </div>
+    <div class="logo-text">
+      <span class="logo-main">Бизнес-сообщество</span>
+      <span class="logo-sub-name">«ATAMEKEN Club»</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/index.html">Главная</a></li>
+    <li><a href="/projects.html">Проекты</a></li>
+    <li><a href="/events.html">Календарь</a></li>
+    <li><a href="/pricing.html">Тарифы</a></li>
+    <li><a href="/services.html">Дополнительные услуги</a></li>
+    <li><a href="/partners.html">Партнеры</a></li>
+    <li><a href="/residents.html">Резиденты</a></li>
+    <li><a href="/about.html">О нас</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-dd" id="langDD">
+      <button class="lang-dd-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-dd-current">RU</span>
+        <svg class="lang-dd-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 5 6 8 9 5"/></svg>
+      </button>
+      <div class="lang-switch">
+        <button class="lang-btn active">RU</button>
+        <button class="lang-btn">KZ</button>
+        <button class="lang-btn">EN</button>
+        <button class="lang-btn">中文</button>
+      </div>
+    </div>
+    <a href="/login.html" class="btn-red" style="padding:.48rem 1.2rem;font-size:.75rem">Войти</a>
+  </div>
+</nav>
+
+<main style="padding-top:1rem">
+<!-- ══ КАТАЛОГ ПРОЕКТОВ ══ -->
+<section id="catalog">
+  <div class="inner">
+    <div class="sh reveal">
+      <div class="sh-inner">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block;margin-bottom:.75rem">Каталог проектов</span>
+          <h2>Верифицированные<br/>проекты и компании</h2>
+        </div>
+        <div class="sh-right">
+          <p>Карточки видны всем. Полные данные - финансовые модели, команда, контакты - открываются только верифицированным участникам. Регистрация бесплатна.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cat-tabs reveal" id="catTabs">
+      <button class="cat-tab on" data-tab="all">Все</button>
+      <button class="cat-tab" data-tab="invest">Инвест-проекты</button>
+      <button class="cat-tab" data-tab="franchise">Франшизы</button>
+      <button class="cat-tab" data-tab="sale">Продажа готового бизнеса</button>
+      <button class="cat-tab" data-tab="goods">Продажа товаров и сырья</button>
+    </div>
+    <div class="cat-grid" id="catGrid">
+
+      <div class="pcard locked blurred" data-tab="invest" style="position:relative">
+        <span class="card-priority"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 6.5,3.5 10,3.5 7.5,5.5 8.5,9 5,7 1.5,9 2.5,5.5 0,3.5 3.5,3.5"/></svg>Приоритет</span>
+<div class="pcard-top green"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Инвест-проект</div>
+          <div class="pcard-title">Агропромышленный хаб «Степной»</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            Резидент ATAMEKEN Club
+            <span class="bdg-tip">Значок не присвоен. Компания пока не является Резидентом Бизнес-сообщества «ATAMEKEN Club».</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
+          </span>
+          <span class="bdg bdg-ct-kz">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+            СТ-КЗ
+            <span class="bdg-tip">Сертификат о казахстанском происхождении товара СТ-КЗ.</span>
+          </span>
+          <span class="bdg bdg-ct1">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+            СТ-1
+            <span class="bdg-tip">Сертификат происхождения СТ-1 для стран СНГ. Даёт преференции при экспорте.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>Pre-A</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M5 3V2h4v1"/></svg><strong>1.2 млрд KZT</strong></div>
+          </div>
+          <div class="pcard-desc">Вертикально интегрированное агропроизводство с экспортным потенциалом на рынки КНР и ЦА. Ищут инвестора или стратегического партнёра.</div>
+          <div class="pcard-tags"><span class="ptag">Агропром</span><span class="ptag">Казахстан</span><span class="ptag">Экспорт</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">от 150 млн</div><div class="pcard-price-l">мин. чек, KZT</div></div><button class="pcard-btn">Досье</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финансовая модель, команда и контакты - только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="invest">
+        <div class="pcard-top blue"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Инвест-проект</div>
+          <div class="pcard-title">МФК «AlmaCity Towers»</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            Резидент ATAMEKEN Club
+            <span class="bdg-tip">Значок не присвоен. Компания пока не является Резидентом Бизнес-сообщества «ATAMEKEN Club».</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
+          </span>
+          <span class="bdg bdg-fin-audit">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            Верификация Фин.модели
+            <span class="bdg-tip">Финансовая модель верифицирована независимым аудитором.</span>
+          </span>
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="1" width="8" height="10" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7" x2="8" y2="7"/></svg>
+            Верификация БП
+            <span class="bdg-tip">Значок не присвоен. Верификация бизнес-плана не проводилась.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>Seed</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M5 3V2h4v1"/></svg><strong>4.8 млрд KZT</strong></div>
+          </div>
+          <div class="pcard-desc">МФК с жилой и коммерческой составляющей в Алматы. Ищут со-инвестора в SPV. Полная финмодель и юридическая структура в закрытом досье.</div>
+          <div class="pcard-tags"><span class="ptag">Недвижимость</span><span class="ptag">Алматы</span><span class="ptag">SPV</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">от 500 млн</div><div class="pcard-price-l">мин. чек, KZT</div></div><button class="pcard-btn">Досье</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финансовая модель, команда и контакты - только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="franchise">
+        <div class="pcard-top amber"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Франшиза</div>
+          <div class="pcard-title">«Stepnoy Kitchen» - сеть кафе</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            Резидент ATAMEKEN Club
+            <span class="bdg-tip">Значок не присвоен.</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
+          </span>
+          <span class="bdg bdg-buh-audit">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 9V5l4-4 4 4v4"/><rect x="4" y="7" width="4" height="4"/></svg>
+            Финаудит Компании
+            <span class="bdg-tip">Финансовый аудит компании пройден: проверены первичные документы, учётная политика и соответствие стандартам.</span>
+          </span>
+          <span class="bdg bdg-fin-audit">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="10" height="7" rx="1"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            Верификация Фин.модели
+            <span class="bdg-tip">Финансовый аудит компании пройден: отчётность проверена независимым аудитором.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 3.3 4.5 7.5 4.5 7.5s4.5-4.2 4.5-7.5c0-2.5-2-4.5-4.5-4.5z"/></svg><strong>12 точек, СНГ</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>Окупаемость 18 мес.</strong></div>
+          </div>
+          <div class="pcard-desc">Казахстанский фаст-кэжуал. ROI-калькулятор, стандарты, обучение 14 дней, полная операционная поддержка.</div>
+          <div class="pcard-tags"><span class="ptag">HoReCa</span><span class="ptag">Масштабирование</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">от 35 млн</div><div class="pcard-price-l">паушальный взнос, KZT</div></div><button class="pcard-btn">Досье</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финмодель и контакты франчайзера - только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="sale">
+        <div class="pcard-top green"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Продажа готового бизнеса</div>
+          <div class="pcard-title">Завод металлообработки - Алматы</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-club">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            Резидент ATAMEKEN Club
+            <span class="bdg-tip">Является Резидентом Бизнес-сообщества «ATAMEKEN Club». Приоритетное отображение в каталоге.</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
+          </span>
+          <span class="bdg bdg-ct-kz">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+            СТ-КЗ
+            <span class="bdg-tip">Сертификат СТ-КЗ о казахстанском происхождении.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="12" height="11" rx="1"/><path d="M5 2V1h4v1"/></svg><strong>Основан 2015</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-2.5 2-4.5 5-4.5s5 2 5 4.5M7 6.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/></svg><strong>85 сотрудников</strong></div>
+          </div>
+          <div class="pcard-desc">Действующий завод с собственными площадями. Прибыльный. Собственник выходит. Полная отчётность и аудит в закрытом досье.</div>
+          <div class="pcard-tags"><span class="ptag">Производство</span><span class="ptag">Прибыльный</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">по запросу</div><div class="pcard-price-l">конфиденциально</div></div><button class="pcard-btn">Запросить</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Финотчётность и стоимость - только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="goods" style="position:relative">
+        <span class="card-priority"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 6.5,3.5 10,3.5 7.5,5.5 8.5,9 5,7 1.5,9 2.5,5.5 0,3.5 3.5,3.5"/></svg>Приоритет</span>
+<div class="pcard-top amber"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Продажа товаров и сырья</div>
+          <div class="pcard-title">Пшеница 3-го класса - партии от 1 000 тонн</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-club">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            Резидент ATAMEKEN Club
+            <span class="bdg-tip">Является Резидентом Бизнес-сообщества «ATAMEKEN Club». Приоритетное отображение в каталоге.</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
+          </span>
+          <span class="bdg bdg-ct-kz">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+            СТ-КЗ
+            <span class="bdg-tip">Сертификат СТ-КЗ о казахстанском происхождении.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-2.5 2-4.5 5-4.5s5 2 5 4.5"/><circle cx="7" cy="4" r="2.5"/></svg><strong>Прямой производитель</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M5 3V2h4v1"/></svg><strong>от 1 000 т.</strong></div>
+          </div>
+          <div class="pcard-desc">Зерновая продукция Северного Казахстана. Прямой производитель. Поставки в КНР, Узбекистан, Турцию. Контракты от 1 000 тонн.</div>
+          <div class="pcard-tags"><span class="ptag">Агро</span><span class="ptag">Экспорт</span><span class="ptag">КЗ</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">по запросу</div><div class="pcard-price-l">FCA / DAP, USD/т</div></div><button class="pcard-btn">Запросить</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Цена, логистика и контакты - только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+      <div class="pcard locked blurred" data-tab="goods">
+        <div class="pcard-top blue"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">Продажа товаров и сырья</div>
+          <div class="pcard-title">Медный концентрат - партии от 500 тонн</div>
+          <div class="badge-strip">
+          <span class="bdg bdg-off">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 38 Q30 16 50 38" stroke="currentColor" stroke-width="3" fill="none"/><line x1="8" y1="38" x2="52" y2="38" stroke="currentColor" stroke-width="2.5"/></svg>
+            Резидент ATAMEKEN Club
+            <span class="bdg-tip">Значок не присвоен.</span>
+          </span>
+          <span class="bdg bdg-verified">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+            Верификация анкеты
+            <span class="bdg-tip">Анкета верифицирована: проверены регистрационные данные, контакты и публичный след.</span>
+          </span>
+          <span class="bdg bdg-ct1">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 1l1.5 4H11L8 7.5l1 4L6 9 3 11.5l1-4L1 5h3.5z"/></svg>
+            СТ-1
+            <span class="bdg-tip">Сертификат СТ-1 для стран СНГ.</span>
+          </span>
+        </div>
+          <div class="pcard-meta">
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="12" height="9" rx="1"/></svg><strong>Cu 25-28%</strong></div>
+            <div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M5 3V2h4v1"/></svg><strong>от 500 т.</strong></div>
+          </div>
+          <div class="pcard-desc">Медный концентрат от ГОКа Восточного Казахстана. Регулярные отгрузки. Сертификация по международным стандартам.</div>
+          <div class="pcard-tags"><span class="ptag">Металлы</span><span class="ptag">ГМК</span><span class="ptag">Экспорт</span></div>
+          <div class="pcard-foot"><div><div class="pcard-price">по запросу</div><div class="pcard-price-l">CIF, USD/т</div></div><button class="pcard-btn">Запросить</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>Цена, логистика и контакты - только для верифицированных участников</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+
+    </div>
+    <div class="cat-more reveal">
+      <p>В каталоге сотни производителей и товаров: проекты, франшизы, компании, поставщики и покупатели. Полный доступ - после верификации.</p>
+      <a href="/register.html" class="btn-red">Зарегистрироваться и открыть каталог</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="f-logo">
+    <div class="f-logo-emb">
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
+    </div>
+    <div class="f-logo-text">
+      <span class="f-logo-main">Бизнес-сообщество</span>
+      <span class="f-logo-sub-name">«ATAMEKEN Club»</span>
+    </div>
+  </div>
+  <div class="f-mid">
+    <p>© 2025 ТОО «ATAMEKEN Club». Все права защищены.</p>
+    <p>Бизнес-сообщество «ATAMEKEN Club» · Казахстан</p>
+  </div>
+  <div class="f-right">
+    <a href="mailto:info@atameken.club">info@atameken.club</a>
+    <a href="tel:+77000000000">+7 (700) 000-00-00</a>
+    <a href="#">г. Алматы, Казахстан</a>
+  </div>
+</footer>
+
+<script src="/assets/api.js"></script>
+<script>
+// Auth-aware nav
+(function(){
+  const token = localStorage.getItem('ac_access');
+  document.querySelectorAll('a[href="/login.html"]').forEach(a => {
+    if(token){ a.href = '/cabinet.html'; if(a.textContent.trim()==='Войти') a.textContent = 'Кабинет'; }
+  });
+  if(token){
+    document.querySelectorAll('a.btn-red[href="/register.html"]').forEach(a => {
+      if(/Регистрац|верифика/i.test(a.textContent)){ a.href = '/verify.html'; }
+    });
+  }
+  function setLockedState(state){
+    document.querySelectorAll('.pcard.locked').forEach(card => {
+      const panel = card.querySelector('.lock-panel');
+      if(state === 'verified'){
+        card.classList.remove('locked','blurred');
+        if(panel) panel.style.display = 'none';
+      } else if(state === 'pending'){
+        if(panel){
+          const a = panel.querySelector('a');
+          const p = panel.querySelector('p');
+          if(a){ a.href = '/verify.html'; a.textContent = 'Статус заявки'; }
+          if(p) p.textContent = 'Заявка на верификацию рассматривается. Доступ к полным досье откроется после одобрения.';
+        }
+      } else if(state === 'draft'){
+        if(panel){
+          const a = panel.querySelector('a');
+          const p = panel.querySelector('p');
+          if(a){ a.href = '/verify.html'; a.textContent = 'Заполнить анкету'; }
+          if(p) p.textContent = 'Заполните анкету верификации, чтобы открыть полные досье проектов.';
+        }
+      }
+    });
+  }
+  if(!token) return;
+  setLockedState('draft');
+  fetch('/profile', { headers: { Authorization: 'Bearer ' + token } })
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(data => {
+      const st = data?.profile?.status;
+      if(st === 'VERIFIED'){ setLockedState('verified'); }
+      else if(st === 'SUBMITTED'){ setLockedState('pending'); }
+      else { setLockedState('draft'); }
+    })
+    .catch(() => {});
+})();
+
+// Reveal observer
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.06});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Catalog tabs
+document.querySelectorAll('.cat-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const t = btn.dataset.tab;
+    document.querySelectorAll('#catGrid .pcard').forEach(c => {
+      c.style.display = (t === 'all' || c.dataset.tab === t) ? 'flex' : 'none';
+    });
+  });
+});
+</script>
+<script src="/assets/i18n.js"></script>
+</body>
+</html>
