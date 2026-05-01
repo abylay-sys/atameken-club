@@ -249,7 +249,6 @@
     // 1) Text nodes
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
       acceptNode(n) {
-        // skip script/style/textarea
         const p = n.parentNode;
         if (!p) return NodeFilter.FILTER_REJECT;
         const tag = p.nodeName;
@@ -264,30 +263,31 @@
       const next = translateText(original, lang);
       if (node.nodeValue !== next) node.nodeValue = next;
     }
-    // 2) Attributes: placeholder, title, aria-label, value (for buttons), alt
+    // 2) Attributes: placeholder, title, aria-label, alt
     const ATTRS = ['placeholder', 'title', 'aria-label', 'alt'];
     document.querySelectorAll('[placeholder],[title],[aria-label],[alt]').forEach((el) => {
       ATTRS.forEach((a) => {
         if (!el.hasAttribute(a)) return;
-        const key = '__i18n_' + a;
-        if (!(key in el.dataset)) el.dataset[key.slice(2)] = el.getAttribute(a);
-        const original = el.dataset[key.slice(2)] || el.getAttribute(a);
-        el.setAttribute(a, translateText(original, lang));
+        try {
+          const cacheKey = 'i18nOrig' + a.replace(/(^|-)([a-z])/g, (_, _d, c) => c.toUpperCase());
+          if (!el.dataset[cacheKey]) el.dataset[cacheKey] = el.getAttribute(a);
+          el.setAttribute(a, translateText(el.dataset[cacheKey], lang));
+        } catch (_) { /* ignore */ }
       });
     });
-    // 3) <option> values (selects) — handled by text nodes
   }
 
+  // Buttons are always in fixed order: RU, KZ, EN, 中文
+  const LANG_ORDER = ['ru', 'kk', 'en', 'zh'];
+
   function setActiveButton(lang) {
-    document.querySelectorAll('.lang-btn').forEach((b) => {
-      const txt = (b.textContent || '').trim();
-      let bLang = 'ru';
-      if (txt === 'KZ' || txt === 'KK') bLang = 'kk';
-      else if (txt === 'EN') bLang = 'en';
-      else if (/中/.test(txt)) bLang = 'zh';
-      b.classList.toggle('active', bLang === lang);
+    const idx = LANG_ORDER.indexOf(lang);
+    document.querySelectorAll('.lang-switch').forEach((sw) => {
+      const buttons = sw.querySelectorAll('.lang-btn');
+      buttons.forEach((b, i) => b.classList.toggle('active', i === idx));
     });
-    document.documentElement.setAttribute('lang', lang === 'kk' ? 'kk' : (lang === 'en' ? 'en' : (lang === 'zh' ? 'zh' : 'ru')));
+    const htmlLang = lang === 'kk' ? 'kk' : (lang === 'en' ? 'en' : (lang === 'zh' ? 'zh' : 'ru'));
+    document.documentElement.setAttribute('lang', htmlLang);
   }
 
   function applyLang(lang) {
@@ -305,13 +305,13 @@
   }
 
   function wireUp() {
-    document.querySelectorAll('.lang-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const txt = (btn.textContent || '').trim();
-        if (txt === 'RU') applyLang('ru');
-        else if (txt === 'KZ' || txt === 'KK') applyLang('kk');
-        else if (txt === 'EN') applyLang('en');
-        else if (/中/.test(txt)) applyLang('zh');
+    document.querySelectorAll('.lang-switch').forEach((sw) => {
+      const buttons = sw.querySelectorAll('.lang-btn');
+      buttons.forEach((btn, i) => {
+        btn.addEventListener('click', () => {
+          const lang = LANG_ORDER[i] || 'ru';
+          applyLang(lang);
+        });
       });
     });
     let saved = 'ru';
