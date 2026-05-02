@@ -12,6 +12,12 @@ enum UserRole {
   INVESTOR
   FRANCHISE
   SALE
+  FRANCHISER
+  FRANCHISEE
+  BIZ_SELLER
+  BIZ_BUYER
+  GOODS_SELLER
+  GOODS_BUYER
 }
 
 enum ProfileStatus {

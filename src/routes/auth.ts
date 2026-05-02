@@ -8,7 +8,7 @@ import { requireAuth } from '../middleware/auth';
 const registerSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
   password: z.string().min(8).max(128),
-  role: z.enum(['SEEKER', 'INVESTOR', 'FRANCHISE', 'SALE']),
+  role: z.enum(['SEEKER', 'INVESTOR', 'FRANCHISE', 'SALE', 'FRANCHISER', 'FRANCHISEE', 'BIZ_SELLER', 'BIZ_BUYER', 'GOODS_SELLER', 'GOODS_BUYER']),
   fullName: z.string().min(2).max(120).optional(),
   phone: z.string().max(32).optional(),
 });

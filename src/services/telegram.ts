@@ -6,6 +6,12 @@ const ROLE_LABEL: Record<string, string> = {
   INVESTOR: 'Инвестор',
   FRANCHISE: 'Франчайзер / Франчайзи',
   SALE: 'Продавец / Покупатель бизнеса',
+  FRANCHISER: 'Франчайзер',
+  FRANCHISEE: 'Франчайзи',
+  BIZ_SELLER: 'Продавец готового бизнеса',
+  BIZ_BUYER: 'Покупатель готового бизнеса',
+  GOODS_SELLER: 'Продавец товаров и сырья',
+  GOODS_BUYER: 'Покупатель товаров и сырья',
 };
 
 function esc(v: unknown): string {

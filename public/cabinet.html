@@ -845,8 +845,8 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
 (async function () {
   if (!AC.requireAuth('/login.html')) return;
 
-  const ROLE_TO_TYPE = { SEEKER: 'seeker', INVESTOR: 'investor', FRANCHISE: 'franchise', SALE: 'sale' };
-  const ROLE_LABEL = { SEEKER: 'Соискатель инвестиций', INVESTOR: 'Инвестор', FRANCHISE: 'Франчайзер / Франчайзи', SALE: 'Продавец / Покупатель бизнеса' };
+  const ROLE_TO_TYPE = { SEEKER: 'seeker', INVESTOR: 'investor', FRANCHISE: 'franchise', SALE: 'sale', FRANCHISER: 'franchise', FRANCHISEE: 'franchise', BIZ_SELLER: 'sale', BIZ_BUYER: 'sale', GOODS_SELLER: 'sale', GOODS_BUYER: 'sale' };
+  const ROLE_LABEL = { SEEKER: 'Соискатель инвестиций', INVESTOR: 'Инвестор', FRANCHISE: 'Франчайзер / Франчайзи', SALE: 'Продавец / Покупатель бизнеса', FRANCHISER: 'Франчайзер', FRANCHISEE: 'Франчайзи', BIZ_SELLER: 'Продавец готового бизнеса', BIZ_BUYER: 'Покупатель готового бизнеса', GOODS_SELLER: 'Продавец товаров и сырья', GOODS_BUYER: 'Покупатель товаров и сырья' };
   const PROFILE_FIELDS = ['companyName','bin','industry','region','description','descriptionFull','recommendation','website','instagram','facebook','linkedin','telegram','whatsapp','foundedYear','revenue','employees','investmentNeed','investmentGoal','contactName','contactPhone','contactEmail'];
 
   const $ = (id) => document.getElementById(id);
