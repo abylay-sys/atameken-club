@@ -35,6 +35,10 @@
   .res-field input:focus,.res-field select:focus,.res-field textarea:focus{border-color:var(--red);background:#fff}
   .res-field textarea{resize:vertical;min-height:90px;line-height:1.5}
   .res-field-hint{font-size:.7rem;color:var(--ink3);margin-top:-.1rem}
+  .res-file-label{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem .95rem;background:var(--bg);border:1.5px dashed var(--border2);color:var(--ink2);border-radius:3px;cursor:pointer;font-size:.82rem;font-weight:500;transition:all .2s;width:fit-content}
+  .res-file-label:hover{border-color:var(--red);color:var(--red)}
+  .res-file-label svg{flex-shrink:0}
+  .res-file-name{font-size:.78rem;color:var(--red);margin-top:.4rem;font-weight:500}
   .res-submit{margin-top:1.5rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
   .res-submit-btn{padding:.85rem 2rem;background:var(--red);color:#fff;border:none;border-radius:3px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:all .22s}
   .res-submit-btn:hover{background:var(--red2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,40,42,.25)}
@@ -71,7 +75,7 @@
     <li><a href="/services.html">Дополнительные услуги</a></li>
     <li><a href="/partners.html">Партнеры</a></li>
     <li><a href="/residents.html">Резиденты</a></li>
-    <li><a href="/about.html">О нас</a></li>
+    <li style="display:none"><a href="/about.html">О нас</a></li>
   </ul>
   <div class="nav-right">
     <div class="lang-dd" id="langDD">
@@ -95,29 +99,11 @@
   <div class="inner">
     <div class="res-intro reveal">
       <div class="red-bar"></div>
-      <span class="tag" style="display:block;margin-bottom:.85rem">Как стать Резидентом</span>
-      <h1>Сайт открыт для всех,<br/>Резидентство — закрытое</h1>
-      <p>Сайт — это открытая платформа для всех, а Резидентство в Клубе — закрытое. Резиденты «ATAMEKEN Club» принимаются исключительно по рекомендации одной из перечисленных ниже организаций. Это базовая мера, обеспечивающая надёжность и репутационную защиту всех участников Клуба.</p>
-    </div>
-
-    <div class="res-paths reveal">
-      <div class="res-path">
-        <div class="res-path-tag">Путь 1</div>
-        <h3>Для казахстанских компаний</h3>
-        <ol>
-          <li>По рекомендации Национальной Палаты предпринимателей Республики Казахстан.</li>
-          <li>По рекомендации Палаты предпринимателей города Алматы.</li>
-          <li>По рекомендации Ассоциаций, Союзов, Профсоюзов, Бизнес-клубов (иных ОЮЛ), являющихся Партнёрами «ATAMEKEN Club».</li>
-        </ol>
-      </div>
-      <div class="res-path">
-        <div class="res-path-tag">Путь 2</div>
-        <h3>Для компаний не из Республики Казахстан</h3>
-        <ol>
-          <li>По рекомендации Посольства, Генерального Консульства, Консульства, иных официальных дипломатических представительств иностранных государств, расположенных на территории Республики Казахстан.</li>
-          <li>По рекомендации Торгово-промышленных Палат, Внешнеторговых Палат, Ассоциаций, Союзов, Профсоюзов, Бизнес-клубов (иных ОЮЛ), являющихся Партнёрами «ATAMEKEN Club».</li>
-        </ol>
-      </div>
+      <span class="tag" style="display:block;margin-bottom:.85rem">Резиденты</span>
+      <h1>Надёжные и проверенные<br/>предприниматели</h1>
+      <p>Резиденты Бизнес-сообщества «ATAMEKEN Club» — это надёжные и проверенные предприниматели, которые прошли строгий отбор. Резидентом может стать только предприниматель, имеющий рекомендацию от Партнёров Бизнес-сообщества «ATAMEKEN Club», а также по рекомендации от: Национальной палаты предпринимателей Республики Казахстан, Палаты предпринимателей города Алматы, или представительств дипломатических служб иностранных государств.</p>
+      <p>Наращивание количества собственных Резидентов не является приоритетной задачей Бизнес-сообщества «ATAMEKEN Club». Основная цель — создание площадки, на которой добросовестные предприниматели смогут найти себе таких же добросовестных контрагентов со всего мира для дальнейшего сотрудничества.</p>
+      <p>Чтобы подать заявку на рассмотрение в качестве Резидента Бизнес-сообщества «ATAMEKEN Club», необходимо заполнить Анкету.</p>
     </div>
 
     <div class="res-form-section reveal">
@@ -131,6 +117,18 @@
           <div class="res-field full">
             <label for="r-name">Название компании</label>
             <input type="text" id="r-name" name="name" required placeholder="ТОО «Пример»"/>
+          </div>
+          <div class="res-field">
+            <label for="r-country">Страна</label>
+            <input type="text" id="r-country" name="country" placeholder="Казахстан"/>
+          </div>
+          <div class="res-field">
+            <label for="r-region">Область / регион</label>
+            <input type="text" id="r-region" name="region" placeholder="Алматинская"/>
+          </div>
+          <div class="res-field">
+            <label for="r-city">Город</label>
+            <input type="text" id="r-city" name="city" placeholder="Алматы"/>
           </div>
           <div class="res-field">
             <label for="r-form">Форма учреждения</label>
@@ -190,7 +188,7 @@
             <input type="text" id="r-revenue" name="revenue" placeholder="например, 1,2 млрд KZT"/>
           </div>
           <div class="res-field">
-            <label for="r-volume">Объёмы производства в год</label>
+            <label for="r-volume">Объёмы производства Продукции / реализации товаров / услуг в год</label>
             <input type="text" id="r-volume" name="volume" placeholder="например, 8 000 тонн / 12 000 ед."/>
           </div>
 
@@ -205,9 +203,17 @@
           </div>
 
           <div class="res-field full">
-            <label for="r-recommender">Кем рекомендовано</label>
-            <input type="text" id="r-recommender" name="recommender" placeholder="Название Палаты / Ассоциации / Бизнес-клуба / Посольства"/>
-            <div class="res-field-hint">Резидентство возможно только по рекомендации одной из аккредитованных организаций (см. выше).</div>
+            <label for="r-recommender">Рекомендация от:</label>
+            <input type="text" id="r-recommender" name="recommender" placeholder="Полное наименование организации"/>
+          </div>
+          <div class="res-field full">
+            <label for="r-recommendation-file" class="res-file-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+              <span>Прикрепить скан Рекомендательного письма (PDF)</span>
+            </label>
+            <input type="file" id="r-recommendation-file" name="recommendationFile" accept=".pdf,application/pdf" style="display:none"/>
+            <div class="res-file-name" id="resFileName"></div>
+            <div class="res-field-hint">Резидентство возможно только по рекомендации одной из аккредитованных организаций.</div>
           </div>
         </div>
 
@@ -268,6 +274,9 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   const submit = document.getElementById('resSubmit');
   const FIELDS = [
     ['name',         'Название компании'],
+    ['country',      'Страна'],
+    ['region',       'Область / регион'],
+    ['city',         'Город'],
     ['form',         'Форма учреждения'],
     ['bin',          'БИН / рег. номер'],
     ['founded',      'Дата основания'],
@@ -280,11 +289,20 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
     ['headcount',    'Количество сотрудников'],
     ['size',         'Размер бизнеса'],
     ['revenue',      'Годовой оборот'],
-    ['volume',       'Объёмы производства'],
+    ['volume',       'Объёмы производства / реализации'],
     ['products',     'Товары / услуги'],
     ['info',         'Доп. информация'],
-    ['recommender',  'Рекомендатель'],
+    ['recommender',  'Рекомендация от'],
   ];
+  // File picker — show selected file name
+  const fileInput = document.getElementById('r-recommendation-file');
+  const fileNameEl = document.getElementById('resFileName');
+  if (fileInput && fileNameEl) {
+    fileInput.addEventListener('change', () => {
+      const f = fileInput.files && fileInput.files[0];
+      fileNameEl.textContent = f ? '✓ ' + f.name : '';
+    });
+  }
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     status.className = 'res-status';
@@ -301,6 +319,8 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
       const v = (data.get(key) || '').toString().trim();
       if(v) lines.push(label + ':\n' + v + '\n');
     });
+    const f = fileInput && fileInput.files && fileInput.files[0];
+    if(f) lines.push('Рекомендательное письмо: ' + f.name + ' (приложите файл к письму вручную)\n');
     const subject = 'Заявка на Резидентство — ' + name;
     const body = lines.join('\n');
     const mailto = 'mailto:info@atameken.club?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);

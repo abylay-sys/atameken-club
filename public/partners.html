@@ -30,7 +30,7 @@
     <li><a href="/services.html">Дополнительные услуги</a></li>
     <li><a href="/partners.html">Партнеры</a></li>
     <li><a href="/residents.html">Резиденты</a></li>
-    <li><a href="/about.html">О нас</a></li>
+    <li style="display:none"><a href="/about.html">О нас</a></li>
   </ul>
   <div class="nav-right">
     <div class="lang-dd" id="langDD">
@@ -51,105 +51,81 @@
 
 <main style="padding-top:1rem">
 
-<!-- ══ НАШИ ПАРТНЁРЫ ══ -->
+<!-- ══ НАШИ ПАРТНЁРЫ — ПРЕСС-СТЕНА ══ -->
 <section id="our-partners">
   <div class="inner">
-    <div class="reveal" style="max-width:780px;margin-bottom:2.5rem">
+    <div class="reveal" style="max-width:880px;margin-bottom:2.5rem">
       <div class="red-bar"></div>
       <span class="tag" style="display:block;margin-bottom:.75rem">Наши партнёры</span>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:var(--t7);color:var(--ink);line-height:1.15">Организации, которые<br/>работают с нами</h2>
-      <p style="margin-top:1.15rem;color:var(--ink3)">Профильные ассоциации, отраслевые объединения, акселераторы и бизнес-клубы, поддерживающие платформу ATAMEKEN Club.</p>
+      <p class="op-lead">Партнёры Бизнес-сообщества «ATAMEKEN Club» — это Ассоциации, Палаты, Бизнес-клубы, Акселераторы, Фонды, Объединения юридических лиц и другие коммерческие/некоммерческие организации, в&nbsp;том числе и&nbsp;иностранные, которые представляют бизнес-интересы своих Членов.</p>
+      <p class="op-lead">Партнёрские организации получают право доступа для своих Членов (по предварительной регистрации, т.к. количество мест может быть ограничено) на&nbsp;B2B-нетворкинги и&nbsp;бизнес-мероприятия, организуемые Бизнес-сообществом «ATAMEKEN Club», или в&nbsp;которых оно является Соорганизатором/Партнёром.</p>
+      <p class="op-lead">Чтобы подать заявку на&nbsp;рассмотрение в&nbsp;качестве Партнёра Бизнес-сообщества «ATAMEKEN Club», необходимо заполнить Анкету.</p>
     </div>
 
-    <h3 class="op-cat-title">Партнёрские организации</h3>
-    <div class="op-grid reveal">
-      <div class="op-card">
-        <div class="op-kind">ОЮЛ</div>
-        <div class="op-name">«Ассоциация экспортеров Республики Казахстан»</div>
-      </div>
-      <div class="op-card">
-        <div class="op-kind">ОЮЛ</div>
-        <div class="op-name">«Союз строителей Казахстана»</div>
-      </div>
-      <div class="op-card">
-        <div class="op-kind">ОО</div>
-        <div class="op-name">«Независимый профсоюз по защите малого и среднего бизнеса»</div>
-      </div>
-    </div>
-
-    <h3 class="op-cat-title">Акселератор</h3>
-    <div class="op-grid reveal">
-      <div class="op-card">
-        <div class="op-kind">Акселератор</div>
-        <div class="op-name">MOST IT HUB</div>
-      </div>
-    </div>
-
-    <h3 class="op-cat-title">Бизнес-клубы</h3>
-    <div class="op-grid reveal">
-      <div class="op-card">
-        <div class="op-kind">ОЮЛ</div>
-        <div class="op-name">«26 Business Club»</div>
-      </div>
-      <div class="op-card">
-        <div class="op-kind">Бизнес-клуб</div>
-        <div class="op-name">«ClubFirst»</div>
-      </div>
-      <div class="op-card">
-        <div class="op-kind">Бизнес-клуб</div>
-        <div class="op-name">«VQ Business Club»</div>
-      </div>
+    <div class="op-wall reveal">
+      <div class="op-tile"><span class="op-tile-name">«Ассоциация экспортеров Республики Казахстан»</span><span class="op-tile-kind">ОЮЛ</span></div>
+      <div class="op-tile"><span class="op-tile-name">«Союз строителей Казахстана»</span><span class="op-tile-kind">ОЮЛ</span></div>
+      <div class="op-tile"><span class="op-tile-name">«Независимый профсоюз по защите малого и среднего бизнеса»</span><span class="op-tile-kind">ОО</span></div>
+      <div class="op-tile"><span class="op-tile-name">MOST IT HUB</span><span class="op-tile-kind">Акселератор</span></div>
+      <div class="op-tile"><span class="op-tile-name">«26 Business Club»</span><span class="op-tile-kind">Бизнес-клуб</span></div>
+      <div class="op-tile"><span class="op-tile-name">«ClubFirst»</span><span class="op-tile-kind">Бизнес-клуб</span></div>
+      <div class="op-tile"><span class="op-tile-name">«VQ Business Club»</span><span class="op-tile-kind">Бизнес-клуб</span></div>
     </div>
   </div>
 </section>
 
 <style>
-  #our-partners .op-cat-title{font-family:'Cormorant Garamond',serif;font-size:var(--t6);color:var(--ink);margin:2.25rem 0 1rem;font-weight:500}
-  #our-partners .op-cat-title:first-of-type{margin-top:0}
-  #our-partners .op-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-  #our-partners .op-card{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--red);padding:1.4rem 1.5rem;border-radius:4px;box-shadow:var(--shadow);transition:all .25s;display:flex;flex-direction:column;gap:.55rem;min-height:120px}
-  #our-partners .op-card:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
-  #our-partners .op-kind{font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
-  #our-partners .op-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;line-height:1.3;color:var(--ink)}
-  @media(max-width:900px){#our-partners .op-grid{grid-template-columns:1fr 1fr}}
-  @media(max-width:600px){#our-partners .op-grid{grid-template-columns:1fr}}
+  #our-partners .op-lead{color:var(--ink2);line-height:1.7;font-size:var(--t2);margin:0 0 1rem}
+  #our-partners .op-wall{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+  #our-partners .op-tile{background:#fff;border:1px solid var(--border);border-radius:6px;padding:1.4rem 1.25rem;box-shadow:var(--shadow);transition:all .25s;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;gap:.5rem}
+  #our-partners .op-tile:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+  #our-partners .op-tile-name{font-family:'''Cormorant Garamond''',serif;font-size:1.05rem;line-height:1.3;color:var(--ink);font-weight:500}
+  #our-partners .op-tile-kind{font-size:.62rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+  @media(max-width:980px){#our-partners .op-wall{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:720px){#our-partners .op-wall{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){#our-partners .op-wall{grid-template-columns:1fr}}
 </style>
 
-<!-- ══ ПАРТНЁРЫ ══ -->
+<!-- ══ АНКЕТА ПАРТНЁРА ══ -->
 <section id="partners" class="bg-gray">
   <div class="inner">
     <div class="pt-layout">
       <div class="pt-left reveal">
         <div class="red-bar"></div>
-        <span class="tag" style="display:block;margin-bottom:.75rem">Клубам-партнёрам</span>
-        <h2>Подключите ваш клуб<br/>к платформе</h2>
-        <p style="margin-top:1.15rem">Подключайте ваш бизнес-клуб к платформе и открывайте участникам доступ к деловому каталогу, мероприятиям и инструментам верификации.</p>
-        <p>Меморандум не является эксклюзивным. Каждая сторона несёт ответственность за достоверность сведений. Взаимодействие строго по регламенту.</p>
-        <ul class="pt-benef">
-          <li>Участники клуба получают доступ к верифицированному каталогу и закрытым мероприятиям</li>
-          <li>Юридически оформленный процесс - меморандум, NDA, NCNDA с каждым участником</li>
-          <li>Операционная поддержка и брендовый контур от ATAMEKEN Club</li>
-          <li>Возможность проведения питч-сессий под брендом клуба</li>
-          <li>Прозрачная модель - без обещания гарантированных сделок</li>
-        </ul>
+        <span class="tag" style="display:block;margin-bottom:.75rem">Анкета</span>
+        <h2>Заявка на&nbsp;рассмотрение<br/>в&nbsp;качестве Партнёра</h2>
+        <p style="margin-top:1.15rem">Заполните анкету ниже — мы рассмотрим заявку и свяжемся в течение 5 рабочих дней. После предварительного одобрения подписывается меморандум о сотрудничестве.</p>
       </div>
       <div class="form-wrap reveal">
-        <h3>Запрос для клуба-партнёра</h3>
-        <p class="form-sub">Оставьте контакты - свяжемся в течение 2 рабочих дней</p>
+        <h3>Анкета Партнёра</h3>
+        <p class="form-sub">Все поля помеченные *&nbsp;— обязательные</p>
+        <div class="field"><label>Название организации *</label><input type="text" placeholder="ОЮЛ &laquo;...&raquo;"/></div>
         <div class="f-row">
-          <div class="field"><label>Название клуба</label><input type="text" placeholder="Ваша организация"/></div>
-          <div class="field"><label>Страна / город</label><input type="text" placeholder="Алматы, КЗ"/></div>
+          <div class="field"><label>Страна *</label><input type="text" placeholder="Казахстан"/></div>
+          <div class="field"><label>Область / регион</label><input type="text" placeholder="Алматинская"/></div>
         </div>
-        <div class="field"><label>Контактное лицо</label><input type="text" placeholder="ФИО, должность"/></div>
         <div class="f-row">
-          <div class="field"><label>Телефон / WhatsApp</label><input type="tel" placeholder="+7 (___) ___-__-__"/></div>
-          <div class="field"><label>E-mail</label><input type="email" placeholder="mail@example.com"/></div>
+          <div class="field"><label>Город *</label><input type="text" placeholder="Алматы"/></div>
+          <div class="field"><label>Форма учреждения</label><input type="text" placeholder="ОЮЛ / Ассоциация / Палата..."/></div>
         </div>
-        <div class="field"><label>Кол-во участников</label>
-          <select><option value="" disabled selected>Выберите диапазон</option><option>До 10</option><option>10–30</option><option>30–100</option><option>Более 100</option></select>
+        <div class="f-row">
+          <div class="field"><label>БИН / рег. номер</label><input type="text" placeholder="000000000000"/></div>
+          <div class="field"><label>Дата основания</label><input type="text" placeholder="дд.мм.гггг"/></div>
         </div>
-        <div class="field"><label>Комментарий</label><textarea placeholder="Расскажите о клубе, задачах и рынках присутствия"></textarea></div>
-        <button class="f-submit" id="fBtn">Отправить запрос</button>
+        <div class="field"><label>Ф.И.О. руководителя</label><input type="text" placeholder="Иванов Иван Иванович"/></div>
+        <div class="field"><label>Контакты руководителя (телефон, e-mail)</label><input type="text" placeholder="+7 (___) ___-__-__ · email@org.kz"/></div>
+        <div class="field"><label>Ф.И.О. менеджера / администратора</label><input type="text" placeholder="Иванов Иван Иванович"/></div>
+        <div class="field"><label>Контакты менеджера / администратора (телефон, e-mail)</label><input type="text" placeholder="+7 (___) ___-__-__ · email@org.kz"/></div>
+        <div class="field"><label>Обзорная информация об объединении *</label><textarea placeholder="Кратко: миссия, ключевые направления, география работы"></textarea></div>
+        <div class="f-row">
+          <div class="field"><label>Количество участников / членов</label><input type="text" placeholder="например, 250"/></div>
+          <div class="field"><label>% соотношение по видам деятельности</label><input type="text" placeholder="например, 60% услуги / 40% производство"/></div>
+        </div>
+        <div class="field"><label>% соотношение по размеру (микро / малый / средний / крупный)</label><input type="text" placeholder="30% / 50% / 15% / 5%"/></div>
+        <div class="field"><label>Условия участия для членов</label><textarea placeholder="Размер взноса, требования к компании, формат вступления..."></textarea></div>
+        <div class="field"><label>Виды и формат активности для участников</label><textarea placeholder="Нетворкинги, обучение, юр. поддержка, выставки, бизнес-миссии..."></textarea></div>
+        <div class="field"><label>Информация (соцсети, сайт и т.д.)</label><input type="text" placeholder="https://example.kz · @org_inst · facebook.com/org"/></div>
+        <button class="f-submit" id="fBtn">Отправить заявку</button>
       </div>
     </div>
   </div>
