@@ -111,45 +111,119 @@
 </style>
 
 <!-- ══ АНКЕТА ПАРТНЁРА ══ -->
+<style>
+  /* Partners form — visually aligned with residents */
+  #partners .res-form-section{margin-top:0;padding-top:0;border-top:none}
+  #partners .res-form-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.75rem}
+  #partners .res-form-head p{font-size:.85rem;color:var(--ink3);max-width:440px;margin:0;line-height:1.55}
+  #partners .res-form{background:#fff;border:1px solid var(--border);border-radius:8px;padding:2rem 2.25rem;box-shadow:var(--shadow)}
+  #partners .res-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem 1.25rem}
+  #partners .res-field{display:flex;flex-direction:column;gap:.4rem}
+  #partners .res-field.full{grid-column:1/-1}
+  #partners .res-field label{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+  #partners .res-field input,#partners .res-field textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);padding:.68rem .9rem;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:400;outline:none;transition:border-color .22s;border-radius:3px;appearance:none}
+  #partners .res-field input:focus,#partners .res-field textarea:focus{border-color:var(--red);background:#fff}
+  #partners .res-field textarea{resize:vertical;min-height:90px;line-height:1.5}
+  #partners .res-submit{margin-top:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+  #partners .res-submit-btn{background:var(--red);color:#fff;border:none;padding:.85rem 1.85rem;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:background .22s}
+  #partners .res-submit-btn:hover{background:#a02022}
+  @media(max-width:720px){#partners .res-form-grid{grid-template-columns:1fr}}
+</style>
 <section id="partners" class="bg-gray">
   <div class="inner">
-    <div class="pt-layout">
-      <div class="pt-left reveal">
-        <div class="red-bar"></div>
-        <span class="tag" style="display:block;margin-bottom:.75rem">Анкета</span>
-        <p style="margin-top:1.15rem">Чтобы подать заявку на&nbsp;рассмотрение в&nbsp;качестве Партнёра Бизнес-сообщества «ATAMEKEN Club», необходимо заполнить Анкету.</p>
+    <div class="res-form-section reveal">
+      <div class="res-form-head">
+        <div>
+          <div class="red-bar"></div>
+          <span class="tag" style="display:block">Анкета</span>
+        </div>
+        <p>Чтобы подать заявку на&nbsp;рассмотрение в&nbsp;качестве Партнёра Бизнес-сообщества «ATAMEKEN Club», необходимо заполнить Анкету.</p>
       </div>
-      <div class="form-wrap reveal">
-        <h3>Анкета Партнёра</h3>
-        <p class="form-sub">Все поля помеченные *&nbsp;— обязательные</p>
-        <div class="field"><label>Название организации *</label><input type="text" placeholder="ОЮЛ &laquo;...&raquo;"/></div>
-        <div class="f-row">
-          <div class="field"><label>Страна *</label><input type="text" placeholder="Казахстан"/></div>
-          <div class="field"><label>Область / регион</label><input type="text" placeholder="Алматинская"/></div>
+
+      <form class="res-form" id="partnerForm" novalidate>
+        <div class="res-form-grid">
+          <div class="res-field full">
+            <label for="p-name">Название организации</label>
+            <input type="text" id="p-name" name="name" required placeholder="ОЮЛ «...»"/>
+          </div>
+          <div class="res-field">
+            <label for="p-country">Страна</label>
+            <input type="text" id="p-country" name="country" placeholder="Казахстан"/>
+          </div>
+          <div class="res-field">
+            <label for="p-region">Область / регион</label>
+            <input type="text" id="p-region" name="region" placeholder="Алматинская"/>
+          </div>
+          <div class="res-field">
+            <label for="p-city">Город</label>
+            <input type="text" id="p-city" name="city" placeholder="Алматы"/>
+          </div>
+          <div class="res-field">
+            <label for="p-form">Форма учреждения</label>
+            <input type="text" id="p-form" name="form" placeholder="ОЮЛ / Ассоциация / Палата..."/>
+          </div>
+          <div class="res-field">
+            <label for="p-bin">БИН / рег. номер</label>
+            <input type="text" id="p-bin" name="bin" placeholder="000000000000"/>
+          </div>
+          <div class="res-field">
+            <label for="p-founded">Дата основания</label>
+            <input type="text" id="p-founded" name="founded" placeholder="дд.мм.гггг"/>
+          </div>
+
+          <div class="res-field">
+            <label for="p-ceo-name">Ф.И.О. руководителя</label>
+            <input type="text" id="p-ceo-name" name="ceoName" placeholder="Иванов Иван Иванович"/>
+          </div>
+          <div class="res-field">
+            <label for="p-ceo-contact">Контакты руководителя</label>
+            <input type="text" id="p-ceo-contact" name="ceoContact" placeholder="+7 (___) ___-__-__ · email@org.kz"/>
+          </div>
+          <div class="res-field">
+            <label for="p-mgr-name">Ф.И.О. менеджера / администратора</label>
+            <input type="text" id="p-mgr-name" name="mgrName" placeholder="Иванов Иван Иванович"/>
+          </div>
+          <div class="res-field">
+            <label for="p-mgr-contact">Контакты менеджера</label>
+            <input type="text" id="p-mgr-contact" name="mgrContact" placeholder="+7 (___) ___-__-__ · email@org.kz"/>
+          </div>
+
+          <div class="res-field full">
+            <label for="p-overview">Обзорная информация об&nbsp;объединении</label>
+            <textarea id="p-overview" name="overview" placeholder="Кратко: миссия, ключевые направления, география работы"></textarea>
+          </div>
+
+          <div class="res-field">
+            <label for="p-members">Количество участников / членов</label>
+            <input type="text" id="p-members" name="members" placeholder="например, 250"/>
+          </div>
+          <div class="res-field">
+            <label for="p-activity">% соотношение по&nbsp;видам деятельности</label>
+            <input type="text" id="p-activity" name="activity" placeholder="например, 60% услуги / 40% производство"/>
+          </div>
+          <div class="res-field full">
+            <label for="p-size">% соотношение по&nbsp;размеру (микро / малый / средний / крупный)</label>
+            <input type="text" id="p-size" name="size" placeholder="30% / 50% / 15% / 5%"/>
+          </div>
+
+          <div class="res-field full">
+            <label for="p-terms">Условия участия для членов</label>
+            <textarea id="p-terms" name="terms" placeholder="Размер взноса, требования к компании, формат вступления..."></textarea>
+          </div>
+          <div class="res-field full">
+            <label for="p-formats">Виды и&nbsp;формат активности для участников</label>
+            <textarea id="p-formats" name="formats" placeholder="Нетворкинги, обучение, юр. поддержка, выставки, бизнес-миссии..."></textarea>
+          </div>
+          <div class="res-field full">
+            <label for="p-info">Информация (соцсети, сайт и&nbsp;т.д.)</label>
+            <input type="text" id="p-info" name="info" placeholder="https://example.kz · @org_inst · facebook.com/org"/>
+          </div>
         </div>
-        <div class="f-row">
-          <div class="field"><label>Город *</label><input type="text" placeholder="Алматы"/></div>
-          <div class="field"><label>Форма учреждения</label><input type="text" placeholder="ОЮЛ / Ассоциация / Палата..."/></div>
+
+        <div class="res-submit">
+          <button type="submit" class="res-submit-btn" id="fBtn">Отправить заявку</button>
         </div>
-        <div class="f-row">
-          <div class="field"><label>БИН / рег. номер</label><input type="text" placeholder="000000000000"/></div>
-          <div class="field"><label>Дата основания</label><input type="text" placeholder="дд.мм.гггг"/></div>
-        </div>
-        <div class="field"><label>Ф.И.О. руководителя</label><input type="text" placeholder="Иванов Иван Иванович"/></div>
-        <div class="field"><label>Контакты руководителя (телефон, e-mail)</label><input type="text" placeholder="+7 (___) ___-__-__ · email@org.kz"/></div>
-        <div class="field"><label>Ф.И.О. менеджера / администратора</label><input type="text" placeholder="Иванов Иван Иванович"/></div>
-        <div class="field"><label>Контакты менеджера / администратора (телефон, e-mail)</label><input type="text" placeholder="+7 (___) ___-__-__ · email@org.kz"/></div>
-        <div class="field"><label>Обзорная информация об объединении *</label><textarea placeholder="Кратко: миссия, ключевые направления, география работы"></textarea></div>
-        <div class="f-row">
-          <div class="field"><label>Количество участников / членов</label><input type="text" placeholder="например, 250"/></div>
-          <div class="field"><label>% соотношение по видам деятельности</label><input type="text" placeholder="например, 60% услуги / 40% производство"/></div>
-        </div>
-        <div class="field"><label>% соотношение по размеру (микро / малый / средний / крупный)</label><input type="text" placeholder="30% / 50% / 15% / 5%"/></div>
-        <div class="field"><label>Условия участия для членов</label><textarea placeholder="Размер взноса, требования к компании, формат вступления..."></textarea></div>
-        <div class="field"><label>Виды и формат активности для участников</label><textarea placeholder="Нетворкинги, обучение, юр. поддержка, выставки, бизнес-миссии..."></textarea></div>
-        <div class="field"><label>Информация (соцсети, сайт и т.д.)</label><input type="text" placeholder="https://example.kz · @org_inst · facebook.com/org"/></div>
-        <button class="f-submit" id="fBtn">Отправить заявку</button>
-      </div>
+      </form>
     </div>
   </div>
 </section>
