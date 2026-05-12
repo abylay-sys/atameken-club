@@ -64,7 +64,7 @@
       </div>
     </div>
 
-    <!-- ────── СТИЛИ КАРТОЧЕК АКТИВНОСТЕЙ ────── -->
+    <!-- ────── СТИЛИ ДЕТАЛЬНЫХ СТРОК АКТИВНОСТЕЙ ────── -->
     <style>
       .pg-block{margin-bottom:2.5rem}
       .pg-block-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;padding-bottom:.85rem;border-bottom:1px solid var(--border)}
@@ -76,19 +76,30 @@
       .pg-free{background:#f4faf6;border:1px solid #cce5d3;border-left:3px solid #2f9e44;border-radius:6px;padding:1rem 1.15rem;margin-bottom:1.15rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
       .pg-free-tag{font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#2f9e44;flex-shrink:0}
       .pg-free-text{font-size:var(--t2);color:var(--ink2);line-height:1.5;margin:0;flex:1}
-      .pg-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-      .pg-card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:1.15rem 1.2rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.6rem;transition:all .2s;min-height:170px}
-      .pg-card:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-1px)}
-      .pg-card-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);line-height:1.25;font-weight:500;margin:0}
-      .pg-card-desc{font-size:.78rem;color:var(--ink3);line-height:1.5;margin:0;flex:1}
-      .pg-card-foot{display:flex;align-items:center;justify-content:space-between;gap:.65rem;margin-top:.35rem;padding-top:.7rem;border-top:1px dashed var(--border)}
-      .pg-card-price{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--red);font-weight:600;line-height:1}
-      .pg-card-price small{display:block;font-family:'Inter',sans-serif;font-size:.6rem;font-weight:500;color:var(--ink4);letter-spacing:.04em;margin-top:.2rem;line-height:1.3}
-      .pg-card-link{font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red);text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;transition:gap .2s}
-      .pg-card-link:hover{gap:.55rem}
-      .pg-card-link svg{width:11px;height:11px}
-      @media(max-width:980px){.pg-cards{grid-template-columns:repeat(2,1fr)}}
-      @media(max-width:600px){.pg-cards{grid-template-columns:1fr}.pg-card{min-height:auto}}
+      /* Детальные строки */
+      .tx-rows{display:flex;flex-direction:column;gap:.85rem}
+      .tx-row{display:grid;grid-template-columns:1fr 240px;gap:1.5rem;background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.4rem 1.65rem;box-shadow:var(--shadow);transition:all .22s}
+      .tx-row:hover{border-color:var(--red);box-shadow:var(--shadow-md)}
+      .tx-row-main{display:flex;flex-direction:column;gap:.7rem;min-width:0}
+      .tx-row-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--ink);line-height:1.25;font-weight:500;margin:0}
+      .tx-row-desc{font-size:.83rem;color:var(--ink2);line-height:1.6;margin:0}
+      .tx-row-inc-tag{font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-top:.35rem}
+      .tx-row-inc{display:grid;grid-template-columns:1fr 1fr;gap:.35rem .85rem;margin:0;padding:0;list-style:none}
+      .tx-row-inc li{position:relative;padding-left:1.1rem;font-size:.78rem;color:var(--ink2);line-height:1.45}
+      .tx-row-inc li::before{content:'';position:absolute;left:0;top:.42rem;width:9px;height:5px;border-left:1.6px solid var(--red);border-bottom:1.6px solid var(--red);transform:rotate(-45deg)}
+      .tx-row-meta{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;margin-top:.4rem;font-size:.7rem;color:var(--ink3);align-items:center}
+      .tx-row-meta-i{display:inline-flex;align-items:center;gap:.4rem}
+      .tx-row-meta-i svg{width:13px;height:13px;color:var(--red);flex-shrink:0}
+      .tx-row-meta-i strong{color:var(--ink);font-weight:600;font-size:.75rem}
+      .tx-row-side{border-left:1px dashed var(--border);padding-left:1.5rem;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.5rem}
+      .tx-row-side-tag{font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+      .tx-row-price{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--red);font-weight:600;line-height:1}
+      .tx-row-price-sub{font-size:.7rem;color:var(--ink4);line-height:1.3}
+      .tx-row-btn{margin-top:.6rem;background:var(--red);color:#fff;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.65rem 1.1rem;border-radius:3px;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;transition:background .22s}
+      .tx-row-btn:hover{background:#a02022}
+      .tx-row-btn svg{width:11px;height:11px}
+      @media(max-width:760px){.tx-row{grid-template-columns:1fr}.tx-row-side{border-left:0;border-top:1px dashed var(--border);padding-left:0;padding-top:1rem;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center}.tx-row-btn{margin-top:0}}
+      @media(max-width:500px){.tx-row-inc{grid-template-columns:1fr}}
     </style>
 
     <!-- ────── ГРУППА А ────── -->
@@ -104,55 +115,148 @@
         <span class="pg-free-tag">Бесплатно</span>
         <p class="pg-free-text">Регистрация · Личный кабинет · Размещение карточки в&nbsp;Реестре · Базовое описание (без контактов)</p>
       </div>
-      <div class="pg-cards">
-        <a class="pg-card" href="/cabinet.html#activity-verify-company">
-          <h3 class="pg-card-title">Верификация компании</h3>
-          <p class="pg-card-desc">Проверка регистрации, налоговых задолженностей и&nbsp;благонадёжности по&nbsp;открытым источникам.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">$50</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+      <div class="tx-rows">
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Верификация компании</h3>
+            <p class="tx-row-desc">Независимая проверка компании по&nbsp;открытым и&nbsp;платным источникам. Подтверждает регистрационные данные, отсутствие критичных рисков и&nbsp;благонадёжность для&nbsp;будущих контрагентов.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Проверка регистрации в&nbsp;БД (eGov&nbsp;/ Statsnet и&nbsp;аналоги)</li>
+              <li>Связи с&nbsp;аффилированными лицами и&nbsp;судебные дела</li>
+              <li>Налоговые задолженности и&nbsp;статус по&nbsp;обязательным платежам</li>
+              <li>Краткое резюме + шеврон в&nbsp;карточку Реестра</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>1–3 рабочих дня</strong></span>
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 1.5L12 3v4.5c0 3.2-2.5 5-5 5.5-2.5-.5-5-2.3-5-5.5V3z"/></svg><strong>Шеврон в&nbsp;карточку</strong></span>
+            </div>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-market-analysis">
-          <h3 class="pg-card-title">Анализ рынка</h3>
-          <p class="pg-card-desc">Маркетинговый анализ по&nbsp;сфере деятельности: объём рынка, конкуренты, тренды.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">$100</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">$50</div>
+            <div class="tx-row-price-sub">единоразово</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-verify-company">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-business-plan-audit">
-          <h3 class="pg-card-title">Аудит бизнес-плана</h3>
-          <p class="pg-card-desc">Независимая проверка структуры, допущений, реалистичности показателей и&nbsp;рисков.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">$200</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Анализ рынка</h3>
+            <p class="tx-row-desc">Маркетинговый анализ по&nbsp;сфере деятельности компании: объём рынка, доля игроков, ключевые тренды и&nbsp;точки роста. Готовится профильным аналитиком.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Объём рынка и&nbsp;темпы роста по&nbsp;нише</li>
+              <li>Тренды и&nbsp;драйверы спроса</li>
+              <li>Карта конкурентов с&nbsp;краткими профилями</li>
+              <li>PDF-отчёт + краткое резюме для&nbsp;карточки</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>5–7 рабочих дней</strong></span>
+            </div>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-financial-audit">
-          <h3 class="pg-card-title">Аудит фин. модели<br/>/ бухгалтерский аудит</h3>
-          <p class="pg-card-desc">Проверка финансовой модели, первичной документации и&nbsp;бухгалтерского учёта.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">$100</div>
+            <div class="tx-row-price-sub">единоразово</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-market-analysis">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-contracts-audit">
-          <h3 class="pg-card-title">Аудит договоров</h3>
-          <p class="pg-card-desc">Юридический аудит договоров намерения, поставщиков, дистрибьюторов и&nbsp;агентов.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Аудит бизнес-плана</h3>
+            <p class="tx-row-desc">Независимая проверка бизнес-плана: реалистичность допущений, логика модели, риски и&nbsp;слабые места. Идеален для&nbsp;тех, кто готовится к&nbsp;привлечению инвестиций.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Проверка структуры и&nbsp;полноты бизнес-плана</li>
+              <li>Оценка рисков и&nbsp;слабых мест</li>
+              <li>Аудит ключевых допущений и&nbsp;сценариев</li>
+              <li>Заключение с&nbsp;рекомендациями + шеврон</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>5–10 рабочих дней</strong></span>
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 1.5L12 3v4.5c0 3.2-2.5 5-5 5.5-2.5-.5-5-2.3-5-5.5V3z"/></svg><strong>Шеврон в&nbsp;карточку</strong></span>
+            </div>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-deal-support">
-          <h3 class="pg-card-title">Сопровождение сделки</h3>
-          <p class="pg-card-desc">Переговоры, подготовка и&nbsp;заключение сделки под&nbsp;ключ.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">1,5%<small>от суммы сделки</small></div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">$200</div>
+            <div class="tx-row-price-sub">единоразово</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-business-plan-audit">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
           </div>
-        </a>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Аудит фин. модели / бухгалтерский аудит</h3>
+            <p class="tx-row-desc">Глубокая проверка финансовой модели и&nbsp;бухгалтерского учёта силами независимого аудитора. Стоимость зависит от&nbsp;объёма и&nbsp;сложности.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Проверка финмодели на&nbsp;корректность расчётов</li>
+              <li>Соответствие учётной политики стандартам</li>
+              <li>Аудит первичной документации и&nbsp;бух. учёта</li>
+              <li>Заключение независимого аудитора + шеврон</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>от&nbsp;7 рабочих дней</strong></span>
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 1.5L12 3v4.5c0 3.2-2.5 5-5 5.5-2.5-.5-5-2.3-5-5.5V3z"/></svg><strong>Шеврон в&nbsp;карточку</strong></span>
+            </div>
+          </div>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price" style="font-size:1.4rem">по&nbsp;запросу</div>
+            <div class="tx-row-price-sub">индивидуальный расчёт</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-financial-audit">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Аудит договоров</h3>
+            <p class="tx-row-desc">Юридическая проверка договоров намерения, с&nbsp;поставщиками, дистрибьюторами и&nbsp;агентами. Снижает риски при&nbsp;заключении сделок и&nbsp;работе с&nbsp;контрагентами.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Проверка договоров намерения&nbsp;/ поставки</li>
+              <li>Оценка юридических рисков и&nbsp;пробелов</li>
+              <li>Дистрибьюторские и&nbsp;агентские соглашения</li>
+              <li>Рекомендации по&nbsp;правкам + шеврон</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>3–7 рабочих дней</strong></span>
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 1.5L12 3v4.5c0 3.2-2.5 5-5 5.5-2.5-.5-5-2.3-5-5.5V3z"/></svg><strong>Шеврон в&nbsp;карточку</strong></span>
+            </div>
+          </div>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price" style="font-size:1.4rem">по&nbsp;запросу</div>
+            <div class="tx-row-price-sub">зависит от&nbsp;пакета</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-contracts-audit">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Сопровождение сделки</h3>
+            <p class="tx-row-desc">Полное юридическое и&nbsp;переговорное сопровождение сделки под&nbsp;ключ: от&nbsp;первого контакта до&nbsp;подписи. Можно разделить пополам с&nbsp;контрагентом — по&nbsp;0,75% с&nbsp;каждой стороны.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Подготовка и&nbsp;ведение переговоров</li>
+              <li>Разработка и&nbsp;проверка договоров</li>
+              <li>Согласование коммерческих условий</li>
+              <li>Сопровождение до&nbsp;момента подписи и&nbsp;расчётов</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>индивидуально (от&nbsp;2 недель)</strong></span>
+            </div>
+          </div>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">1,5%</div>
+            <div class="tx-row-price-sub">от&nbsp;суммы сделки</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-deal-support">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -169,47 +273,125 @@
         <span class="pg-free-tag">Бесплатно</span>
         <p class="pg-free-text">Регистрация · Личный кабинет · Размещение карточек товарных позиций&nbsp;/ сырьевых партий без&nbsp;лимита · Базовое описание (без контактов)</p>
       </div>
-      <div class="pg-cards">
-        <a class="pg-card" href="/cabinet.html#activity-verify-company">
-          <h3 class="pg-card-title">Верификация компании</h3>
-          <p class="pg-card-desc">Проверка по&nbsp;Statsnet: регистрация, налоговые задолженности, статус.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">$50</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+      <div class="tx-rows">
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Верификация компании</h3>
+            <p class="tx-row-desc">Независимая проверка компании-продавца товаров по&nbsp;Statsnet и&nbsp;другим источникам: регистрация, налоговые задолженности, статус и&nbsp;благонадёжность.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Проверка по&nbsp;Statsnet и&nbsp;аналогам</li>
+              <li>Связи с&nbsp;аффилированными лицами и&nbsp;судебные дела</li>
+              <li>Налоговые задолженности и&nbsp;статус</li>
+              <li>Резюме верификации + шеврон-кружок</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>1–3 рабочих дня</strong></span>
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><polyline points="4.5 7 6.5 9 9.5 5"/></svg><strong>Шеврон-кружок</strong></span>
+            </div>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-product-certification">
-          <h3 class="pg-card-title">Верификация состава<br/>/ сертификата производства</h3>
-          <p class="pg-card-desc">Проверка состава продукции, сертификатов производства и&nbsp;соответствия стандартам.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">$50</div>
+            <div class="tx-row-price-sub">единоразово</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-verify-company">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-stock-verification">
-          <h3 class="pg-card-title">Верификация наличия запасов</h3>
-          <p class="pg-card-desc">Физическая проверка наличия товарных запасов и&nbsp;сырья на&nbsp;складе.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Верификация состава / сертификата производства</h3>
+            <p class="tx-row-desc">Проверка фактического состава продукции и&nbsp;подлинности сертификатов производства. Подтверждает соответствие заявленным характеристикам и&nbsp;стандартам.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Проверка состава по&nbsp;заявленной спецификации</li>
+              <li>Соответствие отраслевым стандартам</li>
+              <li>Подлинность сертификатов производства</li>
+              <li>Резюме верификации + шеврон-кружок</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>от&nbsp;5 рабочих дней</strong></span>
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><polyline points="4.5 7 6.5 9 9.5 5"/></svg><strong>Шеврон-кружок</strong></span>
+            </div>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-contracts-audit">
-          <h3 class="pg-card-title">Верификация договоров</h3>
-          <p class="pg-card-desc">Проверка договоров для&nbsp;трейдеров и&nbsp;агентов: поставка, агентские, дистрибуция.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price" style="font-size:1.4rem">по&nbsp;запросу</div>
+            <div class="tx-row-price-sub">зависит от&nbsp;продуктовой линейки</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-product-certification">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-deal-support">
-          <h3 class="pg-card-title">Сопровождение сделки</h3>
-          <p class="pg-card-desc">Переговоры, подготовка и&nbsp;заключение сделки под&nbsp;ключ.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">1,5%<small>от суммы сделки</small></div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Верификация наличия запасов</h3>
+            <p class="tx-row-desc">Физический выезд независимого аудитора и&nbsp;осмотр складских запасов. Обязательный шаг для&nbsp;крупных закупочных сделок — снимает риск «фантомного» товара.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Выезд аудитора на&nbsp;склад</li>
+              <li>Фотофиксация и&nbsp;протокол осмотра</li>
+              <li>Замер фактических остатков</li>
+              <li>Резюме + шеврон-кружок в&nbsp;карточку</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>1–5 рабочих дней</strong></span>
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><polyline points="4.5 7 6.5 9 9.5 5"/></svg><strong>Шеврон-кружок</strong></span>
+            </div>
           </div>
-        </a>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price" style="font-size:1.4rem">по&nbsp;запросу</div>
+            <div class="tx-row-price-sub">зависит от&nbsp;объёма и&nbsp;локации</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-stock-verification">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Верификация договоров</h3>
+            <p class="tx-row-desc">Юридическая проверка договоров для&nbsp;трейдеров, агентов и&nbsp;дистрибьюторов. Снижает риски на&nbsp;стороне продавца товаров при&nbsp;работе с&nbsp;посредниками.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Поставочные договоры</li>
+              <li>Дистрибьюторские контракты</li>
+              <li>Агентские и&nbsp;брокерские соглашения</li>
+              <li>Рекомендации + шеврон-кружок</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>3–7 рабочих дней</strong></span>
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><polyline points="4.5 7 6.5 9 9.5 5"/></svg><strong>Шеврон-кружок</strong></span>
+            </div>
+          </div>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price" style="font-size:1.4rem">по&nbsp;запросу</div>
+            <div class="tx-row-price-sub">зависит от&nbsp;пакета</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-contracts-audit">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Сопровождение сделки</h3>
+            <p class="tx-row-desc">Полное юридическое и&nbsp;переговорное сопровождение сделки купли-продажи товаров&nbsp;/ сырья: от&nbsp;первого контакта до&nbsp;поставки и&nbsp;расчётов.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Подготовка и&nbsp;ведение переговоров</li>
+              <li>Разработка и&nbsp;проверка договоров поставки</li>
+              <li>Согласование коммерческих условий</li>
+              <li>Сопровождение до&nbsp;поставки и&nbsp;расчётов</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>индивидуально</strong></span>
+            </div>
+          </div>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">1,5%</div>
+            <div class="tx-row-price-sub">от&nbsp;суммы сделки</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-deal-support">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -226,31 +408,75 @@
         <span class="pg-free-tag">Бесплатно</span>
         <p class="pg-free-text">Доступ ко&nbsp;всем карточкам Реестра · Краткое описание · Без&nbsp;названий, адресов и&nbsp;контактов</p>
       </div>
-      <div class="pg-cards">
-        <a class="pg-card" href="/cabinet.html#activity-expanded-card">
-          <h3 class="pg-card-title">Развёрнутая карточка</h3>
-          <p class="pg-card-desc">Название, контакты + резюме по&nbsp;всем проведённым верификациям. Пакеты 10&nbsp;/ 25&nbsp;/ 50&nbsp;/ 100 со&nbsp;скидкой.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">$5<small>за 1 карточку</small></div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+      <div class="tx-rows">
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Развёрнутая карточка Реестра</h3>
+            <p class="tx-row-desc">Полная карточка проекта&nbsp;/ компании из&nbsp;Реестра: название, контакты и&nbsp;резюме по&nbsp;всем проведённым верификациям. Можно купить пакетом по&nbsp;10&nbsp;/ 25&nbsp;/ 50&nbsp;/ 100 со&nbsp;скидкой.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Название компании и&nbsp;контактные лица</li>
+              <li>Резюме по&nbsp;всем верификациям</li>
+              <li>Полные контакты для&nbsp;прямой связи</li>
+              <li>Бессрочный доступ из&nbsp;личного кабинета</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>мгновенный доступ</strong></span>
+            </div>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-verification-access">
-          <h3 class="pg-card-title">Доступ к&nbsp;результатам верификаций</h3>
-          <p class="pg-card-desc">Полные результаты каждой проведённой верификации внутри карточки.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">$50<small>за пункт</small></div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">$5</div>
+            <div class="tx-row-price-sub">за&nbsp;1 карточку · пакеты со&nbsp;скидкой</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-expanded-card">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
           </div>
-        </a>
-        <a class="pg-card" href="/cabinet.html#activity-deal-support">
-          <h3 class="pg-card-title">Сопровождение сделки</h3>
-          <p class="pg-card-desc">Переговоры, подготовка и&nbsp;заключение сделки под&nbsp;ключ.</p>
-          <div class="pg-card-foot">
-            <div class="pg-card-price">1,5%<small>от суммы сделки</small></div>
-            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Доступ к&nbsp;результатам верификаций</h3>
+            <p class="tx-row-desc">Полный пакет результатов каждой проведённой верификации внутри выбранной карточки Реестра. Открывается отдельно по&nbsp;каждому пункту — оплачивайте только то, что нужно.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Полный отчёт по&nbsp;пункту верификации</li>
+              <li>Заключение независимого аудитора</li>
+              <li>Сканы подтверждающих документов</li>
+              <li>Сохраняется в&nbsp;личном кабинете</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>мгновенный доступ</strong></span>
+            </div>
           </div>
-        </a>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">$50</div>
+            <div class="tx-row-price-sub">за&nbsp;каждый пункт</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-verification-access">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </div>
+
+        <div class="tx-row">
+          <div class="tx-row-main">
+            <h3 class="tx-row-title">Сопровождение сделки</h3>
+            <p class="tx-row-desc">Юридическое и&nbsp;переговорное сопровождение для&nbsp;стороны покупателя. Подходит и&nbsp;для&nbsp;инвестиционных сделок, и&nbsp;для&nbsp;покупки франшиз&nbsp;/ готового бизнеса&nbsp;/ товаров.</p>
+            <div class="tx-row-inc-tag">Что входит</div>
+            <ul class="tx-row-inc">
+              <li>Ведение переговоров с&nbsp;продавцом</li>
+              <li>Проверка договоров и&nbsp;структуры сделки</li>
+              <li>Согласование условий</li>
+              <li>Сопровождение до&nbsp;подписи и&nbsp;расчётов</li>
+            </ul>
+            <div class="tx-row-meta">
+              <span class="tx-row-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5.5"/><path d="M7 3.5v3.5l2.5 1.5"/></svg><strong>индивидуально</strong></span>
+            </div>
+          </div>
+          <div class="tx-row-side">
+            <div class="tx-row-side-tag">Стоимость</div>
+            <div class="tx-row-price">1,5%</div>
+            <div class="tx-row-price-sub">от&nbsp;суммы сделки</div>
+            <a class="tx-row-btn" href="/cabinet.html#activity-deal-support">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></a>
+          </div>
+        </div>
       </div>
     </div>
 
