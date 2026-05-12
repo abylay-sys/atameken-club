@@ -738,8 +738,228 @@ strong{color:var(--ink);font-weight:600}
       </div>
     </div><!-- /type-sale -->
 
+    <!-- ──────── ACTIVITY DETAIL (Услуги с тарифной страницы) ──────── -->
+    <div id="type-activity" style="display:none">
+      <div class="panel on" id="activity-detail">
+        <div class="page-hd">
+          <div class="page-hd-left">
+            <h2 id="actDtTitle">Активность</h2>
+            <p id="actDtSub">Подробности и стоимость</p>
+          </div>
+          <div class="hd-actions">
+            <a href="/pricing.html" class="btn-o btn-sm">К тарифам</a>
+            <button class="btn-o btn-sm" onclick="returnToCabinet()">Назад в кабинет</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body" style="display:flex;flex-direction:column;gap:1.25rem">
+            <div style="display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap">
+              <div style="flex:1;min-width:280px">
+                <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem" id="actDtBadge">Услуга</div>
+                <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.85rem;color:var(--ink);font-weight:500;line-height:1.2;margin:0 0 .85rem" id="actDtHead">—</h3>
+                <p style="font-size:var(--t2);color:var(--ink2);line-height:1.65;margin:0" id="actDtDesc">—</p>
+              </div>
+              <div style="background:#fafafa;border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.5rem;text-align:center;min-width:180px">
+                <div style="font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.4rem">Стоимость</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--red);font-weight:600;line-height:1" id="actDtPrice">—</div>
+                <div style="font-size:.72rem;color:var(--ink4);margin-top:.4rem" id="actDtPriceSub"></div>
+              </div>
+            </div>
+
+            <div>
+              <h4 style="font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:0 0 .65rem">Что входит</h4>
+              <ul style="margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.4rem" id="actDtIncludes"></ul>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+              <div style="background:#fafafa;border-radius:6px;padding:.85rem 1rem">
+                <div style="font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.3rem">Длительность</div>
+                <div style="font-size:.92rem;color:var(--ink);font-weight:500" id="actDtDuration">—</div>
+              </div>
+              <div style="background:#fafafa;border-radius:6px;padding:.85rem 1rem">
+                <div style="font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.3rem">Подходит для</div>
+                <div style="font-size:.92rem;color:var(--ink);font-weight:500" id="actDtAudience">—</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:.85rem;flex-wrap:wrap;margin-top:.5rem">
+              <button class="btn-r" id="actDtBuy" onclick="alert('Оформление покупки в разработке')">Купить</button>
+              <button class="btn-o" id="actDtCart" onclick="actDtAddToCart()">Добавить в корзину</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
+
+<script>
+// ───── Каталог 10 активностей (для деталки услуги с тарифной страницы) ─────
+const ACTIVITIES = {
+  'verify-company': {
+    badge: 'Группы А и Б',
+    title: 'Верификация компании',
+    desc: 'Независимая проверка компании по открытым и платным источникам. Подтверждает регистрационные данные, отсутствие критичных рисков и благонадёжность для будущих контрагентов.',
+    price: '$50',
+    priceSub: 'единоразово',
+    includes: ['Проверка регистрации в БД (eGov / Statsnet и аналогах)', 'Налоговые задолженности и статус по обязательным платежам', 'Связи с аффилированными лицами и судебные дела', 'Краткое резюме с присвоением шеврона в карточке Реестра'],
+    duration: '1–3 рабочих дня',
+    audience: 'Соискатели · Франчайзеры · Продавцы · Продавцы товаров'
+  },
+  'market-analysis': {
+    badge: 'Группа А',
+    title: 'Анализ рынка',
+    desc: 'Маркетинговый анализ по сфере деятельности компании: объём рынка, доля игроков, ключевые тренды и точки роста. Готовится профильным аналитиком.',
+    price: '$100',
+    priceSub: 'единоразово',
+    includes: ['Объём рынка и темпы роста по нише', 'Карта конкурентов с краткими профилями', 'Тренды и драйверы спроса', 'PDF-отчёт + краткое резюме для карточки'],
+    duration: '5–7 рабочих дней',
+    audience: 'Соискатели инвестиций · Франчайзеры · Продавцы готового бизнеса'
+  },
+  'business-plan-audit': {
+    badge: 'Группа А',
+    title: 'Аудит Бизнес-плана',
+    desc: 'Независимая проверка бизнес-плана: реалистичность допущений, логика модели, риски и слабые места. Идеален для тех, кто готовится к привлечению инвестиций.',
+    price: '$200',
+    priceSub: 'единоразово',
+    includes: ['Проверка структуры и полноты бизнес-плана', 'Аудит ключевых допущений и сценариев', 'Оценка рисков и слабых мест', 'Заключение с рекомендациями + шеврон в карточку'],
+    duration: '5–10 рабочих дней',
+    audience: 'Соискатели инвестиций · Франчайзеры · Продавцы готового бизнеса'
+  },
+  'financial-audit': {
+    badge: 'Группа А',
+    title: 'Аудит фин. модели / бухгалтерский аудит',
+    desc: 'Глубокая проверка финансовой модели и бухгалтерского учёта силами независимого аудитора. Стоимость зависит от объёма и сложности.',
+    price: 'по запросу',
+    priceSub: 'индивидуальный расчёт',
+    includes: ['Проверка финансовой модели на корректность расчётов', 'Аудит первичной документации и бухгалтерского учёта', 'Соответствие учётной политики стандартам', 'Заключение независимого аудитора + шеврон в карточку'],
+    duration: 'от 7 рабочих дней',
+    audience: 'Соискатели инвестиций · Франчайзеры · Продавцы готового бизнеса'
+  },
+  'contracts-audit': {
+    badge: 'Группы А и Б',
+    title: 'Аудит договоров',
+    desc: 'Юридическая проверка договоров намерения, с поставщиками, дистрибьюторами и агентами. Снижает риски при заключении сделок и работе с контрагентами.',
+    price: 'по запросу',
+    priceSub: 'зависит от пакета договоров',
+    includes: ['Проверка договоров намерения / поставки', 'Дистрибьюторские и агентские соглашения', 'Оценка юридических рисков и пробелов', 'Рекомендации по правкам + шеврон в карточку'],
+    duration: '3–7 рабочих дней',
+    audience: 'Соискатели · Продавцы товаров и сырья · Трейдеры · Агенты'
+  },
+  'product-certification': {
+    badge: 'Группа Б',
+    title: 'Верификация состава / сертификата производства',
+    desc: 'Проверка состава продукции и подлинности сертификатов производства. Подтверждает соответствие заявленным характеристикам и стандартам.',
+    price: 'по запросу',
+    priceSub: 'зависит от продуктовой линейки',
+    includes: ['Проверка состава по заявленной спецификации', 'Подлинность сертификатов производства', 'Соответствие отраслевым и государственным стандартам', 'Резюме верификации + шеврон в карточку'],
+    duration: 'от 5 рабочих дней',
+    audience: 'Продавцы товаров и сырья'
+  },
+  'stock-verification': {
+    badge: 'Группа Б',
+    title: 'Верификация наличия запасов',
+    desc: 'Физическая проверка фактических товарных запасов или сырья на складе продавца. Обязательный шаг для крупных закупочных сделок.',
+    price: 'по запросу',
+    priceSub: 'зависит от объёма и локации',
+    includes: ['Выезд независимого аудитора на склад', 'Замер фактических остатков и условий хранения', 'Фотофиксация и протокол осмотра', 'Резюме + шеврон в карточку'],
+    duration: '1–5 рабочих дней',
+    audience: 'Продавцы товаров и сырья'
+  },
+  'deal-support': {
+    badge: 'Группы А, Б и В',
+    title: 'Сопровождение сделки',
+    desc: 'Полное юридическое и переговорное сопровождение сделки под ключ: от первого контакта до подписи. Можно разделить пополам с контрагентом (по 0,75% с каждой стороны).',
+    price: '1,5%',
+    priceSub: 'от суммы сделки',
+    includes: ['Подготовка и ведение переговоров', 'Согласование коммерческих условий', 'Разработка и проверка договоров', 'Сопровождение до момента подписи и расчётов'],
+    duration: 'индивидуально (от 2 недель)',
+    audience: 'Все стороны сделки — продавцы и покупатели'
+  },
+  'expanded-card': {
+    badge: 'Группа В',
+    title: 'Развёрнутая карточка Реестра',
+    desc: 'Полная карточка проекта/компании из Реестра: название, контакты и резюме по всем проведённым верификациям. Доступны пакеты со скидкой.',
+    price: '$5',
+    priceSub: 'за 1 карточку · пакеты 10 / 25 / 50 / 100',
+    includes: ['Название компании и контактные лица', 'Полные контакты для прямой связи', 'Резюме по всем проведённым верификациям', 'Доступ из личного кабинета — без ограничения по времени'],
+    duration: 'мгновенный доступ',
+    audience: 'Инвесторы · Франчайзи · Покупатели готового бизнеса · Покупатели товаров'
+  },
+  'verification-access': {
+    badge: 'Группа В',
+    title: 'Доступ к результатам верификаций',
+    desc: 'Полный пакет результатов каждой проведённой верификации внутри выбранной карточки Реестра. Открывается отдельно по каждому пункту.',
+    price: '$50',
+    priceSub: 'за каждый пункт верификации',
+    includes: ['Полный отчёт по выбранному пункту верификации', 'Сканы и подтверждающие документы (где применимо)', 'Заключение независимого аудитора', 'Сохраняется в личном кабинете'],
+    duration: 'мгновенный доступ',
+    audience: 'Инвесторы · Франчайзи · Покупатели готового бизнеса · Покупатели товаров'
+  }
+};
+
+function showActivity(id) {
+  const data = ACTIVITIES[id];
+  if (!data) return false;
+  // Hide all user-type sections
+  document.querySelectorAll('[id^="type-"]').forEach(d => d.style.display = 'none');
+  document.getElementById('type-activity').style.display = 'block';
+  // Fill the panel
+  document.getElementById('actDtBadge').textContent = data.badge;
+  document.getElementById('actDtHead').textContent = data.title;
+  document.getElementById('actDtTitle').textContent = data.title;
+  document.getElementById('actDtSub').textContent = data.audience;
+  document.getElementById('actDtDesc').textContent = data.desc;
+  document.getElementById('actDtPrice').textContent = data.price;
+  document.getElementById('actDtPriceSub').textContent = data.priceSub || '';
+  document.getElementById('actDtDuration').textContent = data.duration;
+  document.getElementById('actDtAudience').textContent = data.audience;
+  const ul = document.getElementById('actDtIncludes');
+  ul.innerHTML = '';
+  data.includes.forEach(it => {
+    const li = document.createElement('li');
+    li.style.cssText = 'color:var(--ink2);line-height:1.55;font-size:var(--t2)';
+    li.textContent = it;
+    ul.appendChild(li);
+  });
+  window.scrollTo(0, 0);
+  return true;
+}
+
+function returnToCabinet() {
+  history.replaceState(null, '', '/cabinet.html');
+  showPanel(currentType || 'seeker', 'dashboard');
+  document.getElementById('type-activity').style.display = 'none';
+}
+
+function actDtAddToCart() {
+  const id = (location.hash || '').replace('#activity-', '');
+  if (!id || !ACTIVITIES[id]) { alert('Активность не выбрана'); return; }
+  try {
+    const key = 'ac_cart_v1';
+    const items = JSON.parse(localStorage.getItem(key) || '[]');
+    if (items.some(it => it.id === id)) { alert('Уже в корзине'); return; }
+    items.push({ id, name: ACTIVITIES[id].title, price: ACTIVITIES[id].price });
+    localStorage.setItem(key, JSON.stringify(items));
+    alert('Добавлено в корзину: ' + ACTIVITIES[id].title);
+  } catch (e) { alert('Не удалось добавить в корзину'); }
+}
+
+// Handle URL hash on load and on change
+function handleActivityHash() {
+  const hash = location.hash || '';
+  if (hash.startsWith('#activity-')) {
+    const id = hash.slice('#activity-'.length);
+    return showActivity(id);
+  }
+  return false;
+}
+window.addEventListener('hashchange', handleActivityHash);
+// Run once after DOM ready — but auth flow may redirect first
+setTimeout(() => { handleActivityHash(); }, 50);
+</script>
 
 <script>
 const sidebars = {
@@ -843,6 +1063,32 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
 <script src="/assets/api.js"></script>
 <script>
 (async function () {
+  // Если зашли по ссылке "Подробнее" с тарифной страницы — показываем детали услуги.
+  // Если пользователь не авторизован — детали всё равно показываем (без бокового меню и
+  // переключателя ролей), а логин потребуется только при попытке купить.
+  if (location.hash.startsWith('#activity-')) {
+    if (typeof handleActivityHash === 'function') handleActivityHash();
+    if (!AC.getToken()) {
+      // Гостевой режим: прячем сайдбар, переключатель ролей, user info
+      const sb = document.getElementById('sidebar'); if (sb) sb.style.display = 'none';
+      const tb = document.querySelector('.type-bar'); if (tb) tb.style.display = 'none';
+      const tnUser = document.querySelector('.tn-user'); if (tnUser) tnUser.style.display = 'none';
+      const logout = document.getElementById('btn-logout');
+      if (logout) { logout.textContent = 'Войти'; logout.setAttribute('href', '/login.html'); }
+      const cab = document.querySelector('.cab-layout');
+      if (cab) cab.style.gridTemplateColumns = '1fr';
+      // Кнопка "Назад в кабинет" для гостей — заменяем на "Войти в кабинет"
+      const hd = document.querySelector('#activity-detail .hd-actions');
+      if (hd) {
+        const backBtn = [...hd.querySelectorAll('button')].find(b => /Назад в кабинет/i.test(b.textContent));
+        if (backBtn) { backBtn.textContent = 'Войти в кабинет'; backBtn.onclick = () => location.href = '/login.html'; }
+      }
+      // Кнопка "Купить" — ведёт на логин
+      const buyBtn = document.getElementById('actDtBuy');
+      if (buyBtn) buyBtn.onclick = () => { alert('Войдите в кабинет, чтобы оформить покупку.'); location.href = '/login.html'; };
+    }
+    return;
+  }
   if (!AC.requireAuth('/login.html')) return;
 
   const ROLE_TO_TYPE = { SEEKER: 'seeker', INVESTOR: 'investor', FRANCHISE: 'franchise', SALE: 'sale', FRANCHISER: 'franchise', FRANCHISEE: 'franchise', BIZ_SELLER: 'sale', BIZ_BUYER: 'sale', GOODS_SELLER: 'sale', GOODS_BUYER: 'sale' };

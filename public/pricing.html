@@ -64,101 +64,193 @@
       </div>
     </div>
 
+    <!-- ────── СТИЛИ КАРТОЧЕК АКТИВНОСТЕЙ ────── -->
+    <style>
+      .pg-block{margin-bottom:2.5rem}
+      .pg-block-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;padding-bottom:.85rem;border-bottom:1px solid var(--border)}
+      .pg-block-letter{width:42px;height:42px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;flex-shrink:0}
+      .pg-block-head-body{flex:1;min-width:0}
+      .pg-block-roles{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);line-height:1.3;font-weight:500}
+      .pg-block-shield{display:inline-flex;align-items:center;gap:.4rem;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-top:.35rem}
+      .pg-block-shield svg{width:14px;height:14px}
+      .pg-free{background:#f4faf6;border:1px solid #cce5d3;border-left:3px solid #2f9e44;border-radius:6px;padding:1rem 1.15rem;margin-bottom:1.15rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+      .pg-free-tag{font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#2f9e44;flex-shrink:0}
+      .pg-free-text{font-size:var(--t2);color:var(--ink2);line-height:1.5;margin:0;flex:1}
+      .pg-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+      .pg-card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:1.15rem 1.2rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.6rem;transition:all .2s;min-height:170px}
+      .pg-card:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+      .pg-card-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);line-height:1.25;font-weight:500;margin:0}
+      .pg-card-desc{font-size:.78rem;color:var(--ink3);line-height:1.5;margin:0;flex:1}
+      .pg-card-foot{display:flex;align-items:center;justify-content:space-between;gap:.65rem;margin-top:.35rem;padding-top:.7rem;border-top:1px dashed var(--border)}
+      .pg-card-price{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--red);font-weight:600;line-height:1}
+      .pg-card-price small{display:block;font-family:'Inter',sans-serif;font-size:.6rem;font-weight:500;color:var(--ink4);letter-spacing:.04em;margin-top:.2rem;line-height:1.3}
+      .pg-card-link{font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red);text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;transition:gap .2s}
+      .pg-card-link:hover{gap:.55rem}
+      .pg-card-link svg{width:11px;height:11px}
+      @media(max-width:980px){.pg-cards{grid-template-columns:repeat(2,1fr)}}
+      @media(max-width:600px){.pg-cards{grid-template-columns:1fr}.pg-card{min-height:auto}}
+    </style>
+
     <!-- ────── ГРУППА А ────── -->
-    <div class="tg reveal">
-      <div class="tg-head">
-        <span class="tg-letter">А</span>
-        <div>
-          <div class="tg-roles">Соискатели инвестиций · Франчайзеры · Продавцы готового бизнеса</div>
-          <div class="tg-shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg> Шеврон-щит</div>
+    <div class="pg-block reveal">
+      <div class="pg-block-head">
+        <span class="pg-block-letter">А</span>
+        <div class="pg-block-head-body">
+          <div class="pg-block-roles">Соискатели инвестиций · Франчайзеры · Продавцы готового бизнеса</div>
+          <div class="pg-block-shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg> Шеврон-щит</div>
         </div>
       </div>
-      <div class="tg-grid">
-        <div class="tg-col tg-free">
-          <div class="tg-col-tag">Бесплатно</div>
-          <div class="tg-col-title">Размещение</div>
-          <ul class="tg-list">
-            <li>Регистрация и личный кабинет</li>
-            <li>Размещение карточки в Реестре</li>
-            <li>Базовое описание (без контактов)</li>
-          </ul>
-        </div>
-        <div class="tg-col tg-paid">
-          <div class="tg-col-tag">Платно</div>
-          <div class="tg-col-title">Верификация и сопровождение</div>
-          <ul class="tg-list">
-            <li><span>Верификация компании — проверка регистрации, налоговых задолженностей, благонадёжности</span><strong>$50</strong></li>
-            <li><span>Анализ рынка — маркетинговый анализ по сфере деятельности</span><strong>$100</strong></li>
-            <li><span>Аудит Бизнес-плана</span><strong>$200</strong></li>
-            <li><span>Аудит фин.&nbsp;модели / бухгалтерский аудит</span><strong>по запросу</strong></li>
-            <li><span>Аудит договоров намерения / договоров с поставщиками и дистрибьюторами</span><strong>по запросу</strong></li>
-            <li><span>Сопровождение сделки — переговоры, подготовка и заключение</span><strong>1,5%<small>от суммы сделки (можно делить пополам — по 0,75% с каждой стороны)</small></strong></li>
-          </ul>
-        </div>
+      <div class="pg-free">
+        <span class="pg-free-tag">Бесплатно</span>
+        <p class="pg-free-text">Регистрация · Личный кабинет · Размещение карточки в&nbsp;Реестре · Базовое описание (без контактов)</p>
+      </div>
+      <div class="pg-cards">
+        <a class="pg-card" href="/cabinet.html#activity-verify-company">
+          <h3 class="pg-card-title">Верификация компании</h3>
+          <p class="pg-card-desc">Проверка регистрации, налоговых задолженностей и&nbsp;благонадёжности по&nbsp;открытым источникам.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">$50</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-market-analysis">
+          <h3 class="pg-card-title">Анализ рынка</h3>
+          <p class="pg-card-desc">Маркетинговый анализ по&nbsp;сфере деятельности: объём рынка, конкуренты, тренды.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">$100</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-business-plan-audit">
+          <h3 class="pg-card-title">Аудит бизнес-плана</h3>
+          <p class="pg-card-desc">Независимая проверка структуры, допущений, реалистичности показателей и&nbsp;рисков.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">$200</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-financial-audit">
+          <h3 class="pg-card-title">Аудит фин. модели<br/>/ бухгалтерский аудит</h3>
+          <p class="pg-card-desc">Проверка финансовой модели, первичной документации и&nbsp;бухгалтерского учёта.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-contracts-audit">
+          <h3 class="pg-card-title">Аудит договоров</h3>
+          <p class="pg-card-desc">Юридический аудит договоров намерения, поставщиков, дистрибьюторов и&nbsp;агентов.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-deal-support">
+          <h3 class="pg-card-title">Сопровождение сделки</h3>
+          <p class="pg-card-desc">Переговоры, подготовка и&nbsp;заключение сделки под&nbsp;ключ.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">1,5%<small>от суммы сделки</small></div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
       </div>
     </div>
 
     <!-- ────── ГРУППА Б ────── -->
-    <div class="tg reveal">
-      <div class="tg-head">
-        <span class="tg-letter">Б</span>
-        <div>
-          <div class="tg-roles">Продавцы товаров и сырья</div>
-          <div class="tg-shield tg-shield-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg> Шеврон-кружок</div>
+    <div class="pg-block reveal">
+      <div class="pg-block-head">
+        <span class="pg-block-letter">Б</span>
+        <div class="pg-block-head-body">
+          <div class="pg-block-roles">Продавцы товаров и&nbsp;сырья</div>
+          <div class="pg-block-shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg> Шеврон-кружок</div>
         </div>
       </div>
-      <div class="tg-grid">
-        <div class="tg-col tg-free">
-          <div class="tg-col-tag">Бесплатно</div>
-          <div class="tg-col-title">Размещение</div>
-          <ul class="tg-list">
-            <li>Регистрация и личный кабинет</li>
-            <li>Размещение карточек товарных позиций / сырьевых партий без лимита</li>
-            <li>Базовое описание (без контактов)</li>
-          </ul>
-        </div>
-        <div class="tg-col tg-paid">
-          <div class="tg-col-tag">Платно</div>
-          <div class="tg-col-title">Верификация и сопровождение</div>
-          <ul class="tg-list">
-            <li><span>Верификация компании — проверка по&nbsp;Statsnet</span><strong>$50</strong></li>
-            <li><span>Верификация состава / сертификата производства</span><strong>по запросу</strong></li>
-            <li><span>Верификация наличия запасов</span><strong>по запросу</strong></li>
-            <li><span>Верификация договоров (для трейдеров / агентов)</span><strong>по запросу</strong></li>
-            <li><span>Сопровождение сделки — переговоры, подготовка и заключение</span><strong>1,5%<small>от суммы сделки (можно делить пополам — по 0,75% с каждой стороны)</small></strong></li>
-          </ul>
-        </div>
+      <div class="pg-free">
+        <span class="pg-free-tag">Бесплатно</span>
+        <p class="pg-free-text">Регистрация · Личный кабинет · Размещение карточек товарных позиций&nbsp;/ сырьевых партий без&nbsp;лимита · Базовое описание (без контактов)</p>
+      </div>
+      <div class="pg-cards">
+        <a class="pg-card" href="/cabinet.html#activity-verify-company">
+          <h3 class="pg-card-title">Верификация компании</h3>
+          <p class="pg-card-desc">Проверка по&nbsp;Statsnet: регистрация, налоговые задолженности, статус.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">$50</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-product-certification">
+          <h3 class="pg-card-title">Верификация состава<br/>/ сертификата производства</h3>
+          <p class="pg-card-desc">Проверка состава продукции, сертификатов производства и&nbsp;соответствия стандартам.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-stock-verification">
+          <h3 class="pg-card-title">Верификация наличия запасов</h3>
+          <p class="pg-card-desc">Физическая проверка наличия товарных запасов и&nbsp;сырья на&nbsp;складе.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-contracts-audit">
+          <h3 class="pg-card-title">Верификация договоров</h3>
+          <p class="pg-card-desc">Проверка договоров для&nbsp;трейдеров и&nbsp;агентов: поставка, агентские, дистрибуция.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price" style="font-size:1rem">по запросу</div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-deal-support">
+          <h3 class="pg-card-title">Сопровождение сделки</h3>
+          <p class="pg-card-desc">Переговоры, подготовка и&nbsp;заключение сделки под&nbsp;ключ.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">1,5%<small>от суммы сделки</small></div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
       </div>
     </div>
 
     <!-- ────── ГРУППА В ────── -->
-    <div class="tg reveal">
-      <div class="tg-head">
-        <span class="tg-letter">В</span>
-        <div>
-          <div class="tg-roles">Инвесторы · Франчайзи · Покупатели готового бизнеса · Покупатели товаров и сырья</div>
-          <div class="tg-shield">Доступ к Реестру</div>
+    <div class="pg-block reveal">
+      <div class="pg-block-head">
+        <span class="pg-block-letter">В</span>
+        <div class="pg-block-head-body">
+          <div class="pg-block-roles">Инвесторы · Франчайзи · Покупатели готового бизнеса · Покупатели товаров и&nbsp;сырья</div>
+          <div class="pg-block-shield">Доступ к&nbsp;Реестру</div>
         </div>
       </div>
-      <div class="tg-grid">
-        <div class="tg-col tg-free">
-          <div class="tg-col-tag">Бесплатно</div>
-          <div class="tg-col-title">Короткая версия карточек</div>
-          <ul class="tg-list">
-            <li>Доступ ко всем карточкам Реестра</li>
-            <li>Краткое описание</li>
-            <li>Без названий, адресов и контактов</li>
-          </ul>
-        </div>
-        <div class="tg-col tg-paid">
-          <div class="tg-col-tag">Платно</div>
-          <div class="tg-col-title">Развёрнутые карточки и доступ к данным</div>
-          <ul class="tg-list">
-            <li><span>Развёрнутая карточка — название, контакты + резюме по&nbsp;всем проведённым верификациям</span><strong>$5<small>за 1 карточку · доступны пакеты 10 / 25 / 50 / 100 со&nbsp;скидкой</small></strong></li>
-            <li><span>Доступ к&nbsp;полным результатам каждой проведённой верификации</span><strong>$50<small>за каждый пункт внутри 1 карточки</small></strong></li>
-            <li><span>Сопровождение сделки — переговоры, подготовка и заключение</span><strong>1,5%<small>от суммы сделки (можно делить пополам — по 0,75% с каждой стороны)</small></strong></li>
-          </ul>
-        </div>
+      <div class="pg-free">
+        <span class="pg-free-tag">Бесплатно</span>
+        <p class="pg-free-text">Доступ ко&nbsp;всем карточкам Реестра · Краткое описание · Без&nbsp;названий, адресов и&nbsp;контактов</p>
+      </div>
+      <div class="pg-cards">
+        <a class="pg-card" href="/cabinet.html#activity-expanded-card">
+          <h3 class="pg-card-title">Развёрнутая карточка</h3>
+          <p class="pg-card-desc">Название, контакты + резюме по&nbsp;всем проведённым верификациям. Пакеты 10&nbsp;/ 25&nbsp;/ 50&nbsp;/ 100 со&nbsp;скидкой.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">$5<small>за 1 карточку</small></div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-verification-access">
+          <h3 class="pg-card-title">Доступ к&nbsp;результатам верификаций</h3>
+          <p class="pg-card-desc">Полные результаты каждой проведённой верификации внутри карточки.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">$50<small>за пункт</small></div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
+        <a class="pg-card" href="/cabinet.html#activity-deal-support">
+          <h3 class="pg-card-title">Сопровождение сделки</h3>
+          <p class="pg-card-desc">Переговоры, подготовка и&nbsp;заключение сделки под&nbsp;ключ.</p>
+          <div class="pg-card-foot">
+            <div class="pg-card-price">1,5%<small>от суммы сделки</small></div>
+            <span class="pg-card-link">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></span>
+          </div>
+        </a>
       </div>
     </div>
 
