@@ -162,7 +162,7 @@ nav.scrolled{box-shadow:var(--shadow)}
 
 /* ─── SECTION HEADER ─── */
 .sh{margin-bottom:1.5rem}
-.sh-inner{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:end}
+.sh-inner{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
 .sh h2{font-size:var(--t7)}
 .sh-right p{font-size:var(--t3);border-top:2px solid var(--red);padding-top:1.1rem}
 
