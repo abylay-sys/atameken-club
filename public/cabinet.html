@@ -295,7 +295,7 @@ strong{color:var(--ink);font-weight:600}
       <div class="panel on" id="seeker-dashboard">
         <div class="page-hd">
           <div class="page-hd-left">
-            <h2>Мой кабинет</h2>
+            <h2>Личный кабинет</h2>
             <p>Управление профилем, документами и услугами</p>
           </div>
           <div class="hd-actions">
@@ -465,7 +465,7 @@ strong{color:var(--ink);font-weight:600}
     <div id="type-investor" style="display:none">
       <div class="panel on" id="investor-dashboard">
         <div class="page-hd">
-          <div class="page-hd-left"><h2>Кабинет инвестора</h2><p>Доступ к верифицированному каталогу проектов</p></div>
+          <div class="page-hd-left"><h2>Личный кабинет</h2><p>Доступ к верифицированному каталогу проектов</p></div>
           <div class="hd-actions">
             <button class="btn-r btn-sm" onclick="showPanel('investor','catalog')">Смотреть проекты</button>
           </div>
@@ -612,7 +612,7 @@ strong{color:var(--ink);font-weight:600}
     <div id="type-franchise" style="display:none">
       <div class="panel on" id="franchise-dashboard">
         <div class="page-hd">
-          <div class="page-hd-left"><h2>Кабинет франшизы</h2><p>Управление профилем и поиск франчайзи</p></div>
+          <div class="page-hd-left"><h2>Личный кабинет</h2><p>Управление профилем и поиск франчайзи</p></div>
           <button class="btn-r btn-sm" onclick="showPanel('franchise','profile')">Заполнить профиль</button>
         </div>
         <div class="status-banner sb warning">
@@ -662,7 +662,7 @@ strong{color:var(--ink);font-weight:600}
     <div id="type-sale" style="display:none">
       <div class="panel on" id="sale-dashboard">
         <div class="page-hd">
-          <div class="page-hd-left"><h2>Купля-продажа бизнеса</h2><p>Конфиденциальное размещение и поиск объектов</p></div>
+          <div class="page-hd-left"><h2>Личный кабинет</h2><p>Конфиденциальное размещение и поиск объектов</p></div>
           <div class="hd-actions">
             <button class="btn-r btn-sm" onclick="showPanel('sale','list')">Разместить бизнес</button>
             <button class="btn-b btn-sm" onclick="showPanel('sale','search')">Найти бизнес</button>
@@ -964,27 +964,27 @@ setTimeout(() => { handleActivityHash(); }, 50);
 <script>
 const sidebars = {
   seeker: [
-    {label:'Мой кабинет',sections:[
+    {label:'',sections:[
       {id:'seeker-dashboard',icon:'home',text:'Обзор'},
       {id:'seeker-docs',icon:'file',text:'Документы'},
       {id:'seeker-services',icon:'star',text:'Услуги'},
     ]}
   ],
   investor:[
-    {label:'Кабинет инвестора',sections:[
+    {label:'',sections:[
       {id:'investor-dashboard',icon:'home',text:'Обзор'},
       {id:'investor-catalog',icon:'search',text:'Каталог проектов'},
       {id:'investor-subscribe',icon:'card',text:'Подписка'},
     ]}
   ],
   franchise:[
-    {label:'Моя франшиза',sections:[
+    {label:'',sections:[
       {id:'franchise-dashboard',icon:'home',text:'Обзор'},
       {id:'franchise-profile',icon:'edit',text:'Профиль франшизы'},
     ]}
   ],
   sale:[
-    {label:'Купля-продажа',sections:[
+    {label:'',sections:[
       {id:'sale-dashboard',icon:'home',text:'Обзор'},
       {id:'sale-list',icon:'plus',text:'Разместить объект'},
       {id:'sale-search',icon:'search',text:'Найти бизнес'},
@@ -1013,10 +1013,12 @@ function buildSidebar(type){
   groups.forEach(g => {
     const sec = document.createElement('div');
     sec.className = 'sidebar-section';
-    const lbl = document.createElement('div');
-    lbl.className = 'sidebar-label';
-    lbl.textContent = g.label;
-    sec.appendChild(lbl);
+    if (g.label) {
+      const lbl = document.createElement('div');
+      lbl.className = 'sidebar-label';
+      lbl.textContent = g.label;
+      sec.appendChild(lbl);
+    }
     g.sections.forEach(item => {
       const div = document.createElement('div');
       div.className = 'sidebar-item' + (item.id === currentPanel ? ' on' : '');
@@ -1026,6 +1028,18 @@ function buildSidebar(type){
     });
     sidebar.appendChild(sec);
   });
+
+  // Кнопка-выход «Перейти в Реестр» внизу сайдбара
+  const exitSec = document.createElement('div');
+  exitSec.className = 'sidebar-section';
+  exitSec.style.cssText = 'margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)';
+  const exitLink = document.createElement('a');
+  exitLink.href = '/projects.html';
+  exitLink.className = 'sidebar-item';
+  exitLink.style.cssText = 'text-decoration:none;color:var(--red);font-weight:600';
+  exitLink.innerHTML = (icons.search || '') + 'Перейти в Реестр';
+  exitSec.appendChild(exitLink);
+  sidebar.appendChild(exitSec);
 }
 
 function showPanel(type, panelId){
@@ -1115,6 +1129,7 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
     const desc = $('status-desc');
     const actions = $('status-actions');
     if (!banner) return;
+    banner.style.display = ''; // reset, может быть скрыт из SUBMITTED state
     banner.classList.remove('warning', 'success', 'info');
 
     if (!profile || profile.status === 'DRAFT') {
@@ -1124,11 +1139,9 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
       actions.innerHTML = '<a class="btn-r btn-sm" href="/verify.html">Перейти к анкете</a>';
       $('stat-status').textContent = 'Черновик';
     } else if (profile.status === 'SUBMITTED') {
-      banner.classList.add('info');
-      title.textContent = 'Заявка на проверке';
-      desc.textContent = 'Модераторы рассмотрят заявку в течение 2 рабочих дней.';
-      actions.innerHTML = '<a class="btn-o btn-sm" href="/verify.html">Смотреть анкету</a>';
-      $('stat-status').textContent = 'На проверке';
+      // Заявка отправлена — баннер скрываем, ответственность за публикацию на Пользователе (см. Пользовательское соглашение)
+      banner.style.display = 'none';
+      $('stat-status').textContent = 'Опубликовано';
     } else if (profile.status === 'VERIFIED') {
       banner.classList.add('success');
       title.textContent = 'Профиль верифицирован';
