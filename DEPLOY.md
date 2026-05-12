@@ -108,6 +108,58 @@ https://atameken-backend-xxxx.onrender.com/cabinet.html
 
 ---
 
+## Подключение основного домена `atameken.club`
+
+Сервис уже запущен на `https://atameken-backend.onrender.com`. Нужно завести основной домен `atameken.club` (и `www.atameken.club`).
+
+DNS домена обслуживается через `hoster.kz` (NS: `ns1/ns2/ns3.hoster.kz`, регистратор NameSilo).
+
+### Шаг 1. В Render — добавить кастомные домены
+1. Открыть [dashboard.render.com](https://dashboard.render.com) → сервис **atameken-backend** → **Settings** → **Custom Domains** → **Add Custom Domain**.
+2. Добавить `atameken.club` → Render покажет инструкцию для apex-домена: либо **A**-запись на IP Render (обычно несколько IP), либо **ALIAS/ANAME** на `atameken-backend.onrender.com`.
+3. Добавить вторым шагом `www.atameken.club` → Render выдаст **CNAME** на `atameken-backend.onrender.com`.
+4. Записать значения — нужны для DNS на следующем шаге.
+
+### Шаг 2. В hoster.kz — добавить DNS-записи
+Зайти в панель `hoster.kz`, открыть DNS-зону `atameken.club` и добавить то, что выдал Render. Обычно так:
+
+| Type  | Name | Value                                  | TTL |
+|-------|------|----------------------------------------|-----|
+| A     | `@`  | IP, который выдал Render               | 300 |
+| CNAME | `www`| `atameken-backend.onrender.com`        | 300 |
+
+Если hoster.kz поддерживает **ANAME/ALIAS** для apex — это предпочтительнее A-записи (на корне нельзя CNAME, но ANAME можно):
+
+| Type  | Name | Value                            |
+|-------|------|----------------------------------|
+| ANAME | `@`  | `atameken-backend.onrender.com`  |
+| CNAME | `www`| `atameken-backend.onrender.com`  |
+
+DNS обновляется обычно за 5–60 минут.
+
+### Шаг 3. Дождаться SSL
+В Render → Custom Domains: статус каждой записи `Pending` → `Verified`, после чего автоматически выдастся Let's Encrypt SSL. Это занимает до часа.
+
+### Шаг 4. Обновить `CORS_ORIGIN` в Render
+**Settings → Environment** → `CORS_ORIGIN` →
+
+```
+https://atameken.club,https://www.atameken.club,https://atameken-backend.onrender.com
+```
+
+Сохранить — Render передеплоится (~2 мин).
+
+### Шаг 5. Проверить
+- `https://atameken.club/health` → `{ok:true,...}`
+- `https://atameken.club/` → главная
+- `https://www.atameken.club/` → редирект или та же главная
+- Зайти в кабинет, отправить тестовую заявку — должно работать как на onrender-домене.
+
+### Дополнительно — редирект www → apex
+Render позволяет пометить один домен как **Primary** — все остальные будут редиректить на него. Settings → Custom Domains → `Set as Primary` на `atameken.club`.
+
+---
+
 ## Известные ограничения бесплатного тарифа Render
 
 - **Засыпает после 15 мин** бездействия. Первый запрос после сна ~30 сек. Для продакшена → Starter $7/мес.
