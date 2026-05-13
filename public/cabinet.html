@@ -817,17 +817,219 @@ strong{color:var(--ink);font-weight:600}
               </div>
             </div>
 
-            <div style="display:flex;gap:.85rem;flex-wrap:wrap;margin-top:.5rem">
+            <div style="display:flex;gap:.85rem;flex-wrap:wrap;margin-top:.5rem" id="actDtActions">
               <button class="btn-r" id="actDtBuy" onclick="alert('Оформление покупки в разработке')">Купить</button>
               <button class="btn-o" id="actDtCart" onclick="actDtAddToCart()">Добавить в корзину</button>
             </div>
           </div>
         </div>
+
+        <!-- Кастомные блоки под конкретные активности (deal-support, messages) -->
+        <div id="actDtExtras" style="margin-top:1.5rem"></div>
       </div>
     </div>
 
   </main>
 </div>
+
+<!-- ═══ UI deal-support: 3 документа + split-калькулятор (HTML-шаблон, скрыт пока не нужен) ═══ -->
+<template id="tpl-deal-support">
+  <style>
+    .ds-wrap{display:flex;flex-direction:column;gap:1.25rem}
+    .ds-docs{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    @media(max-width:880px){.ds-docs{grid-template-columns:1fr}}
+    .ds-doc{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.35rem;display:flex;flex-direction:column;gap:.75rem;box-shadow:var(--shadow);transition:all .2s}
+    .ds-doc.signed{border-color:#16a34a;background:#f4faf6}
+    .ds-doc-num{width:32px;height:32px;border-radius:50%;background:var(--red-dim);color:var(--red);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-family:'Cormorant Garamond',serif}
+    .ds-doc.signed .ds-doc-num{background:#dcfce7;color:#16a34a}
+    .ds-doc-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);font-weight:500;line-height:1.3;margin:0}
+    .ds-doc-abbr{font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink4);margin-top:-.25rem}
+    .ds-doc-desc{font-size:.78rem;color:var(--ink2);line-height:1.5;margin:0;flex:1}
+    .ds-doc-actions{display:flex;flex-direction:column;gap:.55rem;margin-top:auto}
+    .ds-doc-preview{font-size:.7rem;color:var(--red);text-decoration:none;font-weight:600;letter-spacing:.04em;display:inline-flex;align-items:center;gap:.3rem;cursor:pointer;background:none;border:0;padding:0}
+    .ds-doc-preview:hover{text-decoration:underline}
+    .ds-doc-check{display:flex;align-items:flex-start;gap:.5rem;font-size:.78rem;line-height:1.4;color:var(--ink2);cursor:pointer;user-select:none}
+    .ds-doc-check input{margin-top:.15rem;accent-color:var(--red);flex-shrink:0}
+    .ds-calc{background:#fffaf0;border:1px solid #C5963A;border-radius:8px;padding:1.5rem 1.65rem;display:flex;flex-direction:column;gap:.85rem}
+    .ds-calc h4{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#7a5810;font-weight:500;margin:0}
+    .ds-calc-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:.85rem;color:var(--ink2);padding:.4rem 0;border-bottom:1px dashed rgba(197,150,58,.35)}
+    .ds-calc-row:last-of-type{border-bottom:none;font-weight:600;color:var(--ink);font-size:.95rem;padding-top:.6rem}
+    .ds-calc-row strong{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--red);font-weight:600}
+    .ds-split-toggle{display:flex;align-items:center;gap:.55rem;font-size:.85rem;color:var(--ink2);cursor:pointer;padding:.5rem .65rem;background:#fff;border:1px solid #C5963A;border-radius:4px;margin-top:.25rem;user-select:none}
+    .ds-split-toggle input{accent-color:#C5963A}
+    .ds-final{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#fff;border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;margin-top:.5rem}
+    .ds-final-label{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+    .ds-final-btn{background:var(--red);color:#fff;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.7rem 1.4rem;border:0;border-radius:3px;cursor:pointer;transition:all .2s}
+    .ds-final-btn:hover{background:#a02022}
+    .ds-final-btn:disabled{background:#d4d4d4;cursor:not-allowed}
+  </style>
+  <div class="ds-wrap">
+    <div class="ds-docs">
+      <div class="ds-doc" data-doc="nda">
+        <div class="ds-doc-num">1</div>
+        <div class="ds-doc-abbr">NDA</div>
+        <h4 class="ds-doc-title">Соглашение о неразглашении</h4>
+        <p class="ds-doc-desc">Стороны обязуются не раскрывать конфиденциальную информацию, полученную в ходе переговоров — финансовые показатели, клиентскую базу, ноу-хау. Срок действия — взаимодействие + 3 года.</p>
+        <div class="ds-doc-actions">
+          <button class="ds-doc-preview" type="button" onclick="alert('Откроется PDF с шаблоном NDA. Подключение к API подписи — следующий шаг.')">📄 Посмотреть документ →</button>
+          <label class="ds-doc-check"><input type="checkbox" data-cb="nda"/> <span>Ознакомлен(а) и согласен(а) подписать <strong>NDA</strong></span></label>
+        </div>
+      </div>
+      <div class="ds-doc" data-doc="ncnda">
+        <div class="ds-doc-num">2</div>
+        <div class="ds-doc-abbr">NCNDA</div>
+        <h4 class="ds-doc-title">Соглашение о ненарушении каналов</h4>
+        <p class="ds-doc-desc">Стороны обязуются не обходить ATAMEKEN Club при заключении сделки с контрагентом, найденным через Платформу. Международный стандарт ICC NCNDA.</p>
+        <div class="ds-doc-actions">
+          <button class="ds-doc-preview" type="button" onclick="alert('Откроется PDF с шаблоном NCNDA. Подключение к API подписи — следующий шаг.')">📄 Посмотреть документ →</button>
+          <label class="ds-doc-check"><input type="checkbox" data-cb="ncnda"/> <span>Ознакомлен(а) и согласен(а) подписать <strong>NCNDA</strong></span></label>
+        </div>
+      </div>
+      <div class="ds-doc" data-doc="commission">
+        <div class="ds-doc-num">3</div>
+        <div class="ds-doc-abbr">КОМИССИЯ</div>
+        <h4 class="ds-doc-title">Договор о сопровождении за комиссию</h4>
+        <p class="ds-doc-desc">ATAMEKEN Club сопровождает сделку под ключ: переговоры, подготовка и проверка договоров, ведение до момента подписи и расчётов. Комиссия — 1,5% от суммы сделки.</p>
+        <div class="ds-doc-actions">
+          <button class="ds-doc-preview" type="button" onclick="alert('Откроется PDF с договором о сопровождении.')">📄 Посмотреть документ →</button>
+          <label class="ds-doc-check"><input type="checkbox" data-cb="commission"/> <span>Ознакомлен(а) и согласен(а) с условиями <strong>сопровождения за&nbsp;1,5%</strong></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-calc">
+      <h4>Расчёт стоимости сопровождения</h4>
+      <div class="ds-calc-row">
+        <span>Базовая комиссия (от суммы сделки)</span>
+        <strong>1,5%</strong>
+      </div>
+      <label class="ds-split-toggle">
+        <input type="checkbox" id="ds-split"/>
+        <span>Вторая сторона сделки (контрагент) тоже подключает Сопровождение — делим комиссию пополам</span>
+      </label>
+      <div class="ds-calc-row" id="ds-split-info" style="display:none">
+        <span>Делится между продавцом и покупателем по 50%</span>
+        <strong>0,75% × 0,75%</strong>
+      </div>
+      <div class="ds-calc-row">
+        <span>Итого <em>с вашей стороны</em></span>
+        <strong id="ds-final-pct">1,5%</strong>
+      </div>
+    </div>
+
+    <div class="ds-final">
+      <div>
+        <div class="ds-final-label">Готово к подписанию</div>
+        <div id="ds-status" style="font-size:.85rem;color:var(--ink3);margin-top:.2rem">Отметьте 3 чекбокса согласия выше</div>
+      </div>
+      <button class="ds-final-btn" id="ds-submit" disabled>Подписать и оплатить</button>
+    </div>
+  </div>
+</template>
+
+<!-- ═══ UI messages: чат + AI-переводчик (HTML-шаблон, скрыт пока не нужен) ═══ -->
+<template id="tpl-messages">
+  <style>
+    .ms-wrap{display:grid;grid-template-columns:280px 1fr;gap:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow);overflow:hidden;min-height:540px}
+    @media(max-width:780px){.ms-wrap{grid-template-columns:1fr}.ms-list{border-right:0;border-bottom:1px solid var(--border);max-height:200px}}
+    .ms-list{border-right:1px solid var(--border);background:#fafafa;overflow-y:auto;display:flex;flex-direction:column}
+    .ms-list-head{padding:1rem 1.15rem;border-bottom:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:space-between}
+    .ms-list-head h4{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink);margin:0}
+    .ms-search{width:100%;border:1px solid var(--border);background:#fff;padding:.45rem .7rem;font-size:.78rem;border-radius:4px;font-family:'Inter',sans-serif;margin:.55rem 1.15rem;width:calc(100% - 2.3rem)}
+    .ms-item{padding:.7rem 1.15rem;border-bottom:1px solid var(--border);cursor:pointer;display:flex;gap:.7rem;align-items:flex-start;transition:background .15s}
+    .ms-item:hover{background:#fff}
+    .ms-item.on{background:#fff;border-left:3px solid var(--red);padding-left:calc(1.15rem - 3px)}
+    .ms-avatar{width:38px;height:38px;border-radius:50%;background:var(--red-dim);color:var(--red);font-weight:700;font-size:.78rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Cormorant Garamond',serif}
+    .ms-item-body{flex:1;min-width:0}
+    .ms-item-top{display:flex;align-items:center;justify-content:space-between;gap:.4rem}
+    .ms-item-name{font-size:.82rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ms-item-time{font-size:.65rem;color:var(--ink4);flex-shrink:0}
+    .ms-item-preview{font-size:.72rem;color:var(--ink3);margin-top:.15rem;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    .ms-item-unread{margin-left:.4rem;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;padding:.05rem .4rem;border-radius:8px;min-width:18px;text-align:center}
+    .ms-chat{display:flex;flex-direction:column;min-height:540px}
+    .ms-chat-head{padding:.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.85rem;background:#fff}
+    .ms-chat-head .ms-avatar{width:34px;height:34px}
+    .ms-chat-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);font-weight:500}
+    .ms-chat-meta{font-size:.7rem;color:var(--ink4);margin-top:.1rem}
+    .ms-toggle{margin-left:auto;display:flex;align-items:center;gap:.45rem;font-size:.72rem;color:var(--ink2);cursor:pointer;padding:.35rem .6rem;background:#fffaf0;border:1px solid #C5963A;border-radius:4px;user-select:none}
+    .ms-toggle input{accent-color:#C5963A}
+    .ms-body{flex:1;overflow-y:auto;padding:1.25rem;background:#fafafa;display:flex;flex-direction:column;gap:.85rem;max-height:380px}
+    .ms-msg{max-width:75%;display:flex;flex-direction:column;gap:.2rem}
+    .ms-msg.mine{align-self:flex-end;align-items:flex-end}
+    .ms-msg.them{align-self:flex-start;align-items:flex-start}
+    .ms-bubble{padding:.65rem .85rem;border-radius:8px;font-size:.82rem;line-height:1.5;color:var(--ink);background:#fff;border:1px solid var(--border)}
+    .ms-msg.mine .ms-bubble{background:var(--red);color:#fff;border-color:var(--red);border-bottom-right-radius:2px}
+    .ms-msg.them .ms-bubble{border-bottom-left-radius:2px}
+    .ms-trans{font-size:.72rem;color:var(--ink3);padding:.45rem .6rem;background:rgba(197,150,58,.08);border-left:2px solid #C5963A;border-radius:0 3px 3px 0;margin-top:.15rem;max-width:100%;line-height:1.4}
+    .ms-trans-tag{font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C5963A;margin-right:.35rem}
+    .ms-time{font-size:.6rem;color:var(--ink4);margin:.15rem .25rem 0}
+    .ms-input{padding:.85rem 1.25rem;border-top:1px solid var(--border);background:#fff;display:flex;align-items:center;gap:.7rem}
+    .ms-input input{flex:1;border:1px solid var(--border);padding:.6rem .85rem;font-size:.82rem;font-family:'Inter',sans-serif;border-radius:4px;outline:none}
+    .ms-input input:focus{border-color:var(--red)}
+    .ms-send{background:var(--red);color:#fff;border:0;padding:.6rem 1.1rem;font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:background .2s}
+    .ms-send:hover{background:#a02022}
+    .ms-lang-pill{display:inline-block;background:#f0f0f0;color:var(--ink3);font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.1rem .4rem;border-radius:2px;margin-right:.4rem}
+  </style>
+  <div class="ms-wrap">
+    <div class="ms-list">
+      <div class="ms-list-head"><h4>Сообщения</h4><span style="font-size:.65rem;color:var(--ink4)">3</span></div>
+      <input type="text" class="ms-search" placeholder="Поиск по чатам…"/>
+      <div class="ms-item on" data-chat="1">
+        <div class="ms-avatar">ZH</div>
+        <div class="ms-item-body">
+          <div class="ms-item-top"><div class="ms-item-name">Zhang Wei · Shanghai Trade</div><div class="ms-item-time">сейчас</div></div>
+          <div class="ms-item-preview">您好！我们有兴趣购买您的产品…</div>
+        </div>
+        <div class="ms-item-unread">2</div>
+      </div>
+      <div class="ms-item" data-chat="2">
+        <div class="ms-avatar">ER</div>
+        <div class="ms-item-body">
+          <div class="ms-item-top"><div class="ms-item-name">Erlan Sultanov · QazProm</div><div class="ms-item-time">12:48</div></div>
+          <div class="ms-item-preview">Здравствуйте! Уточните, пожалуйста, объёмы поставки на III квартал…</div>
+        </div>
+      </div>
+      <div class="ms-item" data-chat="3">
+        <div class="ms-avatar">MJ</div>
+        <div class="ms-item-body">
+          <div class="ms-item-top"><div class="ms-item-name">Mehmet Yıldız · Anadolu Ltd.</div><div class="ms-item-time">вчера</div></div>
+          <div class="ms-item-preview">Merhaba! Fiyat listenizi inceleyebilir miyim?</div>
+        </div>
+      </div>
+    </div>
+    <div class="ms-chat">
+      <div class="ms-chat-head">
+        <div class="ms-avatar">ZH</div>
+        <div>
+          <div class="ms-chat-name">Zhang Wei · Shanghai Trade Co.</div>
+          <div class="ms-chat-meta"><span class="ms-lang-pill">ZH</span>был(а) в сети только что</div>
+        </div>
+        <label class="ms-toggle"><input type="checkbox" id="ms-translate" checked/> <span>AI-перевод</span></label>
+      </div>
+      <div class="ms-body" id="ms-body">
+        <div class="ms-msg them">
+          <div class="ms-bubble">您好！我们有兴趣购买您的产品。请问能否提供报价单？</div>
+          <div class="ms-trans"><span class="ms-trans-tag">RU</span>Здравствуйте! Нам интересно купить вашу продукцию. Можете прислать прайс-лист?</div>
+          <div class="ms-time">12:24</div>
+        </div>
+        <div class="ms-msg mine">
+          <div class="ms-bubble">Здравствуйте! Конечно, отправлю прайс прямо сейчас. Какой объём вас интересует?</div>
+          <div class="ms-trans"><span class="ms-trans-tag">ZH</span>您好！当然可以，我现在就发送价格清单。您对什么数量感兴趣？</div>
+          <div class="ms-time">12:26</div>
+        </div>
+        <div class="ms-msg them">
+          <div class="ms-bubble">大约每月 500 吨。我们是上海的进口商，主要做建材。</div>
+          <div class="ms-trans"><span class="ms-trans-tag">RU</span>Около 500 тонн в месяц. Мы импортёр из Шанхая, основное направление — стройматериалы.</div>
+          <div class="ms-time">12:28</div>
+        </div>
+      </div>
+      <div class="ms-input">
+        <input type="text" placeholder="Напишите сообщение… (будет переведено на язык собеседника)"/>
+        <button class="ms-send" type="button" onclick="alert('Сообщение отправлено (демо). Полноценный чат подключим в следующем спринте.')">Отправить</button>
+      </div>
+    </div>
+  </div>
+</template>
 
 <script>
 // ───── Каталог 10 активностей (для деталки услуги с тарифной страницы) ─────
@@ -998,8 +1200,74 @@ function showActivity(id) {
     li.textContent = it;
     ul.appendChild(li);
   });
+
+  // Сбрасываем кастомный extras-блок
+  const extras = document.getElementById('actDtExtras');
+  if (extras) extras.innerHTML = '';
+
+  // Спец-UI для конкретных активностей
+  if (id === 'deal-support' && extras) {
+    const tpl = document.getElementById('tpl-deal-support');
+    if (tpl) extras.appendChild(tpl.content.cloneNode(true));
+    initDealSupportUI();
+  } else if (id === 'messages' && extras) {
+    const tpl = document.getElementById('tpl-messages');
+    if (tpl) extras.appendChild(tpl.content.cloneNode(true));
+    initMessagesUI();
+  }
+
   window.scrollTo(0, 0);
   return true;
+}
+
+// ════ Логика deal-support: чекбоксы согласия + split-калькулятор ════
+function initDealSupportUI() {
+  const extras = document.getElementById('actDtExtras');
+  if (!extras) return;
+  const checks = extras.querySelectorAll('input[type="checkbox"][data-cb]');
+  const splitCb = extras.querySelector('#ds-split');
+  const splitInfo = extras.querySelector('#ds-split-info');
+  const finalPct = extras.querySelector('#ds-final-pct');
+  const status = extras.querySelector('#ds-status');
+  const submit = extras.querySelector('#ds-submit');
+
+  function update() {
+    // Обновляем визуал «подписанных» документов
+    checks.forEach(cb => {
+      const doc = cb.closest('.ds-doc');
+      if (doc) doc.classList.toggle('signed', cb.checked);
+    });
+    const allSigned = [...checks].every(cb => cb.checked);
+    if (submit) submit.disabled = !allSigned;
+    if (status) status.textContent = allSigned ? 'Все документы согласованы — можно подписывать' : `Отмечено ${[...checks].filter(c=>c.checked).length} из ${checks.length} чекбоксов`;
+  }
+  function updateSplit() {
+    const split = splitCb && splitCb.checked;
+    if (splitInfo) splitInfo.style.display = split ? '' : 'none';
+    if (finalPct) finalPct.textContent = split ? '0,75%' : '1,5%';
+  }
+  checks.forEach(cb => cb.addEventListener('change', update));
+  if (splitCb) splitCb.addEventListener('change', updateSplit);
+  if (submit) submit.addEventListener('click', () => {
+    alert('Документы отправлены на e-sign.\n\n(Подключение Adobe Sign / DocuSign / Kalkan e-sign — следующий шаг.)');
+  });
+  update(); updateSplit();
+}
+
+// ════ Логика messages: переключение чатов + toggle перевода ════
+function initMessagesUI() {
+  const extras = document.getElementById('actDtExtras');
+  if (!extras) return;
+  const items = extras.querySelectorAll('.ms-item');
+  items.forEach(it => it.addEventListener('click', () => {
+    items.forEach(x => x.classList.remove('on'));
+    it.classList.add('on');
+    // (В реальном чате — загружали бы переписку по it.dataset.chat)
+  }));
+  const toggle = extras.querySelector('#ms-translate');
+  if (toggle) toggle.addEventListener('change', () => {
+    extras.querySelectorAll('.ms-trans').forEach(t => t.style.display = toggle.checked ? '' : 'none');
+  });
 }
 
 function returnToCabinet() {
