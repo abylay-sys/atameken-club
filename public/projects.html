@@ -370,6 +370,94 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), {threshold:.06});
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+// ═══ Унифицированные 8 шевронов на каждой карточке (Task D) ═══
+(function(){
+  // 8 активностей с уникальным цветом + аббревиатура. Серый = неактивно.
+  const SHEVS = [
+    {id:'verify-company',   abbr:'ВК', color:'#16a34a', title:'Верификация компании'},
+    {id:'market-analysis',  abbr:'АР', color:'#0891b2', title:'Анализ рынка'},
+    {id:'business-plan-audit', abbr:'БП', color:'#ea580c', title:'Аудит Бизнес-плана'},
+    {id:'financial-audit',  abbr:'ФА', color:'#1A6FC4', title:'Аудит фин. модели / бухгалтерский аудит'},
+    {id:'contracts-audit',  abbr:'АД', color:'#7c3aed', title:'Аудит договоров'},
+    {id:'product-certification', abbr:'ПС', color:'#15803d', title:'Верификация состава / сертификатов производства'},
+    {id:'stock-verification', abbr:'ЗП', color:'#1d4ed8', title:'Верификация наличия запасов'},
+    {id:'deal-support',     abbr:'СС', color:'#C5963A', title:'Сопровождение сделки'},
+  ];
+
+  // Маппинг старых .bdg-классов на новые activity-id (для определения «активных» шевронов)
+  const BDG_TO_SHEV = {
+    'bdg-verified': 'verify-company',
+    'bdg-v-form': 'verify-company',
+    'bdg-bp-audit': 'business-plan-audit',
+    'bdg-v-bp': 'business-plan-audit',
+    'bdg-buh-audit': 'financial-audit',
+    'bdg-fin-audit': 'financial-audit',
+    'bdg-v-fin': 'financial-audit',
+    'bdg-audit-co': 'financial-audit',
+    'bdg-audit-pr': 'financial-audit',
+    'bdg-v-ctr': 'contracts-audit',
+    'bdg-ct-kz': 'product-certification',
+    'bdg-ct1': 'product-certification',
+    'bdg-halal': 'product-certification',
+  };
+
+  // Стили
+  const style = document.createElement('style');
+  style.textContent = `
+    .shev-strip{display:flex;flex-wrap:wrap;gap:.3rem;margin:.6rem 0 .85rem;padding:.45rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .shev{position:relative;width:30px;height:30px;border-radius:50%;background:#f0f0f0;border:1.5px solid #d4d4d4;color:#a0a0a0;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;letter-spacing:.02em;cursor:help;transition:all .15s}
+    .shev.on{background:#fff}
+    .shev:hover{transform:scale(1.08);z-index:2}
+    .shev-tip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:.62rem;font-weight:500;letter-spacing:0;text-transform:none;padding:.35rem .6rem;border-radius:3px;white-space:nowrap;z-index:10;pointer-events:none}
+    .shev-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--ink)}
+    .shev:hover .shev-tip{display:block}
+    .shev-club{width:34px;height:34px;background:linear-gradient(135deg,#1A3A6B,#2455A4);border-color:#C5963A;color:#C5963A;border-width:1.5px;margin-right:.15rem;font-size:.55rem}
+    .shev-club.off{filter:grayscale(1);opacity:.5}
+  `;
+  document.head.appendChild(style);
+
+  document.querySelectorAll('.pcard').forEach(card => {
+    const oldStrip = card.querySelector('.badge-strip');
+    if (!oldStrip) return;
+
+    // Извлекаем «активные» шевроны из старых классов
+    const activeIds = new Set();
+    let hasClubBadge = false;
+    let clubActive = false;
+    oldStrip.querySelectorAll('.bdg').forEach(b => {
+      if (b.classList.contains('bdg-club')) { hasClubBadge = true; clubActive = !b.classList.contains('bdg-off'); return; }
+      if (b.classList.contains('bdg-off')) { hasClubBadge = hasClubBadge || /Резидент/i.test(b.textContent); return; }
+      for (const cls of b.classList) {
+        if (BDG_TO_SHEV[cls]) activeIds.add(BDG_TO_SHEV[cls]);
+      }
+    });
+    // По умолчанию — Сопровождение сделки активно для всех (универсальная услуга)
+    if (activeIds.size > 0) activeIds.add('deal-support');
+
+    // Строим унифицированную ленту
+    const strip = document.createElement('div');
+    strip.className = 'shev-strip';
+
+    // Club shevron (отдельный)
+    const club = document.createElement('div');
+    club.className = 'shev shev-club' + (clubActive ? '' : ' off');
+    club.innerHTML = (clubActive ? '★' : '☆') + '<span class="shev-tip">' + (clubActive ? 'Резидент ATAMEKEN Club' : 'Не Резидент Клуба') + '</span>';
+    strip.appendChild(club);
+
+    // 8 activity shevrons
+    SHEVS.forEach(s => {
+      const el = document.createElement('div');
+      const active = activeIds.has(s.id);
+      el.className = 'shev' + (active ? ' on' : '');
+      if (active) { el.style.color = s.color; el.style.borderColor = s.color; el.style.background = s.color + '14'; }
+      el.innerHTML = s.abbr + '<span class="shev-tip">' + s.title + (active ? '' : ' (не пройдено)') + '</span>';
+      strip.appendChild(el);
+    });
+
+    oldStrip.replaceWith(strip);
+  });
+})();
+
 // ═══ Избранное (звёздочка) + Подать жалобу — инжект в каждую карточку Реестра ═══
 (function(){
   const FAV_KEY = 'ac_favorites_v1';
