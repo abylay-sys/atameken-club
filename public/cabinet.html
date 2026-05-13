@@ -897,6 +897,46 @@ const ACTIVITIES = {
     includes: ['Полный отчёт по выбранному пункту верификации', 'Сканы и подтверждающие документы (где применимо)', 'Заключение независимого аудитора', 'Сохраняется в личном кабинете'],
     duration: 'мгновенный доступ',
     audience: 'Инвесторы · Франчайзи · Покупатели готового бизнеса · Покупатели товаров'
+  },
+  'packages': {
+    badge: 'Группа В',
+    title: 'Пакеты карточек',
+    desc: 'Покупка карточек Реестра пакетами 10 / 25 / 50 / 100 со скидкой до 30%. Чем больше карточек в пакете — тем ниже стоимость одной.',
+    price: 'от $40',
+    priceSub: 'за пакет 10 карточек',
+    includes: ['Пакет 10 карточек — $40 (скидка 20%)', 'Пакет 25 карточек — $87 (скидка 30%)', 'Пакет 50 карточек — $150 (скидка 40%)', 'Пакет 100 карточек — $250 (скидка 50%)'],
+    duration: 'мгновенный доступ',
+    audience: 'Инвесторы · Франчайзи · Покупатели готового бизнеса · Покупатели товаров'
+  },
+  'messages': {
+    badge: 'Для всех',
+    title: 'Сообщения',
+    desc: 'Прямой чат между пользователями Реестра — переговоры без посредников. Встроен AI-переводчик, как в WeChat, чтобы общаться с предпринимателями из любых стран на родном языке.',
+    price: 'бесплатно',
+    priceSub: 'без ограничений',
+    includes: ['Чат с любым пользователем Платформы', 'AI-переводчик с автоопределением языка', 'История переписки сохраняется в кабинете', 'Возможность подключить менеджера платформы для медиации'],
+    duration: 'постоянно',
+    audience: 'Все пользователи Платформы'
+  },
+  'professional-translation': {
+    badge: 'Для всех',
+    title: 'Профессиональный перевод',
+    desc: 'Перевод вашей карточки / анкеты / документов живым профессиональным переводчиком (не AI). Подходит, когда нужен дипломатический уровень, точная юридическая или техническая терминология.',
+    price: 'по запросу',
+    priceSub: 'зависит от объёма и языковой пары',
+    includes: ['Перевод носителем языка по нужному направлению', 'Юридическая / техническая / маркетинговая терминология', 'Срок зависит от объёма (обычно 2–10 рабочих дней)', 'Подходит для карточки, анкеты, договоров и презентаций'],
+    duration: '2–10 рабочих дней',
+    audience: 'Все пользователи Платформы'
+  },
+  'additional-services': {
+    badge: 'Партнёры',
+    title: 'Дополнительные услуги',
+    desc: 'Услуги наших аккредитованных Партнёров — юридическое сопровождение, бухгалтерия, маркетинговый анализ, упаковка проектов, дизайн презентаций, оценка активов и многое другое.',
+    price: 'по запросу',
+    priceSub: 'каждая услуга — индивидуально',
+    includes: ['Юридическое сопровождение и due diligence', 'Бухгалтерский аутсорсинг и налоговый консалтинг', 'Упаковка инвест-проекта / питч-дека', 'Маркетинговая стратегия и брендинг'],
+    duration: 'индивидуально',
+    audience: 'Все пользователи Платформы'
   }
 };
 
@@ -930,9 +970,16 @@ function showActivity(id) {
 
 function returnToCabinet() {
   history.replaceState(null, '', '/cabinet.html');
-  showPanel(currentType || 'seeker', 'dashboard');
   document.getElementById('type-activity').style.display = 'none';
+  showPanel(currentType || 'seeker', 'dashboard');
 }
+
+// При смене hash перерисуем сайдбар — чтобы подсветка активного пункта обновилась
+window.addEventListener('hashchange', () => {
+  if (typeof buildSidebar === 'function' && typeof currentType !== 'undefined') {
+    buildSidebar(currentType);
+  }
+});
 
 function actDtAddToCart() {
   const id = (location.hash || '').replace('#activity-', '');
@@ -962,34 +1009,70 @@ setTimeout(() => { handleActivityHash(); }, 50);
 </script>
 
 <script>
+// Меню сайдбара — структура соответствует карточкам с страницы «Тарифы».
+// Каждый пункт-услуга ссылается на activity-id из ACTIVITIES (раскрывает деталку).
+const SIDEBAR_SELLER_A = [
+  {label:'',sections:[{id:'dashboard',icon:'home',text:'Обзор'}]},
+  {label:'Услуги верификации',sections:[
+    {id:'a-verify-company',icon:'check',text:'Верификация компании',activity:'verify-company'},
+    {id:'a-market-analysis',icon:'chart',text:'Анализ рынка',activity:'market-analysis'},
+    {id:'a-business-plan-audit',icon:'check',text:'Аудит Бизнес-плана',activity:'business-plan-audit'},
+    {id:'a-financial-audit',icon:'check',text:'Аудит фин. модели',activity:'financial-audit'},
+    {id:'a-contracts-audit',icon:'check',text:'Аудит договоров',activity:'contracts-audit'},
+    {id:'a-deal-support',icon:'handshake',text:'Сопровождение сделки',activity:'deal-support'},
+  ]},
+  {label:'Размещение',sections:[
+    {id:'new-publication',icon:'plus',text:'+ Новая публикация'},
+  ]},
+  {label:'Сервис',sections:[
+    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
+    {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
+    {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
+    {id:'docs',icon:'file',text:'Документы'},
+  ]},
+];
+
+const SIDEBAR_SELLER_B = [
+  {label:'',sections:[{id:'dashboard',icon:'home',text:'Обзор'}]},
+  {label:'Услуги верификации',sections:[
+    {id:'b-verify-company',icon:'check',text:'Верификация компании',activity:'verify-company'},
+    {id:'b-product-certification',icon:'check',text:'Состав / сертификаты',activity:'product-certification'},
+    {id:'b-stock-verification',icon:'check',text:'Верификация запасов',activity:'stock-verification'},
+    {id:'b-contracts-audit',icon:'check',text:'Верификация договоров',activity:'contracts-audit'},
+    {id:'b-deal-support',icon:'handshake',text:'Сопровождение сделки',activity:'deal-support'},
+  ]},
+  {label:'Размещение',sections:[
+    {id:'new-publication',icon:'plus',text:'+ Новая публикация'},
+  ]},
+  {label:'Сервис',sections:[
+    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
+    {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
+    {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
+    {id:'docs',icon:'file',text:'Документы'},
+  ]},
+];
+
+const SIDEBAR_BUYER = [
+  {label:'',sections:[{id:'dashboard',icon:'home',text:'Обзор (избранное)'}]},
+  {label:'Доступ к Реестру',sections:[
+    {id:'v-expanded-card',icon:'card',text:'Развёрнутая информация',activity:'expanded-card'},
+    {id:'v-verification-access',icon:'check',text:'Развёрнутый отчёт',activity:'verification-access'},
+    {id:'v-packages',icon:'package',text:'Пакеты карточек',activity:'packages'},
+    {id:'v-deal-support',icon:'handshake',text:'Сопровождение сделки',activity:'deal-support'},
+  ]},
+  {label:'Сервис',sections:[
+    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
+    {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
+    {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
+    {id:'docs',icon:'file',text:'Документы'},
+  ]},
+];
+
 const sidebars = {
-  seeker: [
-    {label:'',sections:[
-      {id:'seeker-dashboard',icon:'home',text:'Обзор'},
-      {id:'seeker-docs',icon:'file',text:'Документы'},
-      {id:'seeker-services',icon:'star',text:'Услуги'},
-    ]}
-  ],
-  investor:[
-    {label:'',sections:[
-      {id:'investor-dashboard',icon:'home',text:'Обзор'},
-      {id:'investor-catalog',icon:'search',text:'Каталог проектов'},
-      {id:'investor-subscribe',icon:'card',text:'Подписка'},
-    ]}
-  ],
-  franchise:[
-    {label:'',sections:[
-      {id:'franchise-dashboard',icon:'home',text:'Обзор'},
-      {id:'franchise-profile',icon:'edit',text:'Профиль франшизы'},
-    ]}
-  ],
-  sale:[
-    {label:'',sections:[
-      {id:'sale-dashboard',icon:'home',text:'Обзор'},
-      {id:'sale-list',icon:'plus',text:'Разместить объект'},
-      {id:'sale-search',icon:'search',text:'Найти бизнес'},
-    ]}
-  ]
+  seeker: SIDEBAR_SELLER_A,
+  investor: SIDEBAR_BUYER,
+  franchise: SIDEBAR_SELLER_A, // по умолчанию Франчайзер (продавец); Франчайзи может использовать «Перейти в Реестр»
+  sale: SIDEBAR_SELLER_A,      // по умолчанию продавец готового бизнеса; покупатели — через Реестр
 };
 
 const icons = {
@@ -1001,6 +1084,11 @@ const icons = {
   search:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>',
   card:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="14" height="10" rx="1.5"/><line x1="1" y1="7" x2="15" y2="7"/></svg>',
   plus:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>',
+  chart:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="2" y1="14" x2="14" y2="14"/><polyline points="3 11 6 8 9 10 13 4"/></svg>',
+  message:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 3h12v9H6l-4 3z"/></svg>',
+  globe:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c2 2 3 4 3 6s-1 4-3 6c-2-2-3-4-3-6s1-4 3-6z"/></svg>',
+  handshake:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8l3-3 3 2 3-2 3 3v3l-2 2-2-1-2 1-2-1-2 1-2-2z"/></svg>',
+  package:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><polygon points="8 1 14 4 14 12 8 15 2 12 2 4"/><line x1="2" y1="4" x2="8" y2="7.5"/><line x1="14" y1="4" x2="8" y2="7.5"/><line x1="8" y1="7.5" x2="8" y2="15"/></svg>',
 };
 
 let currentType = 'seeker';
@@ -1021,9 +1109,33 @@ function buildSidebar(type){
     }
     g.sections.forEach(item => {
       const div = document.createElement('div');
-      div.className = 'sidebar-item' + (item.id === currentPanel ? ' on' : '');
-      div.innerHTML = icons[item.icon] + item.text + (item.badge ? `<span class="badge">${item.badge}</span>` : '');
-      div.onclick = () => showPanel(type, item.id.replace(type+'-',''));
+      const isActive = item.activity
+        ? (location.hash === '#activity-' + item.activity)
+        : (item.id === 'dashboard' && currentPanel.endsWith('-dashboard') && !location.hash);
+      div.className = 'sidebar-item' + (isActive ? ' on' : '');
+      div.innerHTML = (icons[item.icon] || '') + item.text + (item.badge ? `<span class="badge">${item.badge}</span>` : '');
+      div.onclick = () => {
+        if (item.activity) {
+          // Открываем activity-панель через hash — единая логика с тарифной страницей
+          location.hash = '#activity-' + item.activity;
+        } else if (item.id === 'dashboard') {
+          // Возврат на dashboard текущего типа
+          history.replaceState(null, '', '/cabinet.html');
+          showPanel(type, 'dashboard');
+        } else if (item.id === 'docs') {
+          // Документы — у seeker есть отдельная панель, у других — заглушка
+          history.replaceState(null, '', '/cabinet.html');
+          if (document.getElementById(type + '-docs')) {
+            showPanel(type, 'docs');
+          } else {
+            alert('Раздел «Документы» появится после публикации первого объявления.');
+          }
+        } else if (item.id === 'new-publication') {
+          location.href = '/verify.html';
+        } else {
+          alert('Раздел в разработке');
+        }
+      };
       sec.appendChild(div);
     });
     sidebar.appendChild(sec);
