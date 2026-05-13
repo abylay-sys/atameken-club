@@ -44,10 +44,12 @@ strong{color:var(--ink);font-weight:600}
 .tn-back svg{width:13px;height:13px}
 
 /* TYPE SELECTOR (top switcher) */
-.type-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;gap:0;overflow-x:auto;box-shadow:0 1px 0 var(--border)}
-.type-btn{padding:.65rem 1.5rem;font-size:var(--t2);font-weight:500;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
-.type-btn.on{color:var(--red);border-bottom-color:var(--red);font-weight:600}
-.type-btn:not(.on):hover{color:var(--ink2)}
+.type-bar{background:#fff;border-bottom:1px solid var(--border);padding:.6rem 1.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem .5rem;box-shadow:0 1px 0 var(--border)}
+.type-btn{padding:.55rem .9rem;font-size:.78rem;font-weight:500;color:var(--ink3);background:#fafafa;border:1px solid var(--border);cursor:pointer;font-family:'Inter',sans-serif;border-radius:4px;transition:all .2s;text-align:center;line-height:1.25}
+.type-btn.on{color:#fff;background:var(--red);border-color:var(--red);font-weight:600}
+.type-btn:not(.on):hover{background:#fff;border-color:var(--red);color:var(--red)}
+@media(max-width:980px){.type-bar{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.type-bar{grid-template-columns:1fr}}
 
 /* LAYOUT */
 .cab-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 91px)}
@@ -253,12 +255,18 @@ strong{color:var(--ink);font-weight:600}
   </div>
 </div>
 
-<!-- TYPE SWITCHER -->
+<!-- TYPE SWITCHER — 8 категорий в 2 ряда (как «8 типов активностей» на главной) -->
 <div class="type-bar">
-  <button class="type-btn on" data-type="seeker" onclick="switchType('seeker',this)">Соискатель инвестиций</button>
-  <button class="type-btn" data-type="investor" onclick="switchType('investor',this)">Инвестор</button>
-  <button class="type-btn" data-type="franchise" onclick="switchType('franchise',this)">Франчайзер / Франчайзи</button>
-  <button class="type-btn" data-type="sale" onclick="switchType('sale',this)">Продавец / Покупатель бизнеса</button>
+  <!-- 1-й ряд: «условные продавцы» — те, кто публикует -->
+  <button class="type-btn on" data-type="seeker" onclick="switchType('seeker',this)">Соискатели инвестиций</button>
+  <button class="type-btn" data-type="franchiser" onclick="switchType('franchiser',this)">Франчайзеры</button>
+  <button class="type-btn" data-type="biz-seller" onclick="switchType('biz-seller',this)">Продавцы готового бизнеса</button>
+  <button class="type-btn" data-type="goods-seller" onclick="switchType('goods-seller',this)">Продавцы товаров и&nbsp;сырья</button>
+  <!-- 2-й ряд: «условные покупатели» — те, кто выбирает / платит -->
+  <button class="type-btn" data-type="investor" onclick="switchType('investor',this)">Инвесторы</button>
+  <button class="type-btn" data-type="franchisee" onclick="switchType('franchisee',this)">Франчайзи</button>
+  <button class="type-btn" data-type="biz-buyer" onclick="switchType('biz-buyer',this)">Покупатели готового бизнеса</button>
+  <button class="type-btn" data-type="goods-buyer" onclick="switchType('goods-buyer',this)">Покупатели товаров и&nbsp;сырья</button>
 </div>
 
 <div class="cab-layout">
@@ -738,6 +746,32 @@ strong{color:var(--ink);font-weight:600}
       </div>
     </div><!-- /type-sale -->
 
+    <!-- ──────── НОВАЯ ПУБЛИКАЦИЯ (4 уникальные формы под 4 типа продавцов) ──────── -->
+    <div id="type-publication" style="display:none">
+      <div class="panel on" id="publication-form">
+        <div class="page-hd">
+          <div class="page-hd-left">
+            <h2 id="pubFormTitle">Новая публикация</h2>
+            <p id="pubFormSub">Заполните карточку — она появится в Реестре после публикации</p>
+          </div>
+          <div class="hd-actions">
+            <button class="btn-o btn-sm" onclick="returnToCabinet()">Назад</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="padding:1.75rem 2rem">
+            <form class="res-form" id="pubForm" novalidate style="background:transparent;border:0;padding:0;box-shadow:none">
+              <div class="res-form-grid" id="pubFormFields"></div>
+              <div class="res-submit" style="margin-top:1.5rem">
+                <button type="submit" class="res-submit-btn">Опубликовать</button>
+                <span class="res-submit-note">Публикуя карточку, вы соглашаетесь с Пользовательским соглашением и принимаете ответственность за достоверность размещаемой информации.</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ──────── ACTIVITY DETAIL (Услуги с тарифной страницы) ──────── -->
     <div id="type-activity" style="display:none">
       <div class="panel on" id="activity-detail">
@@ -971,7 +1005,141 @@ function showActivity(id) {
 function returnToCabinet() {
   history.replaceState(null, '', '/cabinet.html');
   document.getElementById('type-activity').style.display = 'none';
+  const pub = document.getElementById('type-publication');
+  if (pub) pub.style.display = 'none';
   showPanel(currentType || 'seeker', 'dashboard');
+}
+
+// ════ Конструктор 4-х уникальных форм публикации ════
+const PUBLICATION_FORMS = {
+  'seeker': {
+    title: 'Новая публикация — инвест-проект',
+    sub: 'Карточка проекта для привлечения инвестора',
+    fields: [
+      {name:'projectName', label:'Название проекта', required:true, full:true, placeholder:'Например, «Агропромышленный хаб Степной»'},
+      {name:'industry', label:'Отрасль', placeholder:'Агропром, FoodTech, EdTech...'},
+      {name:'stage', label:'Стадия проекта', type:'select', options:['Idea','MVP','Pre-Seed','Seed','Series A','Series B+']},
+      {name:'amount', label:'Требуемая сумма инвестиций', placeholder:'например, 1,2 млрд KZT'},
+      {name:'payback', label:'Срок окупаемости', placeholder:'например, 3–5 лет'},
+      {name:'equity', label:'Целевая доля инвестора', placeholder:'например, 20%'},
+      {name:'location', label:'Локация', placeholder:'Алматы, Казахстан'},
+      {name:'description', label:'Описание (публичное)', textarea:true, full:true, placeholder:'Без раскрытия конфиденциальных деталей'},
+      {name:'bizplan', label:'Бизнес-план (закрытое)', type:'file', full:true, hint:'PDF, открывается только после оплаты Развёрнутой карточки'},
+      {name:'finmodel', label:'Финансовая модель (закрытое)', type:'file', full:true, hint:'Excel, открывается только после оплаты Развёрнутой карточки'},
+      {name:'contactName', label:'Ф.И.О. контактного лица', full:true},
+      {name:'contactInfo', label:'Контакты (телефон, e-mail)', full:true},
+    ],
+  },
+  'franchiser': {
+    title: 'Новая публикация — франшиза',
+    sub: 'Карточка франшизы для привлечения франчайзи',
+    fields: [
+      {name:'brand', label:'Название бренда', required:true, full:true, placeholder:'Например, «Stepnoy Kitchen»'},
+      {name:'industry', label:'Отрасль', placeholder:'HoReCa, Retail, Beauty, Education...'},
+      {name:'points', label:'Существующие точки', placeholder:'например, 12 точек, СНГ'},
+      {name:'paushal', label:'Паушальный взнос', placeholder:'например, от 35 млн KZT'},
+      {name:'royalty', label:'Роялти', placeholder:'например, 5% от выручки'},
+      {name:'marketing', label:'Маркетинговый сбор', placeholder:'например, 2%'},
+      {name:'payback', label:'Срок окупаемости', placeholder:'например, 18 мес.'},
+      {name:'geography', label:'География франшизы', placeholder:'СНГ, Турция, ОАЭ...'},
+      {name:'description', label:'Описание бизнес-модели', textarea:true, full:true},
+      {name:'support', label:'Поддержка франчайзи', textarea:true, full:true, placeholder:'Обучение, маркетинг, ИТ-системы, ребрендинг...'},
+      {name:'standards', label:'Стандарты и пакет (закрытое)', type:'file', full:true, hint:'Открывается только после оплаты Развёрнутой карточки'},
+      {name:'contactName', label:'Контактное лицо', full:true},
+      {name:'contactInfo', label:'Контакты (телефон, e-mail)', full:true},
+    ],
+  },
+  'biz-seller': {
+    title: 'Новая публикация — готовый бизнес',
+    sub: 'Карточка действующего бизнеса на продажу',
+    fields: [
+      {name:'businessType', label:'Тип бизнеса', required:true, full:true, placeholder:'Например, «Завод металлообработки»'},
+      {name:'industry', label:'Отрасль', placeholder:'Производство, Ритейл, Услуги, IT...'},
+      {name:'location', label:'Локация', placeholder:'Алматы, Казахстан'},
+      {name:'founded', label:'Год основания', placeholder:'например, 2015'},
+      {name:'employees', label:'Количество сотрудников', placeholder:'например, 85'},
+      {name:'revenue', label:'Годовой оборот', placeholder:'например, 1,2 млрд KZT'},
+      {name:'ebitda', label:'EBITDA', placeholder:'например, 240 млн KZT (20%)'},
+      {name:'price', label:'Запрашиваемая цена', placeholder:'например, 850 млн KZT'},
+      {name:'reason', label:'Причина продажи', full:true, placeholder:'Переезд, выход из бизнеса, смена деятельности...'},
+      {name:'description', label:'Описание (публичное)', textarea:true, full:true, placeholder:'Без раскрытия названия и деталей'},
+      {name:'whatIncluded', label:'Что входит в продажу', textarea:true, full:true, placeholder:'Активы, бренд, клиентская база, контракты...'},
+      {name:'finReports', label:'Финансовая отчётность (закрытое)', type:'file', full:true, hint:'Открывается только после NDA + Развёрнутой карточки'},
+      {name:'contactName', label:'Контактное лицо', full:true},
+      {name:'contactInfo', label:'Контакты (телефон, e-mail)', full:true},
+    ],
+  },
+  'goods-seller': {
+    title: 'Новая публикация — товары / сырьё',
+    sub: 'Карточка товара или сырьевой партии',
+    fields: [
+      {name:'product', label:'Название продукции', required:true, full:true, placeholder:'Например, «Фиброцементные плиты»'},
+      {name:'category', label:'Категория', type:'select', options:['Сырьё','Готовая продукция','Полуфабрикаты','Комплектующие']},
+      {name:'industry', label:'Отрасль / сфера применения', placeholder:'Стройматериалы, Метизы, Текстиль...'},
+      {name:'volume', label:'Объём поставки в месяц', placeholder:'например, 8 000 тонн'},
+      {name:'minBatch', label:'Минимальная партия', placeholder:'например, 100 тонн'},
+      {name:'price', label:'Цена / условия', placeholder:'например, $850 / тонна FCA Алматы'},
+      {name:'incoterms', label:'Условия поставки (Инкотермс)', placeholder:'FCA, EXW, CIF, DAP...'},
+      {name:'payment', label:'Условия оплаты', placeholder:'30% предоплата + 70% по факту, аккредитив...'},
+      {name:'certificates', label:'Сертификаты', placeholder:'СТ-1, СТ-КЗ, ISO 9001, Халяль...'},
+      {name:'composition', label:'Состав / характеристики', textarea:true, full:true, placeholder:'Технические характеристики, состав, ТУ'},
+      {name:'description', label:'Описание', textarea:true, full:true},
+      {name:'productionDocs', label:'Сертификаты производства (закрытое)', type:'file', full:true, hint:'PDF, открывается только после оплаты Развёрнутой карточки'},
+      {name:'contactName', label:'Контактное лицо', full:true},
+      {name:'contactInfo', label:'Контакты (телефон, e-mail)', full:true},
+    ],
+  },
+};
+
+function showPublication(sellerType) {
+  // Алиасы для legacy типов
+  const aliasMap = {'franchise':'franchiser','sale':'biz-seller'};
+  const key = aliasMap[sellerType] || sellerType;
+  const form = PUBLICATION_FORMS[key];
+  if (!form) {
+    // Для покупателей публикация недоступна
+    alert('Раздел «Новая публикация» доступен для продавцов: Соискателей, Франчайзеров, Продавцов готового бизнеса, Продавцов товаров и сырья.');
+    return;
+  }
+  document.querySelectorAll('[id^="type-"]').forEach(d => d.style.display = 'none');
+  document.getElementById('type-publication').style.display = 'block';
+  document.getElementById('pubFormTitle').textContent = form.title;
+  document.getElementById('pubFormSub').textContent = form.sub;
+  const grid = document.getElementById('pubFormFields');
+  grid.innerHTML = '';
+  form.fields.forEach(f => {
+    const wrap = document.createElement('div');
+    wrap.className = 'res-field' + (f.full ? ' full' : '');
+    const label = document.createElement('label');
+    label.setAttribute('for', 'pub-' + f.name);
+    label.textContent = f.label + (f.required ? ' *' : '');
+    wrap.appendChild(label);
+    let input;
+    if (f.type === 'select') {
+      input = document.createElement('select');
+      input.innerHTML = '<option value="" disabled selected>Выберите…</option>' + f.options.map(o => `<option>${o}</option>`).join('');
+    } else if (f.textarea) {
+      input = document.createElement('textarea');
+      input.placeholder = f.placeholder || '';
+    } else if (f.type === 'file') {
+      input = document.createElement('input'); input.type = 'file';
+    } else {
+      input = document.createElement('input'); input.type = 'text';
+      input.placeholder = f.placeholder || '';
+    }
+    input.id = 'pub-' + f.name; input.name = f.name; if (f.required) input.required = true;
+    wrap.appendChild(input);
+    if (f.hint) {
+      const hint = document.createElement('div'); hint.className = 'res-field-hint';
+      hint.textContent = f.hint;
+      wrap.appendChild(hint);
+    }
+    grid.appendChild(wrap);
+  });
+  // Подписка на сабмит — заглушка
+  const fr = document.getElementById('pubForm');
+  fr.onsubmit = (e) => { e.preventDefault(); alert('Карточка готова к публикации. Опубликовать?\n\n(Подключение к API Реестра — следующий шаг.)'); };
+  window.scrollTo(0,0);
 }
 
 // При смене hash перерисуем сайдбар — чтобы подсветка активного пункта обновилась
@@ -1068,11 +1236,37 @@ const SIDEBAR_BUYER = [
   ]},
 ];
 
+// 8 категорий ↔ 3 типа сайдбара (продавец А / продавец Б / покупатель)
 const sidebars = {
-  seeker: SIDEBAR_SELLER_A,
-  investor: SIDEBAR_BUYER,
-  franchise: SIDEBAR_SELLER_A, // по умолчанию Франчайзер (продавец); Франчайзи может использовать «Перейти в Реестр»
-  sale: SIDEBAR_SELLER_A,      // по умолчанию продавец готового бизнеса; покупатели — через Реестр
+  // Продавцы группы А
+  'seeker': SIDEBAR_SELLER_A,
+  'franchiser': SIDEBAR_SELLER_A,
+  'biz-seller': SIDEBAR_SELLER_A,
+  // Продавцы группы Б
+  'goods-seller': SIDEBAR_SELLER_B,
+  // Покупатели (группа В)
+  'investor': SIDEBAR_BUYER,
+  'franchisee': SIDEBAR_BUYER,
+  'biz-buyer': SIDEBAR_BUYER,
+  'goods-buyer': SIDEBAR_BUYER,
+  // Старые алиасы (на случай обращения по legacy-имени)
+  'franchise': SIDEBAR_SELLER_A,
+  'sale': SIDEBAR_SELLER_A,
+};
+
+// 8 категорий ↔ 4 существующие type-панели (seeker/investor/franchise/sale)
+const TYPE_ALIAS = {
+  'seeker': 'seeker',
+  'franchiser': 'franchise',
+  'biz-seller': 'sale',
+  'goods-seller': 'sale',
+  'investor': 'investor',
+  'franchisee': 'franchise',
+  'biz-buyer': 'sale',
+  'goods-buyer': 'sale',
+  // Legacy fall-through
+  'franchise': 'franchise',
+  'sale': 'sale',
 };
 
 const icons = {
@@ -1131,7 +1325,8 @@ function buildSidebar(type){
             alert('Раздел «Документы» появится после публикации первого объявления.');
           }
         } else if (item.id === 'new-publication') {
-          location.href = '/verify.html';
+          // Открываем форму публикации, специфичную для текущей категории продавца
+          showPublication(currentType);
         } else {
           alert('Раздел в разработке');
         }
@@ -1155,10 +1350,13 @@ function buildSidebar(type){
 }
 
 function showPanel(type, panelId){
-  currentPanel = type + '-' + panelId;
+  // Маппим 8 категорий на 4 существующие type-панели через TYPE_ALIAS
+  const panelType = (TYPE_ALIAS && TYPE_ALIAS[type]) || type;
+  currentPanel = panelType + '-' + panelId;
   document.querySelectorAll('[id^="type-"]').forEach(d => d.style.display = 'none');
-  document.getElementById('type-' + type).style.display = 'block';
-  document.querySelectorAll('#type-' + type + ' .panel').forEach(p => p.classList.remove('on'));
+  const panelContainer = document.getElementById('type-' + panelType);
+  if (panelContainer) panelContainer.style.display = 'block';
+  document.querySelectorAll('#type-' + panelType + ' .panel').forEach(p => p.classList.remove('on'));
   const target = document.getElementById(currentPanel);
   if(target) target.classList.add('on');
   buildSidebar(type);
@@ -1167,7 +1365,8 @@ function showPanel(type, panelId){
 
 function switchType(type, btn){
   currentType = type;
-  currentPanel = type + '-dashboard';
+  const panelType = (TYPE_ALIAS && TYPE_ALIAS[type]) || type;
+  currentPanel = panelType + '-dashboard';
   document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   showPanel(type, 'dashboard');
@@ -1217,7 +1416,18 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   }
   if (!AC.requireAuth('/login.html')) return;
 
-  const ROLE_TO_TYPE = { SEEKER: 'seeker', INVESTOR: 'investor', FRANCHISE: 'franchise', SALE: 'sale', FRANCHISER: 'franchise', FRANCHISEE: 'franchise', BIZ_SELLER: 'sale', BIZ_BUYER: 'sale', GOODS_SELLER: 'sale', GOODS_BUYER: 'sale' };
+  const ROLE_TO_TYPE = {
+    SEEKER: 'seeker',
+    INVESTOR: 'investor',
+    FRANCHISE: 'franchiser',     // legacy
+    SALE: 'biz-seller',          // legacy
+    FRANCHISER: 'franchiser',
+    FRANCHISEE: 'franchisee',
+    BIZ_SELLER: 'biz-seller',
+    BIZ_BUYER: 'biz-buyer',
+    GOODS_SELLER: 'goods-seller',
+    GOODS_BUYER: 'goods-buyer'
+  };
   const ROLE_LABEL = { SEEKER: 'Соискатель инвестиций', INVESTOR: 'Инвестор', FRANCHISE: 'Франчайзер / Франчайзи', SALE: 'Продавец / Покупатель бизнеса', FRANCHISER: 'Франчайзер', FRANCHISEE: 'Франчайзи', BIZ_SELLER: 'Продавец готового бизнеса', BIZ_BUYER: 'Покупатель готового бизнеса', GOODS_SELLER: 'Продавец товаров и сырья', GOODS_BUYER: 'Покупатель товаров и сырья' };
   const PROFILE_FIELDS = ['companyName','bin','industry','region','description','descriptionFull','recommendation','website','instagram','facebook','linkedin','telegram','whatsapp','foundedYear','revenue','employees','investmentNeed','investmentGoal','contactName','contactPhone','contactEmail'];
 
