@@ -90,6 +90,22 @@
     async adminVerify(id) { return request('POST', '/admin/profiles/' + id + '/verify', null, true); },
     async adminReject(id, reason) { return request('POST', '/admin/profiles/' + id + '/reject', { reason }, true); },
 
+    // ── Публикации в Реестре ──
+    async listPublications(opts) {
+      const q = new URLSearchParams();
+      if (opts && opts.type) q.set('type', opts.type);
+      if (opts && opts.industry) q.set('industry', opts.industry);
+      if (opts && opts.region) q.set('region', opts.region);
+      if (opts && opts.limit) q.set('limit', String(opts.limit));
+      const qs = q.toString();
+      return request('GET', '/publications' + (qs ? '?' + qs : ''), null, false);
+    },
+    async getPublication(id) { return request('GET', '/publications/' + id, null, false); },
+    async myPublications() { return request('GET', '/publications/mine', null, true); },
+    async createPublication(payload) { return request('POST', '/publications', payload, true); },
+    async updatePublication(id, payload) { return request('PUT', '/publications/' + id, payload, true); },
+    async deletePublication(id) { return request('DELETE', '/publications/' + id, null, true); },
+
     getUser, getToken, clearSession,
     requireAuth(redirect) {
       if (!getToken()) {

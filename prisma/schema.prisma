@@ -40,6 +40,7 @@ model User {
 
   profile       CompanyProfile?
   refreshTokens RefreshToken[]
+  publications  Publication[]
 
   @@index([email])
 }
@@ -81,6 +82,47 @@ model CompanyProfile {
   updatedAt     DateTime      @updatedAt
 
   @@index([status])
+}
+
+enum PublicationType {
+  INVEST_PROJECT     // Соискатели инвестиций
+  FRANCHISE          // Франчайзеры
+  BUSINESS_FOR_SALE  // Продавцы готового бизнеса
+  GOODS              // Продавцы товаров и сырья
+}
+
+enum PublicationStatus {
+  DRAFT
+  PUBLISHED
+  REMOVED
+}
+
+model Publication {
+  id          String            @id @default(cuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type        PublicationType
+  status      PublicationStatus @default(PUBLISHED)
+
+  // Денормализованные поля для каталога — индексируются для быстрого фильтра
+  title       String
+  industry    String?
+  region      String?
+  // Краткое описание для «короткой» карточки Реестра
+  shortDesc   String?
+  // Цена / паушал / мин. чек — текстом, формат свободный
+  priceLabel  String?
+  // Полный набор полей формы (4 типа разные) — храним как JSON
+  data        Json
+
+  publishedAt DateTime?         @default(now())
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([type, status])
+  @@index([publishedAt])
 }
 
 model RefreshToken {

@@ -1404,9 +1404,63 @@ function showPublication(sellerType) {
     }
     grid.appendChild(wrap);
   });
-  // Подписка на сабмит — заглушка
+  // Подписка на сабмит — POST в /publications
   const fr = document.getElementById('pubForm');
-  fr.onsubmit = (e) => { e.preventDefault(); alert('Карточка готова к публикации. Опубликовать?\n\n(Подключение к API Реестра — следующий шаг.)'); };
+  fr.onsubmit = async (e) => {
+    e.preventDefault();
+    if (!AC.getToken()) { alert('Войдите в кабинет, чтобы опубликовать карточку.'); location.href = '/login.html'; return; }
+
+    // Собираем все поля формы в объект data
+    const formData = {};
+    form.fields.forEach(f => {
+      const el = document.getElementById('pub-' + f.name);
+      if (!el) return;
+      if (f.type === 'file') return; // файлы пока не загружаем, добавим в следующем шаге
+      const v = el.value && el.value.trim();
+      if (v) formData[f.name] = v;
+    });
+
+    // Маппим 8 категорий в 4 enum-типа Publication
+    const SELLER_TO_PUBTYPE = {
+      'seeker': 'INVEST_PROJECT',
+      'franchiser': 'FRANCHISE',
+      'biz-seller': 'BUSINESS_FOR_SALE',
+      'goods-seller': 'GOODS',
+      // legacy
+      'franchise': 'FRANCHISE',
+      'sale': 'BUSINESS_FOR_SALE',
+    };
+    const pubType = SELLER_TO_PUBTYPE[sellerType] || 'INVEST_PROJECT';
+
+    // Денормализованные поля для каталога — зависят от типа
+    const title = formData.projectName || formData.brand || formData.businessType || formData.product || '';
+    if (!title || title.length < 2) { alert('Укажите название/бренд/тип бизнеса/продукт — это обязательное поле'); return; }
+    const priceLabel = formData.amount || formData.paushal || formData.price || '';
+    const shortDesc = formData.description || '';
+
+    const submitBtn = fr.querySelector('.res-submit-btn');
+    const oldText = submitBtn.textContent;
+    submitBtn.disabled = true; submitBtn.textContent = 'Публикуем…';
+    try {
+      const { publication } = await AC.createPublication({
+        type: pubType,
+        title,
+        industry: formData.industry || null,
+        region: formData.location || null,
+        shortDesc: shortDesc || null,
+        priceLabel: priceLabel || null,
+        data: formData,
+      });
+      alert('Готово! Карточка опубликована в Реестре.\n\nID: ' + publication.id);
+      // Возвращаемся в Обзор
+      returnToCabinet();
+    } catch (err) {
+      console.error('Publication failed:', err);
+      alert('Не удалось опубликовать: ' + (err.message || 'попробуйте ещё раз'));
+    } finally {
+      submitBtn.disabled = false; submitBtn.textContent = oldText;
+    }
+  };
   window.scrollTo(0,0);
 }
 
