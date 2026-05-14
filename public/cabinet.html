@@ -304,23 +304,32 @@ strong{color:var(--ink);font-weight:600}
         <div class="page-hd">
           <div class="page-hd-left">
             <h2>Личный кабинет</h2>
-            <p>Управление профилем, документами и услугами</p>
-          </div>
-          <div class="hd-actions">
-            <a class="btn-r btn-sm" href="/verify.html">Перейти к верификации</a>
           </div>
         </div>
 
-        <!-- Status banner: set by JS -->
-        <div id="status-banner" class="status-banner sb warning">
-          <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-          <div class="sb-text">
-            <h4 id="status-title">Профиль не верифицирован</h4>
-            <p id="status-desc">Заполните профиль и отправьте его на проверку</p>
+        <!-- Унифицированная инфо-плашка: ценность верификации + скидка резидентам. Без «светофора». -->
+        <div class="info-banner" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+          <div style="flex-shrink:0;color:#C5963A;font-size:1.25rem;line-height:1">★</div>
+          <div style="flex:1;font-size:.85rem;color:var(--ink2);line-height:1.55">
+            <strong style="color:var(--ink)">Верифицируйте карточку</strong> — это повышает шансы на&nbsp;матчмейкинг с&nbsp;надёжным партнёром. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — скидка 10% на&nbsp;все услуги.</strong>
           </div>
-          <div class="sb-actions" id="status-actions">
-            <a class="btn-r btn-sm" href="/verify.html">Заполнить анкету</a>
+        </div>
+
+        <!-- Скрытый legacy status-banner — оставляем DOM для совместимости с JS updateStatusBanner, но не отображаем -->
+        <div id="status-banner" class="status-banner sb warning" style="display:none">
+          <div class="sb-icon"></div>
+          <div class="sb-text"><h4 id="status-title"></h4><p id="status-desc"></p></div>
+          <div class="sb-actions" id="status-actions"></div>
+        </div>
+
+        <!-- Кошелёк (токены): 1 токен = 1 открытие развёрнутой карточки. Психологически проще тратить токены, чем деньги. -->
+        <div class="wallet-card" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
+          <div>
+            <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:.35rem">Кошелёк · Токены</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;line-height:1"><span id="walletBalance">0</span> <small style="font-size:.75rem;font-weight:400;opacity:.7">токенов</small></div>
+            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
           </div>
+          <button class="btn-r btn-sm" style="background:#C5963A;border:none;color:#fff;font-weight:600;padding:.55rem 1.1rem;border-radius:3px;cursor:pointer" onclick="alert('Пакеты токенов:\n· 10 шт. — $50\n· 25 шт. — $115 (-8%)\n· 50 шт. — $220 (-12%)\n· 100 шт. — $400 (-20%)\n\nПокупка подключим следующим шагом.')">Пополнить →</button>
         </div>
 
         <!-- Stats -->
@@ -778,19 +787,13 @@ strong{color:var(--ink);font-weight:600}
         <div class="page-hd">
           <div class="page-hd-left">
             <h2 id="actDtTitle">Активность</h2>
-            <p id="actDtSub">Подробности и стоимость</p>
-          </div>
-          <div class="hd-actions">
-            <a href="/pricing.html" class="btn-o btn-sm">К тарифам</a>
-            <button class="btn-o btn-sm" onclick="returnToCabinet()">Назад в кабинет</button>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card" id="actDtCard">
           <div class="card-body" style="display:flex;flex-direction:column;gap:1.25rem">
             <div style="display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap">
               <div style="flex:1;min-width:280px">
-                <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem" id="actDtBadge">Услуга</div>
                 <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.85rem;color:var(--ink);font-weight:500;line-height:1.2;margin:0 0 .85rem" id="actDtHead">—</h3>
                 <p style="font-size:var(--t2);color:var(--ink2);line-height:1.65;margin:0" id="actDtDesc">—</p>
               </div>
@@ -806,15 +809,9 @@ strong{color:var(--ink);font-weight:600}
               <ul style="margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.4rem" id="actDtIncludes"></ul>
             </div>
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-              <div style="background:#fafafa;border-radius:6px;padding:.85rem 1rem">
-                <div style="font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.3rem">Длительность</div>
-                <div style="font-size:.92rem;color:var(--ink);font-weight:500" id="actDtDuration">—</div>
-              </div>
-              <div style="background:#fafafa;border-radius:6px;padding:.85rem 1rem">
-                <div style="font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.3rem">Подходит для</div>
-                <div style="font-size:.92rem;color:var(--ink);font-weight:500" id="actDtAudience">—</div>
-              </div>
+            <div style="background:#fafafa;border-radius:6px;padding:.85rem 1rem;max-width:300px">
+              <div style="font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.3rem">Длительность</div>
+              <div style="font-size:.92rem;color:var(--ink);font-weight:500" id="actDtDuration">—</div>
             </div>
 
             <div style="display:flex;gap:.85rem;flex-wrap:wrap;margin-top:.5rem" id="actDtActions">
@@ -1182,28 +1179,29 @@ function showActivity(id) {
   // Hide all user-type sections
   document.querySelectorAll('[id^="type-"]').forEach(d => d.style.display = 'none');
   document.getElementById('type-activity').style.display = 'block';
-  // Fill the panel
-  document.getElementById('actDtBadge').textContent = data.badge;
-  document.getElementById('actDtHead').textContent = data.title;
+  // Заголовок страницы
   document.getElementById('actDtTitle').textContent = data.title;
-  document.getElementById('actDtSub').textContent = data.audience;
-  document.getElementById('actDtDesc').textContent = data.desc;
+  // Очищаем неактивный текст (eGov/Statsnet) — убираем из текста перед рендером
+  const cleanText = (s) => (s || '').replace(/\s*\(eGov\s*\/\s*Statsnet[^)]*\)/g, '').replace(/\s*по\s*Statsnet\s*/g, ' ');
+  document.getElementById('actDtHead').textContent = data.title;
+  document.getElementById('actDtDesc').textContent = cleanText(data.desc);
   document.getElementById('actDtPrice').textContent = data.price;
   document.getElementById('actDtPriceSub').textContent = data.priceSub || '';
   document.getElementById('actDtDuration').textContent = data.duration;
-  document.getElementById('actDtAudience').textContent = data.audience;
   const ul = document.getElementById('actDtIncludes');
   ul.innerHTML = '';
   data.includes.forEach(it => {
     const li = document.createElement('li');
     li.style.cssText = 'color:var(--ink2);line-height:1.55;font-size:var(--t2)';
-    li.textContent = it;
+    li.textContent = cleanText(it);
     ul.appendChild(li);
   });
 
-  // Сбрасываем кастомный extras-блок
+  // Сбрасываем кастомный extras-блок и видимость основной карточки
   const extras = document.getElementById('actDtExtras');
+  const mainCard = document.getElementById('actDtCard');
   if (extras) extras.innerHTML = '';
+  if (mainCard) mainCard.style.display = '';
 
   // Спец-UI для конкретных активностей
   if (id === 'deal-support' && extras) {
@@ -1211,6 +1209,8 @@ function showActivity(id) {
     if (tpl) extras.appendChild(tpl.content.cloneNode(true));
     initDealSupportUI();
   } else if (id === 'messages' && extras) {
+    // Сообщения бесплатные — прячем «деталку услуги» сверху, показываем только чат
+    if (mainCard) mainCard.style.display = 'none';
     const tpl = document.getElementById('tpl-messages');
     if (tpl) extras.appendChild(tpl.content.cloneNode(true));
     initMessagesUI();
@@ -1502,7 +1502,10 @@ setTimeout(() => { handleActivityHash(); }, 50);
 // Меню сайдбара — структура соответствует карточкам с страницы «Тарифы».
 // Каждый пункт-услуга ссылается на activity-id из ACTIVITIES (раскрывает деталку).
 const SIDEBAR_SELLER_A = [
-  {label:'',sections:[{id:'dashboard',icon:'home',text:'Обзор'}]},
+  {label:'',sections:[
+    {id:'dashboard',icon:'home',text:'Обзор'},
+    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
+  ]},
   {label:'Услуги верификации',sections:[
     {id:'a-verify-company',icon:'check',text:'Верификация компании',activity:'verify-company'},
     {id:'a-market-analysis',icon:'chart',text:'Анализ рынка',activity:'market-analysis'},
@@ -1515,15 +1518,16 @@ const SIDEBAR_SELLER_A = [
     {id:'new-publication',icon:'plus',text:'+ Новая публикация'},
   ]},
   {label:'Сервис',sections:[
-    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
     {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
     {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
-    {id:'docs',icon:'file',text:'Документы'},
   ]},
 ];
 
 const SIDEBAR_SELLER_B = [
-  {label:'',sections:[{id:'dashboard',icon:'home',text:'Обзор'}]},
+  {label:'',sections:[
+    {id:'dashboard',icon:'home',text:'Обзор'},
+    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
+  ]},
   {label:'Услуги верификации',sections:[
     {id:'b-verify-company',icon:'check',text:'Верификация компании',activity:'verify-company'},
     {id:'b-product-certification',icon:'check',text:'Состав / сертификаты',activity:'product-certification'},
@@ -1535,15 +1539,16 @@ const SIDEBAR_SELLER_B = [
     {id:'new-publication',icon:'plus',text:'+ Новая публикация'},
   ]},
   {label:'Сервис',sections:[
-    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
     {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
     {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
-    {id:'docs',icon:'file',text:'Документы'},
   ]},
 ];
 
 const SIDEBAR_BUYER = [
-  {label:'',sections:[{id:'dashboard',icon:'home',text:'Обзор (избранное)'}]},
+  {label:'',sections:[
+    {id:'dashboard',icon:'home',text:'Обзор (избранное)'},
+    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
+  ]},
   {label:'Доступ к Реестру',sections:[
     {id:'v-expanded-card',icon:'card',text:'Развёрнутая информация',activity:'expanded-card'},
     {id:'v-verification-access',icon:'check',text:'Развёрнутый отчёт',activity:'verification-access'},
@@ -1551,10 +1556,8 @@ const SIDEBAR_BUYER = [
     {id:'v-deal-support',icon:'handshake',text:'Сопровождение сделки',activity:'deal-support'},
   ]},
   {label:'Сервис',sections:[
-    {id:'messages',icon:'message',text:'Сообщения',activity:'messages'},
     {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
     {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
-    {id:'docs',icon:'file',text:'Документы'},
   ]},
 ];
 
@@ -1686,6 +1689,8 @@ function showPanel(type, panelId){
 }
 
 function switchType(type, btn){
+  // Сбрасываем activity-хэш — иначе курсор в Менюшке остаётся на той же услуге
+  if (location.hash) history.replaceState(null, '', '/cabinet.html');
   currentType = type;
   const panelType = (TYPE_ALIAS && TYPE_ALIAS[type]) || type;
   currentPanel = panelType + '-dashboard';
