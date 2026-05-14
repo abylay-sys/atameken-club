@@ -123,6 +123,12 @@
     async spendCard(publicationId) { return request('POST', '/wallet/spend/card', { publicationId }, true); },
     async purchasedCards() { return request('GET', '/wallet/purchased', null, true); },
 
+    // ── Kaspi Pay ──
+    async paymentConfig() { return request('GET', '/wallet/payment/config', null, false); },
+    async paymentInit(packageSize) { return request('POST', '/wallet/payment/init', { packageSize }, true); },
+    async paymentStatus(id) { return request('GET', '/wallet/payment/' + encodeURIComponent(id) + '/status', null, true); },
+    async paymentMockComplete(id) { return request('POST', '/wallet/payment/' + encodeURIComponent(id) + '/mock-complete', null, true); },
+
     getUser, getToken, clearSession,
     requireAuth(redirect) {
       if (!getToken()) {

@@ -1386,21 +1386,16 @@ async function showPackages(){
     document.head.appendChild(s);
   }
 
-  // Wire buttons
+  // Wire buttons — теперь через Kaspi Pay (modal с QR + polling)
   grid.querySelectorAll('.pkg-buy').forEach(btn => {
     btn.addEventListener('click', async () => {
       const size = Number(btn.dataset.size);
-      const pkg = TOKEN_PACKAGES.find(p => p.size === size);
-      if (!confirm(`Купить пакет на ${pkg.size} токенов за $${pkg.priceUsd}?\n\n(Реальная оплата через Kaspi/Stripe — подключим следующим спринтом. Сейчас токены зачислятся сразу для теста.)`)) return;
-      btn.disabled = true; btn.textContent = 'Покупаем…';
+      btn.disabled = true; btn.textContent = 'Готовим счёт…';
       try {
-        const { wallet } = await AC.purchaseTokens(size);
-        alert('Готово! На балансе теперь ' + wallet.balance + ' токенов.');
-        // Обновляем все индикаторы баланса в кабинете
-        document.querySelectorAll('.walletBalance').forEach(el => el.textContent = wallet.balance);
-        loadPackageHistory();
+        const { payment } = await AC.paymentInit(size);
+        openKaspiPayModal(payment);
       } catch (e) {
-        alert('Не удалось купить: ' + (e.message || 'ошибка'));
+        alert('Не удалось создать счёт: ' + (e.message || 'ошибка'));
       } finally {
         btn.disabled = false; btn.textContent = 'Купить';
       }
@@ -1409,6 +1404,146 @@ async function showPackages(){
 
   await loadPackageHistory();
 }
+
+// ════════════════════════════════════════════════════════════════
+// Kaspi Pay — модальное окно с QR-кодом + поллинг статуса
+// ════════════════════════════════════════════════════════════════
+let _kaspiPollTimer = null;
+function openKaspiPayModal(payment){
+  closeKaspiPayModal();
+  if (!document.getElementById('kaspi-modal-styles')) {
+    const s = document.createElement('style');
+    s.id = 'kaspi-modal-styles';
+    s.textContent = `
+      .kp-backdrop{position:fixed;inset:0;background:rgba(15,22,32,.65);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+      .kp-modal{background:#fff;border-radius:10px;max-width:440px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden;position:relative;animation:kpIn .25s ease-out}
+      @keyframes kpIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+      .kp-head{background:#F14635;color:#fff;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+      .kp-head-l{flex:1}
+      .kp-head h3{margin:0;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.04em}
+      .kp-head p{margin:.2rem 0 0;font-size:.72rem;opacity:.85;letter-spacing:.04em}
+      .kp-close{background:none;border:0;color:#fff;font-size:1.5rem;cursor:pointer;line-height:1;padding:.25rem;opacity:.7;transition:opacity .2s}
+      .kp-close:hover{opacity:1}
+      .kp-body{padding:1.5rem;text-align:center}
+      .kp-amount{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--ink);font-weight:600;line-height:1;margin-bottom:.4rem}
+      .kp-amount small{font-size:.85rem;color:var(--ink4);font-weight:400;margin-left:.3rem}
+      .kp-tokens{font-size:.78rem;color:var(--ink3);margin-bottom:1.25rem}
+      .kp-qr-box{display:inline-block;background:#fff;border:8px solid #F14635;border-radius:8px;padding:.5rem;box-shadow:0 8px 24px rgba(241,70,53,.18);margin-bottom:1rem}
+      .kp-qr-box img,.kp-qr-box svg{display:block;width:200px;height:200px}
+      .kp-instr{font-size:.78rem;color:var(--ink2);line-height:1.55;margin-bottom:1rem}
+      .kp-ref{display:inline-block;background:#fafafa;border:1px dashed var(--border);padding:.4rem .75rem;font-family:'Courier New',monospace;font-size:.82rem;color:var(--ink);border-radius:3px;letter-spacing:.05em;margin-bottom:1rem}
+      .kp-status{padding:.7rem 1rem;border-radius:6px;font-size:.82rem;font-weight:500;margin-bottom:.85rem}
+      .kp-status.waiting{background:#fffaf0;color:#7a5810;border:1px solid #e9d8a8}
+      .kp-status.success{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+      .kp-status.error{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+      .kp-actions{display:flex;flex-direction:column;gap:.55rem}
+      .kp-btn{padding:.75rem 1rem;border-radius:5px;font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border:0;transition:background .2s;font-family:'Inter',sans-serif;text-decoration:none;display:inline-block;text-align:center}
+      .kp-btn-primary{background:#F14635;color:#fff}
+      .kp-btn-primary:hover{background:#d63a2b}
+      .kp-btn-mock{background:#16a34a;color:#fff}
+      .kp-btn-mock:hover{background:#15803d}
+      .kp-btn-out{background:#fff;color:var(--ink2);border:1px solid var(--border)}
+      .kp-btn-out:hover{border-color:var(--red);color:var(--red)}
+      .kp-mock-note{font-size:.65rem;color:var(--ink4);margin-top:.5rem;font-style:italic}
+    `;
+    document.head.appendChild(s);
+  }
+  const backdrop = document.createElement('div');
+  backdrop.className = 'kp-backdrop';
+  backdrop.id = 'kp-backdrop';
+  // Kaspi QR URL — обычно содержит payment URL. Используем kaspi-style QR:
+  // ссылку или deep-link. Для рендера QR используем сервис api.qrserver.com.
+  const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(payment.kaspiPayUrl) + '&color=F14635';
+  const isMock = payment.mode === 'mock';
+  backdrop.innerHTML = `
+    <div class="kp-modal" role="dialog" aria-modal="true">
+      <div class="kp-head">
+        <div class="kp-head-l">
+          <h3>KASPI PAY</h3>
+          <p>Оплата пакета токенов · ATAMEKEN Club</p>
+        </div>
+        <button class="kp-close" aria-label="Закрыть" onclick="closeKaspiPayModal()">×</button>
+      </div>
+      <div class="kp-body">
+        <div class="kp-amount">${payment.priceKzt.toLocaleString('ru-KZ')}<small>тг</small></div>
+        <div class="kp-tokens">${payment.tokensAmount} токенов · $${payment.priceUsd}</div>
+        <div class="kp-qr-box"><img src="${qrSrc}" alt="QR код Kaspi"/></div>
+        <div class="kp-instr">Отсканируйте QR-код в&nbsp;приложении <strong>Kaspi.kz</strong> или нажмите кнопку ниже, чтобы оплатить с&nbsp;этого устройства.</div>
+        <div class="kp-ref">Номер счёта: <strong>${payment.reference}</strong></div>
+        <div class="kp-status waiting" id="kp-status-box">Ожидаем оплату…</div>
+        <div class="kp-actions">
+          ${isMock
+            ? `<button class="kp-btn kp-btn-mock" id="kp-mock-pay">Я&nbsp;оплатил (mock)</button><div class="kp-mock-note">Сейчас сайт в&nbsp;тест-режиме — реальная оплата подключится после получения merchant-аккаунта Kaspi.</div>`
+            : `<a class="kp-btn kp-btn-primary" href="${payment.kaspiPayUrl}" target="_blank" rel="noopener">Открыть Kaspi.kz →</a><button class="kp-btn kp-btn-out" id="kp-check">Проверить оплату</button>`
+          }
+          <button class="kp-btn kp-btn-out" onclick="closeKaspiPayModal()">Отмена</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  // Mock-completion: одной кнопкой подтверждаем оплату
+  const mockBtn = document.getElementById('kp-mock-pay');
+  if (mockBtn) mockBtn.addEventListener('click', async () => {
+    mockBtn.disabled = true; mockBtn.textContent = 'Подтверждаем…';
+    try {
+      await AC.paymentMockComplete(payment.id);
+      onKaspiPaymentCompleted();
+    } catch (e) {
+      _kaspiSetStatus('error', 'Не удалось подтвердить: ' + (e.message || 'ошибка'));
+      mockBtn.disabled = false; mockBtn.textContent = 'Я оплатил (mock)';
+    }
+  });
+  // Manual check (для real-режима)
+  const checkBtn = document.getElementById('kp-check');
+  if (checkBtn) checkBtn.addEventListener('click', () => _kaspiPoll(payment.id));
+
+  // Authostart polling каждые 4 секунды (в real-режиме)
+  if (!isMock) {
+    _kaspiPollTimer = setInterval(() => _kaspiPoll(payment.id), 4000);
+  }
+}
+function closeKaspiPayModal(){
+  const bd = document.getElementById('kp-backdrop');
+  if (bd) bd.remove();
+  if (_kaspiPollTimer) { clearInterval(_kaspiPollTimer); _kaspiPollTimer = null; }
+}
+function _kaspiSetStatus(kind, text){
+  const box = document.getElementById('kp-status-box');
+  if (!box) return;
+  box.className = 'kp-status ' + kind;
+  box.textContent = text;
+}
+async function _kaspiPoll(paymentId){
+  try {
+    const { status } = await AC.paymentStatus(paymentId);
+    if (status === 'COMPLETED') {
+      onKaspiPaymentCompleted();
+    } else if (status === 'EXPIRED') {
+      _kaspiSetStatus('error', 'Счёт истёк. Создайте новый.');
+      if (_kaspiPollTimer) { clearInterval(_kaspiPollTimer); _kaspiPollTimer = null; }
+    } else if (status === 'FAILED') {
+      _kaspiSetStatus('error', 'Оплата не прошла. Попробуйте ещё раз.');
+      if (_kaspiPollTimer) { clearInterval(_kaspiPollTimer); _kaspiPollTimer = null; }
+    }
+  } catch (e) {
+    console.warn('Payment status check failed:', e);
+  }
+}
+async function onKaspiPaymentCompleted(){
+  if (_kaspiPollTimer) { clearInterval(_kaspiPollTimer); _kaspiPollTimer = null; }
+  _kaspiSetStatus('success', '✓ Оплачено! Токены зачислены.');
+  // Refresh balance и history
+  try {
+    const { wallet } = await AC.wallet();
+    document.querySelectorAll('.walletBalance').forEach(el => el.textContent = wallet.balance);
+  } catch (_) {}
+  await loadPackageHistory();
+  setTimeout(closeKaspiPayModal, 1500);
+}
+window.openKaspiPayModal = openKaspiPayModal;
+window.closeKaspiPayModal = closeKaspiPayModal;
 async function loadPackageHistory(){
   const el = document.getElementById('pkgHistory');
   try {

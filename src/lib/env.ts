@@ -32,4 +32,15 @@ export const env = {
 
   GOOGLE_SHEET_ID: optional('GOOGLE_SHEET_ID'),
   GOOGLE_SERVICE_ACCOUNT_BASE64: optional('GOOGLE_SERVICE_ACCOUNT_BASE64'),
+
+  // ── Kaspi Pay ──
+  // Курс USD→KZT для биллинга пакетов токенов. Можно поменять без передеплоя
+  // через переменную окружения KZT_PER_USD.
+  KZT_PER_USD: Number(process.env.KZT_PER_USD ?? 470),
+  // Реквизиты Kaspi-магазина. Если KASPI_MERCHANT_ID не задан — работаем в
+  // «mock»-режиме (создаём pending-платёж, кнопка «Я оплатил» сразу его
+  // подтверждает — для dev/UAT, пока не получим реальный merchant-account).
+  KASPI_MERCHANT_ID: optional('KASPI_MERCHANT_ID'),
+  KASPI_API_TOKEN: optional('KASPI_API_TOKEN'),
+  KASPI_PAY_BASE_URL: optional('KASPI_PAY_BASE_URL', 'https://kaspi.kz/pay'),
 };

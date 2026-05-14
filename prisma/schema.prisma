@@ -45,6 +45,7 @@ model User {
   complaintsFiled Complaint[]   @relation("ComplaintReporter")
   wallet        TokenWallet?
   purchasedCards PurchasedCard[]
+  pendingPayments PendingPayment[]
 
   @@index([email])
 }
@@ -146,6 +147,39 @@ model Favorite {
   @@unique([userId, publicationId])
   @@index([userId])
   @@index([publicationId])
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
+// Pending-платежи через Kaspi Pay. После init создаётся запись со статусом
+// PENDING. При получении webhook от Kaspi → COMPLETED + начисляем токены
+// (как при стандартной PURCHASE-транзакции). EXPIRED ставится cron'ом
+// или при попытке оплатить просроченный счёт.
+model PendingPayment {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageSize     Int           // 10/25/50/100
+  tokensAmount    Int
+  priceUsd        Int
+  priceKzt        Int           // зафиксирован в момент init по курсу env KZT_PER_USD
+  status          PaymentStatus @default(PENDING)
+  // Kaspi references
+  kaspiOrderId    String?       @unique
+  kaspiPaymentRef String        @unique     // короткий референс для пользователя
+  kaspiTxId       String?                   // ID транзакции после успеха
+  // Lifecycle
+  createdAt       DateTime      @default(now())
+  expiresAt       DateTime
+  completedAt     DateTime?
+
+  @@index([userId])
+  @@index([status])
 }
 
 enum TokenTransactionType {

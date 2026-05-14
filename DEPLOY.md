@@ -49,6 +49,10 @@ Render попросит ввести значения переменных, по
 | `TELEGRAM_MODERATOR_CHAT_ID` | из `.env` (`-5292322000`) |
 | `GOOGLE_SHEET_ID` | из `.env` |
 | `GOOGLE_SERVICE_ACCOUNT_BASE64` | из `.env` (длинная строка) |
+| `KZT_PER_USD` | курс USD→KZT для биллинга пакетов токенов (по умолчанию `470`) — можно менять без передеплоя |
+| `KASPI_MERCHANT_ID` | id магазина в Kaspi.kz (выдаётся при получении merchant-аккаунта). **Без него работает mock-режим**: кнопка «Я оплатил» сразу начисляет токены — для UAT |
+| `KASPI_API_TOKEN` | API-токен из кабинета Kaspi Merchant. Нужен для подписи webhook'ов |
+| `KASPI_PAY_BASE_URL` | по умолчанию `https://kaspi.kz/pay`. Менять не нужно, если Kaspi не сменит endpoint |
 
 Нажми **Apply changes**.
 

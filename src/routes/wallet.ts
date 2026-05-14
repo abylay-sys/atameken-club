@@ -2,6 +2,8 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
+import { env } from '../lib/env';
+import { randomBytes } from 'node:crypto';
 
 // Пакеты токенов с фиксированными скидками.
 // Если в дальнейшем подключим оплату через Kaspi/Stripe — стоимость считается
@@ -118,4 +120,162 @@ export default async function walletRoutes(app: FastifyInstance) {
     });
     return { items };
   });
+
+  // ════════════════════════════════════════════════════════════════
+  // ─── Kaspi Pay: pending payments, QR, webhook, polling ──────────
+  // ════════════════════════════════════════════════════════════════
+
+  // Открытый помощник: текущий курс и режим (real/mock)
+  app.get('/payment/config', async () => ({
+    kztPerUsd: env.KZT_PER_USD,
+    mode: env.KASPI_MERCHANT_ID ? 'live' : 'mock',
+    merchantId: env.KASPI_MERCHANT_ID || null,
+  }));
+
+  // ── Создать pending-платёж ──
+  app.post('/payment/init', { preHandler: requireAuth }, async (req, reply) => {
+    const parsed = purchaseSchema.safeParse(req.body);
+    if (!parsed.success) return reply.code(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
+    const pkg = PACKAGES[parsed.data.packageSize];
+    const priceKzt = Math.round(pkg.priceUsd * env.KZT_PER_USD);
+    // Короткий референс, который пользователь увидит в чеке Kaspi
+    const ref = 'AC-' + randomBytes(3).toString('hex').toUpperCase();
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 минут на оплату
+
+    const pending = await prisma.pendingPayment.create({
+      data: {
+        userId: req.user!.sub,
+        packageSize: parsed.data.packageSize,
+        tokensAmount: pkg.tokens,
+        priceUsd: pkg.priceUsd,
+        priceKzt,
+        kaspiPaymentRef: ref,
+        expiresAt,
+      },
+    });
+
+    // Формируем URL для Kaspi-оплаты (deep-link / QR)
+    let kaspiPayUrl: string;
+    if (env.KASPI_MERCHANT_ID) {
+      // Real Kaspi merchant — формат URL Kaspi.kz для оплаты по реквизитам магазина
+      kaspiPayUrl = `${env.KASPI_PAY_BASE_URL}/${env.KASPI_MERCHANT_ID}?amount=${priceKzt}&reference=${ref}`;
+    } else {
+      // Mock-режим: ведём на /mock-payment, который ходит на /wallet/payment/:id/mock-complete
+      kaspiPayUrl = `/cabinet.html#packages?mockPay=${pending.id}`;
+    }
+
+    return reply.code(201).send({
+      payment: {
+        id: pending.id,
+        reference: ref,
+        priceKzt,
+        priceUsd: pkg.priceUsd,
+        tokensAmount: pkg.tokens,
+        kaspiPayUrl,
+        expiresAt: pending.expiresAt,
+        mode: env.KASPI_MERCHANT_ID ? 'live' : 'mock',
+      },
+    });
+  });
+
+  // ── Статус платежа (polling от фронта) ──
+  app.get('/payment/:id/status', { preHandler: requireAuth }, async (req, reply) => {
+    const { id } = req.params as { id: string };
+    const pending = await prisma.pendingPayment.findUnique({ where: { id } });
+    if (!pending) return reply.code(404).send({ error: 'Платёж не найден' });
+    if (pending.userId !== req.user!.sub) return reply.code(403).send({ error: 'Нет доступа' });
+
+    // Сразу помечаем EXPIRED, если истекло — упростит жизнь фронту
+    if (pending.status === 'PENDING' && pending.expiresAt < new Date()) {
+      await prisma.pendingPayment.update({ where: { id }, data: { status: 'EXPIRED' } });
+      pending.status = 'EXPIRED';
+    }
+    return { status: pending.status, completedAt: pending.completedAt };
+  });
+
+  // ── Mock-завершение (только если KASPI_MERCHANT_ID не задан) ──
+  // Используется в dev/UAT, пока нет реального merchant-аккаунта.
+  // После прохождения KYC у Kaspi — заменим на webhook.
+  app.post('/payment/:id/mock-complete', { preHandler: requireAuth }, async (req, reply) => {
+    if (env.KASPI_MERCHANT_ID) {
+      return reply.code(403).send({ error: 'Mock-режим выключен (KASPI_MERCHANT_ID задан)' });
+    }
+    const { id } = req.params as { id: string };
+    const pending = await prisma.pendingPayment.findUnique({ where: { id } });
+    if (!pending) return reply.code(404).send({ error: 'Платёж не найден' });
+    if (pending.userId !== req.user!.sub) return reply.code(403).send({ error: 'Нет доступа' });
+    if (pending.status !== 'PENDING') return reply.send({ status: pending.status });
+    if (pending.expiresAt < new Date()) {
+      await prisma.pendingPayment.update({ where: { id }, data: { status: 'EXPIRED' } });
+      return reply.code(410).send({ error: 'Платёж истёк' });
+    }
+    await completePayment(pending.id);
+    return reply.send({ status: 'COMPLETED' });
+  });
+
+  // ── Kaspi webhook (для real-режима) ──
+  // Kaspi не публикует точный формат webhook'а в открытом доступе — это
+  // настраивается в личном кабинете магазина. Реализую общую схему:
+  // {orderId, status, amount, reference}. После подключения реального
+  // мерчанта потребуется проверка подписи (HMAC) — заранее закладываем
+  // X-Kaspi-Signature header.
+  app.post('/payment/kaspi-webhook', async (req, reply) => {
+    // TODO: HMAC verification по env.KASPI_API_TOKEN
+    const body = req.body as { reference?: string; status?: string; orderId?: string; txId?: string };
+    if (!body.reference) return reply.code(400).send({ error: 'reference required' });
+
+    const pending = await prisma.pendingPayment.findUnique({ where: { kaspiPaymentRef: body.reference } });
+    if (!pending) return reply.code(404).send({ error: 'Pending payment not found' });
+
+    if (body.status === 'SUCCESS' || body.status === 'COMPLETED' || body.status === 'PAID') {
+      await prisma.pendingPayment.update({
+        where: { id: pending.id },
+        data: { kaspiOrderId: body.orderId || null, kaspiTxId: body.txId || null },
+      });
+      await completePayment(pending.id);
+      return reply.send({ ok: true });
+    } else if (body.status === 'FAILED' || body.status === 'CANCELED') {
+      await prisma.pendingPayment.update({ where: { id: pending.id }, data: { status: 'FAILED' } });
+      return reply.send({ ok: true });
+    }
+    return reply.send({ ok: true });
+  });
+}
+
+// ─── Helper: завершить платёж и начислить токены ───
+async function completePayment(pendingId: string) {
+  const pending = await prisma.pendingPayment.findUnique({ where: { id: pendingId } });
+  if (!pending || pending.status !== 'PENDING') return;
+
+  const wallet = await prisma.tokenWallet.upsert({
+    where: { userId: pending.userId },
+    update: {},
+    create: { userId: pending.userId },
+  });
+  const newBalance = wallet.balance + pending.tokensAmount;
+  await prisma.$transaction([
+    prisma.tokenWallet.update({
+      where: { id: wallet.id },
+      data: { balance: newBalance, totalEarned: { increment: pending.tokensAmount } },
+    }),
+    prisma.tokenTransaction.create({
+      data: {
+        walletId: wallet.id,
+        type: 'PURCHASE',
+        amount: pending.tokensAmount,
+        balanceAfter: newBalance,
+        meta: {
+          packageSize: pending.packageSize,
+          priceUsd: pending.priceUsd,
+          priceKzt: pending.priceKzt,
+          pendingPaymentId: pending.id,
+          kaspiPaymentRef: pending.kaspiPaymentRef,
+        } as any,
+      },
+    }),
+    prisma.pendingPayment.update({
+      where: { id: pending.id },
+      data: { status: 'COMPLETED', completedAt: new Date() },
+    }),
+  ]);
 }
