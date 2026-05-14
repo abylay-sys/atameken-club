@@ -351,15 +351,20 @@
       }
     });
   }
-  if(!token) return;
+  // Экспортируем во внешний scope — нужно для перерисовки lock-panel после API-рендера карточек
+  window.setLockedState = setLockedState;
+  if(!token) { localStorage.removeItem('ac_status'); return; }
   setLockedState('draft');
+  localStorage.setItem('ac_status', 'draft');
   fetch('/profile', { headers: { Authorization: 'Bearer ' + token } })
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     .then(data => {
       const st = data?.profile?.status;
-      if(st === 'VERIFIED'){ setLockedState('verified'); }
-      else if(st === 'SUBMITTED'){ setLockedState('pending'); }
-      else { setLockedState('draft'); }
+      let key = 'draft';
+      if(st === 'VERIFIED') key = 'verified';
+      else if(st === 'SUBMITTED') key = 'pending';
+      setLockedState(key);
+      localStorage.setItem('ac_status', key);
     })
     .catch(() => {});
 })();
@@ -540,22 +545,24 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 
 // Catalog tabs
+function applyTabFilter(){
+  const t = (document.querySelector('.cat-tab.on') || {}).dataset?.tab || 'all';
+  document.querySelectorAll('#catGrid .pcard').forEach(c => {
+    c.style.display = (t === 'all' || c.dataset.tab === t) ? 'flex' : 'none';
+  });
+}
 document.querySelectorAll('.cat-tab').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
-    const t = btn.dataset.tab;
-    document.querySelectorAll('#catGrid .pcard').forEach(c => {
-      c.style.display = (t === 'all' || c.dataset.tab === t) ? 'flex' : 'none';
-    });
+    applyTabFilter();
   });
 });
 
 // ════════════════════════════════════════════════════════════════
-// Звёздочка «Избранное» + «Подать жалобу» в каждой карточке Реестра
+// Стили звёздочки + кнопки жалобы — инжектим один раз
 // ════════════════════════════════════════════════════════════════
-(function(){
-  // Стили звёздочки + кнопки жалобы — инжектим один раз
+(function injectActionStyles(){
   const style = document.createElement('style');
   style.textContent = `
     .pcard-fav{position:absolute;top:.75rem;right:.75rem;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .2s;font-size:1.1rem;line-height:1;color:#cbd5e1}
@@ -566,20 +573,67 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
     .pcard-report svg{width:11px;height:11px}
   `;
   document.head.appendChild(style);
+})();
 
-  // У демо-карточек нет реальных Publication ID, используем slug из заголовка
-  function pubIdFor(card){
-    if (card.dataset.pubId) return card.dataset.pubId;
-    const title = card.querySelector('.pcard-title')?.textContent.trim() || '';
-    // detherminstic «demo-» id, чтобы можно было хранить в localStorage и потом перенести в БД
-    return 'demo-' + title.toLowerCase().replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,40);
+// ════════════════════════════════════════════════════════════════
+// Реестр из API: AC.listPublications() → рендер карточек .pcard
+// Если API пусто/упал — оставляем демо-карточки, что уже в HTML.
+// ════════════════════════════════════════════════════════════════
+const TYPE_META = {
+  INVEST_PROJECT:    { tab:'invest',    color:'green',  label:'Инвест-проект',     btn:'Досье',     lockMsg:'Финансовая модель, команда и контакты — только для верифицированных участников' },
+  FRANCHISE:         { tab:'franchise', color:'blue',   label:'Франшиза',          btn:'Досье',     lockMsg:'Финмодель и контакты франчайзера — только для верифицированных участников' },
+  BUSINESS_FOR_SALE: { tab:'sale',      color:'amber',  label:'Готовый бизнес',    btn:'Досье',     lockMsg:'Финотчётность и стоимость — только для верифицированных участников' },
+  GOODS:             { tab:'goods',     color:'purple', label:'Товары и сырьё',    btn:'Запросить', lockMsg:'Цена, логистика и контакты — только для верифицированных участников' },
+};
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderApiCards(items){
+  const grid = document.getElementById('catGrid');
+  if (!grid) return false;
+  if (!items.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--ink4);font-size:.9rem">В Реестре пока нет публикаций.<br/><span style="font-size:.78rem">Зарегистрируйтесь и опубликуйте свою карточку — она появится здесь.</span></div>';
+    return true;
   }
+  grid.innerHTML = items.map(p => {
+    const meta = TYPE_META[p.type] || TYPE_META.INVEST_PROJECT;
+    const region = p.region ? `<div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 3.3 4.5 7.5 4.5 7.5s4.5-4.2 4.5-7.5c0-2.5-2-4.5-4.5-4.5z"/></svg><strong>${escapeHtml(p.region)}</strong></div>` : '';
+    const industry = p.industry ? `<span class="ptag">${escapeHtml(p.industry)}</span>` : '';
+    const price = p.priceLabel ? `<div class="pcard-price">${escapeHtml(p.priceLabel)}</div><div class="pcard-price-l">&nbsp;</div>` : `<div class="pcard-price">—</div>`;
+    return `
+      <div class="pcard locked blurred" data-tab="${meta.tab}" data-pub-id="${escapeHtml(p.id)}" style="position:relative">
+        <div class="pcard-top ${meta.color}"></div>
+        <div class="pcard-body">
+          <div class="pcard-type">${escapeHtml(meta.label)}</div>
+          <div class="pcard-title">${escapeHtml(p.title)}</div>
+          <div class="pcard-meta">${region}</div>
+          <div class="pcard-desc">${escapeHtml(p.shortDesc || '')}</div>
+          <div class="pcard-tags">${industry}</div>
+          <div class="pcard-foot"><div>${price}</div><button class="pcard-btn">${escapeHtml(meta.btn)}</button></div>
+        </div>
+        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>${escapeHtml(meta.lockMsg)}</p><a href="/register.html">Пройти верификацию</a></div>
+      </div>
+    `;
+  }).join('');
+  // Перепримененяем визибилити-стейт lock-панели по текущему ac_status (после API-рендера)
+  // Состояние хранится в localStorage 'ac_status' (verified/pending/draft); для гостя — оставляем как есть
+  const lockState = localStorage.getItem('ac_status');
+  if (lockState && typeof window.setLockedState === 'function') window.setLockedState(lockState);
+  applyTabFilter();
+  return true;
+}
 
-  // Локальная копия избранного для демо-карточек (т.к. в БД их пока нет).
+// ════════════════════════════════════════════════════════════════
+// Звёздочка «Избранное» + «Подать жалобу» в каждой карточке Реестра
+// Запускается после загрузки/рендера карточек (демо или API).
+// ════════════════════════════════════════════════════════════════
+function setupCardActions(){
   const LOCAL_FAV_KEY = 'ac_demo_favs';
   function localFavs(){ try { return new Set(JSON.parse(localStorage.getItem(LOCAL_FAV_KEY) || '[]')); } catch { return new Set(); } }
   function saveLocalFavs(set){ localStorage.setItem(LOCAL_FAV_KEY, JSON.stringify([...set])); }
-
+  function pubIdFor(card){
+    if (card.dataset.pubId) return card.dataset.pubId;
+    const title = card.querySelector('.pcard-title')?.textContent.trim() || '';
+    return 'demo-' + title.toLowerCase().replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,40);
+  }
   const favSet = localFavs();
   const token = (typeof AC !== 'undefined') && AC.getToken();
 
@@ -589,16 +643,15 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
     try {
       const { items } = await AC.myFavorites();
       items.forEach(it => favSet.add(it.publication.id));
-      // Перерисуем активные звёздочки после подтягивания
       document.querySelectorAll('.pcard-fav').forEach(btn => {
-        const id = btn.dataset.pubId;
-        btn.classList.toggle('on', favSet.has(id));
+        btn.classList.toggle('on', favSet.has(btn.dataset.pubId));
       });
-    } catch (_) { /* ignore — будем работать только с локальными */ }
+    } catch (_) {}
   })();
 
-  // Для каждой карточки — добавляем UI
   document.querySelectorAll('#catGrid .pcard').forEach(card => {
+    // Не дублируем кнопки на уже обработанных карточках
+    if (card.querySelector('.pcard-fav')) return;
     const pubId = pubIdFor(card);
     card.dataset.pubId = pubId;
 
@@ -614,19 +667,14 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
       const isOn = star.classList.toggle('on');
       if (isOn) favSet.add(pubId); else favSet.delete(pubId);
       saveLocalFavs(favSet);
-      // Если залогинен — синхронизируем с сервером. Для демо-карточек API вернёт 404 — это ОК.
       if (token && typeof AC !== 'undefined') {
-        try {
-          if (isOn) await AC.addFavorite(pubId); else await AC.removeFavorite(pubId);
-        } catch (err) {
-          // Демо-карточки не существуют в БД — молча игнорируем 404
-          if (err.status && err.status !== 404) console.warn('Favorite sync failed:', err);
-        }
+        try { if (isOn) await AC.addFavorite(pubId); else await AC.removeFavorite(pubId); }
+        catch (err) { if (err.status && err.status !== 404) console.warn('Favorite sync failed:', err); }
       }
     });
     card.appendChild(star);
 
-    // ⚠ «Подать жалобу» — добавим после tags блока
+    // ⚠ «Подать жалобу»
     const foot = card.querySelector('.pcard-foot');
     if (foot) {
       const report = document.createElement('button');
@@ -653,6 +701,22 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
       foot.parentNode.insertBefore(report, foot);
     }
   });
+}
+
+// Запуск: грузим из API, потом инициализируем интерактив
+(async () => {
+  try {
+    if (typeof AC !== 'undefined' && typeof AC.listPublications === 'function') {
+      const { items } = await AC.listPublications({ limit: 60 });
+      if (items && items.length) {
+        renderApiCards(items);
+      }
+    }
+  } catch (err) {
+    console.warn('Реестр: не удалось загрузить публикации из API, оставляем демо-карточки.', err);
+  } finally {
+    setupCardActions();
+  }
 })();
 </script>
 <script src="/assets/i18n.js"></script>
