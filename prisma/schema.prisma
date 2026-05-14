@@ -46,6 +46,8 @@ model User {
   wallet        TokenWallet?
   purchasedCards PurchasedCard[]
   pendingPayments PendingPayment[]
+  initiatedDeals  Deal[]          @relation("DealInitiator")
+  signedDocuments SignedDocument[] @relation("DocumentSigner")
 
   @@index([email])
 }
@@ -128,6 +130,7 @@ model Publication {
   favorites      Favorite[]
   complaints     Complaint[]
   purchasedBy    PurchasedCard[]
+  deals          Deal[]
 
   @@index([userId])
   @@index([type, status])
@@ -147,6 +150,73 @@ model Favorite {
   @@unique([userId, publicationId])
   @@index([userId])
   @@index([publicationId])
+}
+
+enum DealStatus {
+  DOCS_PENDING       // создан, ожидаем подписания трёх документов
+  DOCS_SIGNED        // все 3 подписаны, ждём оплаты комиссии
+  COMMISSION_PAID    // комиссия получена, сделка в работе
+  COMPLETED          // сделка завершена
+  CANCELED
+}
+
+enum DocumentType {
+  NDA          // Соглашение о неразглашении
+  NCNDA        // Соглашение о ненарушении каналов
+  COMMISSION   // Договор о сопровождении за комиссию
+}
+
+enum SignatureStatus {
+  PENDING
+  SIGNED
+  REJECTED
+}
+
+// Сделка, которую инициатор сопровождает через ATAMEKEN Club. Сразу при
+// создании появляется 3 SignedDocument-записи со статусом PENDING. Подпись —
+// self-signed «click-wrap» с записью IP/UA/timestamp. При подключении
+// внешнего e-sign-провайдера (Kalkan, DocuSign) запишем сюда signatureRef.
+model Deal {
+  id               String           @id @default(cuid())
+  initiatorId      String
+  initiator        User             @relation("DealInitiator", fields: [initiatorId], references: [id], onDelete: Cascade)
+  publicationId    String?
+  publication      Publication?     @relation(fields: [publicationId], references: [id], onDelete: SetNull)
+  splitWithCounter Boolean          @default(false)
+  commissionPct    Float            @default(1.5)
+  // Сумма сделки — пользователь вводит при создании, может быть null если ещё не известна
+  dealAmountKzt    Int?
+  status           DealStatus       @default(DOCS_PENDING)
+  notes            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  signatures       SignedDocument[]
+
+  @@index([initiatorId])
+  @@index([status])
+}
+
+model SignedDocument {
+  id           String          @id @default(cuid())
+  dealId       String
+  deal         Deal            @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User            @relation("DocumentSigner", fields: [userId], references: [id], onDelete: Cascade)
+  type         DocumentType
+  status       SignatureStatus @default(PENDING)
+  // Для click-wrap подписи: IP, UA, точное время
+  signedAt     DateTime?
+  ipAddress    String?
+  userAgent    String?
+  // Версия шаблона документа, который пользователь подписал — для аудита
+  templateVer  String?
+  // Reference от внешнего e-sign провайдера (Kalkan/DocuSign) — пока null
+  signatureRef String?
+
+  @@unique([dealId, userId, type])
+  @@index([dealId])
+  @@index([userId])
 }
 
 enum PaymentStatus {

@@ -1310,11 +1310,187 @@ function initDealSupportUI() {
   }
   checks.forEach(cb => cb.addEventListener('change', update));
   if (splitCb) splitCb.addEventListener('change', updateSplit);
-  if (submit) submit.addEventListener('click', () => {
-    alert('Документы отправлены на e-sign.\n\n(Подключение Adobe Sign / DocuSign / Kalkan e-sign — следующий шаг.)');
+  if (submit) submit.addEventListener('click', async () => {
+    if (!AC.getToken()) { alert('Войдите в кабинет, чтобы подписать документы.'); location.href = '/login.html'; return; }
+    submit.disabled = true; submit.textContent = 'Создаём сделку…';
+    try {
+      const { deal } = await AC.createDeal({ splitWithCounter: !!(splitCb && splitCb.checked) });
+      openSignModal(deal.id);
+    } catch (e) {
+      alert('Не удалось создать сделку: ' + (e.message || 'ошибка'));
+      submit.disabled = false; submit.textContent = 'Подписать и оплатить';
+    }
   });
   update(); updateSplit();
 }
+
+// ════════════════════════════════════════════════════════════════
+// Модал подписания 3 документов (NDA + NCNDA + Commission)
+// ════════════════════════════════════════════════════════════════
+function openSignModal(dealId){
+  closeSignModal();
+  if (!document.getElementById('sign-modal-styles')) {
+    const s = document.createElement('style');
+    s.id = 'sign-modal-styles';
+    s.textContent = `
+      .sg-backdrop{position:fixed;inset:0;background:rgba(15,22,32,.65);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+      .sg-modal{background:#fff;border-radius:10px;max-width:780px;width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden;animation:kpIn .25s ease-out}
+      .sg-head{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#fafafa}
+      .sg-head h3{margin:0;font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500;color:var(--ink)}
+      .sg-head p{margin:.2rem 0 0;font-size:.7rem;color:var(--ink4)}
+      .sg-close{background:none;border:0;font-size:1.5rem;cursor:pointer;line-height:1;padding:.25rem;color:var(--ink3)}
+      .sg-tabs{display:flex;border-bottom:1px solid var(--border);background:#fff;flex-shrink:0}
+      .sg-tab{flex:1;padding:.75rem 1rem;font-size:.78rem;font-weight:600;color:var(--ink3);background:none;border:0;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;text-align:center;position:relative}
+      .sg-tab:hover{color:var(--ink2)}
+      .sg-tab.on{color:var(--red);border-bottom-color:var(--red);background:#fff}
+      .sg-tab.signed::after{content:'✓';position:absolute;top:.5rem;right:.6rem;color:#16a34a;font-weight:700;font-size:.85rem}
+      .sg-body{flex:1;overflow-y:auto;padding:1.5rem 1.85rem;font-size:.88rem;line-height:1.65;color:var(--ink2);min-height:300px}
+      .sg-body h2{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:500;color:var(--ink);margin:0 0 1rem}
+      .sg-body h3{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink);margin:1.25rem 0 .5rem}
+      .sg-body p{margin:0 0 .7rem}
+      .doc-meta{background:#fafafa;border:1px solid var(--border);border-radius:6px;padding:.85rem 1.15rem;margin-bottom:1rem;display:grid;grid-template-columns:1fr 1fr;gap:.35rem .85rem}
+      @media(max-width:560px){.doc-meta{grid-template-columns:1fr}}
+      .doc-meta-row{font-size:.72rem;color:var(--ink3);display:flex;justify-content:space-between;gap:.5rem}
+      .doc-meta-row strong{color:var(--ink);font-weight:600}
+      .sg-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:#fff;flex-shrink:0}
+      .sg-foot-info{font-size:.72rem;color:var(--ink4);flex:1;min-width:200px}
+      .sg-foot-info strong{color:var(--ink2);font-weight:600}
+      .sg-sign-btn{padding:.7rem 1.4rem;font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:3px;cursor:pointer;border:0;background:var(--red);color:#fff;transition:background .2s;font-family:'Inter',sans-serif}
+      .sg-sign-btn:hover{background:#a02022}
+      .sg-sign-btn:disabled{background:#d4d4d4;cursor:default}
+      .sg-sign-btn.signed{background:#16a34a}
+      .sg-loading{text-align:center;padding:3rem;color:var(--ink4);font-size:.85rem}
+      .sg-done{padding:2.5rem 2rem;text-align:center}
+      .sg-done-ico{font-size:3rem;color:#16a34a;margin-bottom:.85rem}
+      .sg-done h4{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--ink);margin:0 0 .55rem}
+      .sg-done p{color:var(--ink3);font-size:.88rem;line-height:1.6;margin:0 0 1rem}
+    `;
+    document.head.appendChild(s);
+  }
+
+  const docs = [
+    { type: 'NDA',        label: 'NDA' },
+    { type: 'NCNDA',      label: 'NCNDA' },
+    { type: 'COMMISSION', label: 'Комиссия 1,5%' },
+  ];
+  const state = { activeIdx: 0, signed: {} };
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'sg-backdrop';
+  backdrop.id = 'sg-backdrop';
+  backdrop.innerHTML = `
+    <div class="sg-modal">
+      <div class="sg-head">
+        <div>
+          <h3>Подписание документов</h3>
+          <p>Сделка: ${dealId} · Подпись фиксируется с указанием IP и времени</p>
+        </div>
+        <button class="sg-close" aria-label="Закрыть" onclick="closeSignModal()">×</button>
+      </div>
+      <div class="sg-tabs" id="sg-tabs">
+        ${docs.map((d,i) => `<button class="sg-tab${i===0?' on':''}" data-idx="${i}" data-type="${d.type}">${d.label}</button>`).join('')}
+      </div>
+      <div class="sg-body" id="sg-body"><div class="sg-loading">Загружаем документ…</div></div>
+      <div class="sg-foot">
+        <div class="sg-foot-info">Нажимая <strong>«Подписать»</strong>, вы подтверждаете ознакомление и&nbsp;согласие в&nbsp;электронной форме. Юридически равнозначно собственноручной подписи.</div>
+        <button class="sg-sign-btn" id="sg-sign-btn">Подписать</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  // Cache загруженных HTML, чтобы не дёргать API при переключении вкладок
+  const cache = {};
+  async function loadDoc(idx){
+    state.activeIdx = idx;
+    const doc = docs[idx];
+    document.querySelectorAll('.sg-tab').forEach((t, i) => t.classList.toggle('on', i === idx));
+    const body = document.getElementById('sg-body');
+    body.innerHTML = '<div class="sg-loading">Загружаем документ…</div>';
+    if (!cache[doc.type]) {
+      try {
+        const { html } = await AC.getDealDocument(dealId, doc.type);
+        cache[doc.type] = html;
+      } catch (e) {
+        body.innerHTML = '<div class="sg-loading" style="color:var(--red)">Не удалось загрузить документ. ' + (e.message || '') + '</div>';
+        return;
+      }
+    }
+    body.innerHTML = cache[doc.type];
+    // Сбрасываем скролл к началу
+    body.scrollTop = 0;
+    // Обновляем кнопку
+    updateSignBtn();
+  }
+  function updateSignBtn(){
+    const btn = document.getElementById('sg-sign-btn');
+    const doc = docs[state.activeIdx];
+    if (state.signed[doc.type]) {
+      btn.disabled = true;
+      btn.className = 'sg-sign-btn signed';
+      btn.textContent = '✓ Подписано';
+    } else {
+      btn.disabled = false;
+      btn.className = 'sg-sign-btn';
+      btn.textContent = 'Подписать ' + doc.label;
+    }
+  }
+
+  document.querySelectorAll('.sg-tab').forEach(t => t.addEventListener('click', () => loadDoc(Number(t.dataset.idx))));
+
+  document.getElementById('sg-sign-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('sg-sign-btn');
+    const doc = docs[state.activeIdx];
+    btn.disabled = true; btn.textContent = 'Подписываем…';
+    try {
+      const res = await AC.signDealDocument(dealId, doc.type);
+      state.signed[doc.type] = true;
+      document.querySelectorAll('.sg-tab').forEach((t, i) => {
+        if (docs[i].type === doc.type) t.classList.add('signed');
+      });
+      updateSignBtn();
+      // Если все подписаны — показываем экран успеха через 0.4s
+      if (res.allSigned) {
+        setTimeout(showSignDone, 400);
+        return;
+      }
+      // Иначе автоматически переходим к следующему неподписанному
+      const nextIdx = docs.findIndex(d => !state.signed[d.type]);
+      if (nextIdx >= 0) setTimeout(() => loadDoc(nextIdx), 400);
+    } catch (e) {
+      alert('Не удалось подписать: ' + (e.message || 'ошибка'));
+      updateSignBtn();
+    }
+  });
+
+  function showSignDone(){
+    const modal = document.querySelector('.sg-modal');
+    if (!modal) return;
+    modal.innerHTML = `
+      <div class="sg-head">
+        <div><h3>Готово!</h3></div>
+        <button class="sg-close" aria-label="Закрыть" onclick="closeSignModal()">×</button>
+      </div>
+      <div class="sg-done">
+        <div class="sg-done-ico">✓</div>
+        <h4>Все 3 документа подписаны</h4>
+        <p>NDA, NCNDA и&nbsp;Договор о&nbsp;сопровождении сохранены в&nbsp;вашем кабинете. Менеджер ATAMEKEN&nbsp;Club свяжется с&nbsp;вами для&nbsp;следующих шагов по&nbsp;сделке.</p>
+        <button class="sg-sign-btn" onclick="closeSignModal()">Закрыть</button>
+      </div>
+    `;
+    // Сбрасываем кнопку «Подписать и оплатить»
+    const dealBtn = document.getElementById('ds-submit');
+    if (dealBtn) { dealBtn.textContent = '✓ Подписано'; dealBtn.className = 'ds-final-btn signed'; }
+  }
+
+  loadDoc(0);
+}
+function closeSignModal(){
+  const bd = document.getElementById('sg-backdrop');
+  if (bd) bd.remove();
+}
+window.openSignModal = openSignModal;
+window.closeSignModal = closeSignModal;
 
 // ════ Логика messages: переключение чатов + toggle перевода ════
 function initMessagesUI() {

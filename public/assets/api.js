@@ -130,6 +130,14 @@
     async paymentMockComplete(id) { return request('POST', '/wallet/payment/' + encodeURIComponent(id) + '/mock-complete', null, true); },
 
     // ── File uploads ──
+    // ── Сделки (Сопровождение) ──
+    async createDeal(payload) { return request('POST', '/deals', payload, true); },
+    async myDeals() { return request('GET', '/deals/mine', null, true); },
+    async getDeal(id) { return request('GET', '/deals/' + encodeURIComponent(id), null, true); },
+    async getDealDocument(id, type) { return request('GET', '/deals/' + encodeURIComponent(id) + '/document/' + encodeURIComponent(type), null, true); },
+    async signDealDocument(id, type) { return request('POST', '/deals/' + encodeURIComponent(id) + '/sign', { type, accept: true }, true); },
+    async cancelDeal(id) { return request('POST', '/deals/' + encodeURIComponent(id) + '/cancel', null, true); },
+
     async uploadFile(file) {
       const fd = new FormData();
       fd.append('file', file);
