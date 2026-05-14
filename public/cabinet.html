@@ -759,8 +759,63 @@ strong{color:var(--ink);font-weight:600}
       </div>
     </div>
 
+    <!-- ──────── PUBLICATION DETAIL (Развёрнутая карточка Реестра) ──────── -->
+    <div id="type-publication-detail" style="display:none">
+      <div class="panel on" id="publication-detail">
+        <div class="page-hd">
+          <div class="page-hd-left">
+            <h2 id="pubDtTitle">Развёрнутая карточка</h2>
+          </div>
+          <div class="hd-actions">
+            <a href="/projects.html" class="btn-o btn-sm">К Реестру</a>
+            <button class="btn-o btn-sm" onclick="returnToCabinet()">Назад в кабинет</button>
+          </div>
+        </div>
+        <div id="pubDtBody"></div>
+      </div>
+    </div>
+
   </main>
 </div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     Стили для развёрнутой карточки (общие для всех 4 шаблонов)
+     ════════════════════════════════════════════════════════════════ -->
+<style>
+  .pd-hero{background:#fff;border:1px solid var(--border);border-top:4px solid var(--red);border-radius:8px;padding:1.5rem 1.75rem;box-shadow:var(--shadow);margin-bottom:1.25rem}
+  .pd-hero.green{border-top-color:#16a34a}
+  .pd-hero.blue{border-top-color:var(--blue)}
+  .pd-hero.amber{border-top-color:var(--gold)}
+  .pd-hero.purple{border-top-color:#7c3aed}
+  .pd-type{font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+  .pd-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--ink);font-weight:500;line-height:1.2;margin:0 0 .65rem}
+  .pd-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.85rem}
+  .pd-tag{font-size:.7rem;color:var(--ink3);background:var(--bg);padding:.2rem .55rem;border-radius:3px}
+  .pd-desc{font-size:.92rem;color:var(--ink2);line-height:1.6;margin:0}
+  .pd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:1.25rem}
+  .pd-field{background:#fafafa;border-radius:6px;padding:.85rem 1.05rem}
+  .pd-field-l{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.35rem}
+  .pd-field-v{font-size:.92rem;color:var(--ink);font-weight:500;line-height:1.4;word-wrap:break-word}
+  .pd-field-v.big{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--red);font-weight:600;line-height:1}
+  .pd-block{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.5rem 1.75rem;box-shadow:var(--shadow);margin-bottom:1.25rem}
+  .pd-block h4{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);font-weight:500;margin:0 0 .85rem}
+  .pd-text{font-size:.88rem;color:var(--ink2);line-height:1.65;margin:0;white-space:pre-wrap}
+  .pd-contacts{background:linear-gradient(135deg,#1A3A6B,#0f2746);color:#fff;border:0;border-radius:8px;padding:1.5rem 1.75rem;box-shadow:0 4px 16px rgba(26,58,107,.2);margin-bottom:1.25rem}
+  .pd-contacts h4{color:#fff;margin:0 0 .85rem;font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500}
+  .pd-contacts .pd-field{background:rgba(255,255,255,.08);color:#fff}
+  .pd-contacts .pd-field-l{color:rgba(255,255,255,.55)}
+  .pd-contacts .pd-field-v{color:#fff}
+  .pd-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:.5rem}
+  .pd-actions .btn-r,.pd-actions .btn-o{padding:.7rem 1.4rem;font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:3px;cursor:pointer;border:1px solid;transition:all .2s;font-family:'Inter',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem}
+  .pd-actions .btn-r{background:var(--red);color:#fff;border-color:var(--red)}
+  .pd-actions .btn-r:hover{background:#a02022}
+  .pd-actions .btn-o{background:#fff;color:var(--ink);border-color:var(--border)}
+  .pd-actions .btn-o:hover{border-color:var(--red);color:var(--red)}
+  .pd-paywall{background:#fffaf0;border:1px solid #C5963A;border-radius:8px;padding:1.5rem 1.75rem;text-align:center;box-shadow:var(--shadow);margin-bottom:1.25rem}
+  .pd-paywall h4{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:#7a5810;font-weight:500;margin:0 0 .55rem}
+  .pd-paywall p{font-size:.88rem;color:var(--ink2);line-height:1.55;margin:0 0 1rem}
+  .pd-paywall .price{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--red);font-weight:600;line-height:1;margin-bottom:.85rem}
+</style>
 
 <!-- ═══ UI deal-support: 3 документа + split-калькулятор (HTML-шаблон, скрыт пока не нужен) ═══ -->
 <template id="tpl-deal-support">
@@ -1208,6 +1263,8 @@ function returnToCabinet() {
   document.getElementById('type-activity').style.display = 'none';
   const pub = document.getElementById('type-publication');
   if (pub) pub.style.display = 'none';
+  const pubDt = document.getElementById('type-publication-detail');
+  if (pubDt) pubDt.style.display = 'none';
   showPanel(currentType || 'seeker', 'dashboard');
 }
 
@@ -1424,11 +1481,235 @@ function handleActivityHash() {
     const id = hash.slice('#activity-'.length);
     return showActivity(id);
   }
+  if (hash.startsWith('#publication-')) {
+    const id = hash.slice('#publication-'.length);
+    showPublicationDetail(id);
+    return true;
+  }
   return false;
 }
 window.addEventListener('hashchange', handleActivityHash);
 // Run once after DOM ready — but auth flow may redirect first
 setTimeout(() => { handleActivityHash(); }, 50);
+
+// ════════════════════════════════════════════════════════════════
+// Развёрнутая карточка публикации (4 шаблона под 4 типа продавцов)
+// При покупке «Развёрнутой карточки» (1 токен / $5) buyer открывает полный
+// data + контакты по этой публикации. Пока gating по покупке не подключён —
+// логин даёт доступ ко всем полям. TODO: PurchasedCard table + проверка.
+// ════════════════════════════════════════════════════════════════
+const PUB_TYPE_META = {
+  INVEST_PROJECT:    { color:'green',  label:'Инвест-проект' },
+  FRANCHISE:         { color:'blue',   label:'Франшиза' },
+  BUSINESS_FOR_SALE: { color:'amber',  label:'Готовый бизнес' },
+  GOODS:             { color:'purple', label:'Товары и сырьё' },
+};
+
+function _esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function _field(label, value){
+  if (value == null || value === '') return '';
+  return `<div class="pd-field"><div class="pd-field-l">${_esc(label)}</div><div class="pd-field-v">${_esc(value)}</div></div>`;
+}
+function _bigField(label, value){
+  if (value == null || value === '') return '';
+  return `<div class="pd-field"><div class="pd-field-l">${_esc(label)}</div><div class="pd-field-v big">${_esc(value)}</div></div>`;
+}
+function _textBlock(label, value){
+  if (!value) return '';
+  return `<div class="pd-block"><h4>${_esc(label)}</h4><p class="pd-text">${_esc(value)}</p></div>`;
+}
+
+// ── Шаблон 1: Инвест-проект ──
+function renderInvestProject(p){
+  const d = p.data || {};
+  return `
+    ${_textBlock('О проекте', d.description)}
+    <div class="pd-block">
+      <h4>Параметры инвестиций</h4>
+      <div class="pd-grid">
+        ${_bigField('Требуется', d.amount)}
+        ${_bigField('Срок окупаемости', d.payback)}
+        ${_bigField('Доля инвестора', d.equity)}
+        ${_field('Стадия', d.stage)}
+        ${_field('Локация', d.location)}
+        ${_field('Отрасль', d.industry || p.industry)}
+      </div>
+    </div>
+    ${(d.bizplan || d.finmodel) ? `<div class="pd-block">
+      <h4>Документы по запросу</h4>
+      <div class="pd-grid">
+        ${d.bizplan ? '<div class="pd-field"><div class="pd-field-l">Бизнес-план</div><div class="pd-field-v">📄 Прикреплён · открывается по запросу контактных данных</div></div>' : ''}
+        ${d.finmodel ? '<div class="pd-field"><div class="pd-field-l">Фин. модель</div><div class="pd-field-v">📄 Прикреплена · открывается по запросу контактных данных</div></div>' : ''}
+      </div>
+    </div>` : ''}
+  `;
+}
+
+// ── Шаблон 2: Франшиза ──
+function renderFranchise(p){
+  const d = p.data || {};
+  return `
+    ${_textBlock('О франшизе', d.description)}
+    <div class="pd-block">
+      <h4>Условия франшизы</h4>
+      <div class="pd-grid">
+        ${_bigField('Паушальный взнос', d.paushal)}
+        ${_bigField('Роялти', d.royalty)}
+        ${_bigField('Маркетинг-сбор', d.marketing)}
+        ${_bigField('Окупаемость', d.payback)}
+        ${_field('Действующих точек', d.points)}
+        ${_field('География', d.geography)}
+        ${_field('Отрасль', d.industry || p.industry)}
+      </div>
+    </div>
+    ${_textBlock('Поддержка франчайзи', d.support)}
+    ${d.standards ? `<div class="pd-block"><h4>Стандарты и пакет</h4><p class="pd-text">📄 Прикреплены · открываются по запросу контактных данных</p></div>` : ''}
+  `;
+}
+
+// ── Шаблон 3: Готовый бизнес ──
+function renderBusinessForSale(p){
+  const d = p.data || {};
+  return `
+    ${_textBlock('Описание', d.description)}
+    <div class="pd-block">
+      <h4>Финансовые показатели</h4>
+      <div class="pd-grid">
+        ${_bigField('Цена', d.price)}
+        ${_bigField('Годовой оборот', d.revenue)}
+        ${_bigField('EBITDA', d.ebitda)}
+        ${_field('Тип бизнеса', d.businessType)}
+        ${_field('Локация', d.location)}
+        ${_field('Год основания', d.founded)}
+        ${_field('Сотрудников', d.employees)}
+        ${_field('Отрасль', d.industry || p.industry)}
+      </div>
+    </div>
+    ${_textBlock('Причина продажи', d.reason)}
+    ${_textBlock('Что входит в продажу', d.whatIncluded)}
+    ${d.finReports ? `<div class="pd-block"><h4>Финансовая отчётность</h4><p class="pd-text">📄 Прикреплена · открывается после подписания NDA</p></div>` : ''}
+  `;
+}
+
+// ── Шаблон 4: Товары / сырьё ──
+function renderGoods(p){
+  const d = p.data || {};
+  return `
+    ${_textBlock('О продукте', d.description)}
+    <div class="pd-block">
+      <h4>Условия поставки</h4>
+      <div class="pd-grid">
+        ${_bigField('Цена', d.price)}
+        ${_bigField('Минимальная партия', d.minBatch)}
+        ${_bigField('Объём в месяц', d.volume)}
+        ${_field('Категория', d.category)}
+        ${_field('Инкотермс', d.incoterms)}
+        ${_field('Условия оплаты', d.payment)}
+        ${_field('Отрасль / сфера', d.industry || p.industry)}
+      </div>
+    </div>
+    ${_textBlock('Состав / характеристики', d.composition)}
+    ${d.certificates ? _textBlock('Сертификаты', d.certificates) : ''}
+    ${d.productionDocs ? `<div class="pd-block"><h4>Сертификаты производства</h4><p class="pd-text">📄 Прикреплены · открываются по запросу</p></div>` : ''}
+  `;
+}
+
+const TEMPLATE_BY_TYPE = {
+  INVEST_PROJECT:    renderInvestProject,
+  FRANCHISE:         renderFranchise,
+  BUSINESS_FOR_SALE: renderBusinessForSale,
+  GOODS:             renderGoods,
+};
+
+async function showPublicationDetail(id){
+  document.querySelectorAll('[id^="type-"]').forEach(d => d.style.display = 'none');
+  document.getElementById('type-publication-detail').style.display = 'block';
+  document.getElementById('pubDtTitle').textContent = 'Загружаем карточку…';
+  const body = document.getElementById('pubDtBody');
+  body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--ink4);font-size:.9rem">Загружаем…</div>';
+  window.scrollTo(0, 0);
+
+  try {
+    const { publication } = await AC.getPublication(id);
+    const p = publication;
+    const meta = PUB_TYPE_META[p.type] || PUB_TYPE_META.INVEST_PROJECT;
+    const renderer = TEMPLATE_BY_TYPE[p.type] || renderInvestProject;
+    const d = p.data || {};
+
+    document.getElementById('pubDtTitle').textContent = p.title;
+
+    // Hero
+    const tags = [p.industry, p.region, d.stage || d.category].filter(Boolean);
+    const verifs = Array.isArray(d.verifications) ? d.verifications : [];
+    const shevHtml = (typeof window.renderShevStripHTML === 'function')
+      ? window.renderShevStripHTML(verifs, { club: !!d.isResident })
+      : '';
+    const heroHtml = `
+      <div class="pd-hero ${meta.color}">
+        <div class="pd-type">${_esc(meta.label)}</div>
+        <div class="pd-title">${_esc(p.title)}</div>
+        <div class="pd-tags">${tags.map(t => `<span class="pd-tag">${_esc(t)}</span>`).join('')}</div>
+        ${shevHtml}
+        ${p.shortDesc ? `<p class="pd-desc" style="margin-top:.85rem">${_esc(p.shortDesc)}</p>` : ''}
+      </div>
+    `;
+
+    // Type-specific body
+    const typeBody = renderer(p);
+
+    // Contacts block — если есть в data
+    const hasContacts = d.contactName || d.contactInfo;
+    const contactsHtml = hasContacts ? `
+      <div class="pd-contacts">
+        <h4>Контакты</h4>
+        <div class="pd-grid">
+          ${d.contactName ? `<div class="pd-field"><div class="pd-field-l">Контактное лицо</div><div class="pd-field-v">${_esc(d.contactName)}</div></div>` : ''}
+          ${d.contactInfo ? `<div class="pd-field"><div class="pd-field-l">Телефон / e-mail</div><div class="pd-field-v">${_esc(d.contactInfo)}</div></div>` : ''}
+        </div>
+      </div>
+    ` : `
+      <div class="pd-paywall">
+        <div class="price">$5</div>
+        <h4>Контактные данные скрыты</h4>
+        <p>Открыть имя контактного лица, телефон и e-mail можно за&nbsp;1&nbsp;токен. Развёрнутая карточка остаётся в&nbsp;вашем кабинете без срока.</p>
+        <button class="btn-r" onclick="alert('Оплата токенами подключим следующим шагом — Kaspi / Stripe / банк-карта.')">Открыть контакты — $5</button>
+      </div>
+    `;
+
+    // Actions block
+    const actionsHtml = `
+      <div class="pd-actions">
+        <a class="btn-r" href="/cabinet.html#activity-deal-support">Сопровождение сделки →</a>
+        <button class="btn-o" id="pdFavBtn" data-pub-id="${_esc(p.id)}">★ В&nbsp;избранное</button>
+        <button class="btn-o" id="pdReportBtn" data-pub-id="${_esc(p.id)}">Подать жалобу</button>
+      </div>
+    `;
+
+    body.innerHTML = heroHtml + typeBody + contactsHtml + actionsHtml;
+
+    // Wire actions
+    const favBtn = document.getElementById('pdFavBtn');
+    if (favBtn) favBtn.addEventListener('click', async () => {
+      try { await AC.addFavorite(p.id); favBtn.textContent = '✓ В избранном'; favBtn.disabled = true; }
+      catch (e) { alert('Не удалось добавить: ' + (e.message || 'ошибка')); }
+    });
+    const reportBtn = document.getElementById('pdReportBtn');
+    if (reportBtn) reportBtn.addEventListener('click', async () => {
+      const reason = prompt('Опишите причину жалобы:');
+      if (!reason || reason.trim().length < 3) return;
+      const details = prompt('Подробности (необязательно):') || '';
+      try { await AC.reportComplaint(p.id, reason.trim(), details.trim() || null); alert('Жалоба отправлена.'); }
+      catch (e) { alert('Не удалось отправить: ' + (e.message || 'ошибка')); }
+    });
+  } catch (err) {
+    document.getElementById('pubDtTitle').textContent = 'Карточка не найдена';
+    body.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--ink3);font-size:.9rem">
+      Не удалось загрузить публикацию.<br/>
+      <span style="font-size:.78rem;color:var(--ink4)">${_esc((err && err.message) || 'Ошибка сети')}</span>
+    </div>`;
+  }
+}
+window.showPublicationDetail = showPublicationDetail;
 </script>
 
 <script>
@@ -1651,7 +1932,7 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   // Если зашли по ссылке "Подробнее" с тарифной страницы — показываем детали услуги.
   // Если пользователь не авторизован — детали всё равно показываем (без бокового меню и
   // переключателя ролей), а логин потребуется только при попытке купить.
-  if (location.hash.startsWith('#activity-')) {
+  if (location.hash.startsWith('#activity-') || location.hash.startsWith('#publication-')) {
     if (typeof handleActivityHash === 'function') handleActivityHash();
     if (!AC.getToken()) {
       // Гостевой режим: прячем сайдбар, переключатель ролей, user info
@@ -1663,11 +1944,14 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
       const cab = document.querySelector('.cab-layout');
       if (cab) cab.style.gridTemplateColumns = '1fr';
       // Кнопка "Назад в кабинет" для гостей — заменяем на "Войти в кабинет"
-      const hd = document.querySelector('#activity-detail .hd-actions');
-      if (hd) {
-        const backBtn = [...hd.querySelectorAll('button')].find(b => /Назад в кабинет/i.test(b.textContent));
-        if (backBtn) { backBtn.textContent = 'Войти в кабинет'; backBtn.onclick = () => location.href = '/login.html'; }
-      }
+      document.querySelectorAll('.hd-actions').forEach(hd => {
+        [...hd.querySelectorAll('button')].forEach(btn => {
+          if (/Назад в кабинет/i.test(btn.textContent)) {
+            btn.textContent = 'Войти в кабинет';
+            btn.onclick = () => location.href = '/login.html';
+          }
+        });
+      });
       // Кнопка "Купить" — ведёт на логин
       const buyBtn = document.getElementById('actDtBuy');
       if (buyBtn) buyBtn.onclick = () => { alert('Войдите в кабинет, чтобы оформить покупку.'); location.href = '/login.html'; };

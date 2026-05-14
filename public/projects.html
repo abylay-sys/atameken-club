@@ -627,7 +627,7 @@ function renderApiCards(items){
           <div class="pcard-meta">${region}</div>
           <div class="pcard-desc">${escapeHtml(p.shortDesc || '')}</div>
           <div class="pcard-tags">${industry}</div>
-          <div class="pcard-foot"><div>${price}</div><button class="pcard-btn">${escapeHtml(meta.btn)}</button></div>
+          <div class="pcard-foot"><div>${price}</div><a class="pcard-btn" href="/cabinet.html#publication-${encodeURIComponent(p.id)}">${escapeHtml(meta.btn)}</a></div>
         </div>
         <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>${escapeHtml(meta.lockMsg)}</p><a href="/register.html">Пройти верификацию</a></div>
       </div>
