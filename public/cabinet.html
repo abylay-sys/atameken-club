@@ -1493,19 +1493,207 @@ window.openSignModal = openSignModal;
 window.closeSignModal = closeSignModal;
 
 // ════ Логика messages: переключение чатов + toggle перевода ════
+// ════════════════════════════════════════════════════════════════
+// «Сообщения» с AI-переводчиком — реальный чат через WebSocket + REST.
+// При первом открытии: AC.listConversations() → если есть переписки,
+// показываем; если нет — UI пустого состояния с инструкцией. Юзер может
+// начать чат через «Написать» на детальной странице публикации.
+// ════════════════════════════════════════════════════════════════
+let _msUiState = null; // { extras, conversations, activeId, messages, ws }
 function initMessagesUI() {
   const extras = document.getElementById('actDtExtras');
   if (!extras) return;
-  const items = extras.querySelectorAll('.ms-item');
-  items.forEach(it => it.addEventListener('click', () => {
-    items.forEach(x => x.classList.remove('on'));
-    it.classList.add('on');
-    // (В реальном чате — загружали бы переписку по it.dataset.chat)
-  }));
+  if (!AC.getToken()) {
+    extras.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--ink4)">Войдите в кабинет, чтобы открыть Сообщения.</div>';
+    return;
+  }
+  _msUiState = { extras, conversations: [], activeId: null, messages: [], ws: null, peerLang: 'ru' };
+
+  loadConversations();
+  ensureChatSocket();
+
+  // Toggle переводов
   const toggle = extras.querySelector('#ms-translate');
   if (toggle) toggle.addEventListener('change', () => {
     extras.querySelectorAll('.ms-trans').forEach(t => t.style.display = toggle.checked ? '' : 'none');
   });
+  // Selector языка собеседника
+  let langCtl = extras.querySelector('#ms-mylang');
+  if (!langCtl) {
+    const head = extras.querySelector('.ms-chat-head');
+    if (head) {
+      const wrap = document.createElement('label');
+      wrap.style.cssText = 'margin-left:.5rem;font-size:.7rem;color:var(--ink3);display:flex;align-items:center;gap:.35rem;cursor:pointer';
+      wrap.innerHTML = `<span>Я пишу на:</span><select id="ms-mylang" style="border:1px solid var(--border);background:#fff;padding:.25rem .35rem;font-size:.7rem;border-radius:3px"><option value="ru">RU</option><option value="kk">KZ</option><option value="en">EN</option><option value="zh">ZH</option><option value="tr">TR</option><option value="es">ES</option><option value="de">DE</option><option value="fr">FR</option><option value="ar">AR</option></select>`;
+      head.appendChild(wrap);
+    }
+  }
+  // Send button
+  const input = extras.querySelector('.ms-input input');
+  const sendBtn = extras.querySelector('.ms-send');
+  function doSend(){
+    if (!_msUiState.activeId) { alert('Выберите чат слева, чтобы написать.'); return; }
+    const text = (input.value || '').trim();
+    if (!text) return;
+    const langSel = extras.querySelector('#ms-mylang');
+    const lang = langSel ? langSel.value : 'ru';
+    input.value = '';
+    // Шлём через WS если есть, иначе REST
+    if (_msUiState.ws && _msUiState.ws.readyState === 1) {
+      _msUiState.ws.send(JSON.stringify({ type:'send', conversationId: _msUiState.activeId, text, lang }));
+    } else {
+      AC.sendChatMessage(_msUiState.activeId, text, lang).catch(e => alert('Не удалось отправить: '+(e.message||'')));
+    }
+  }
+  if (sendBtn) { sendBtn.onclick = doSend; }
+  if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(); } });
+}
+
+async function loadConversations() {
+  const extras = _msUiState.extras;
+  try {
+    const { items } = await AC.listConversations();
+    _msUiState.conversations = items;
+    renderConversationList();
+    if (items.length) selectConversation(items[0].id);
+    else renderEmptyChatState();
+  } catch (e) {
+    console.warn('listConversations failed', e);
+    extras.querySelectorAll('.ms-list-head ~ *').forEach(el => el.classList?.contains('ms-search') || el.remove?.());
+  }
+}
+
+function renderConversationList(){
+  const extras = _msUiState.extras;
+  const list = extras.querySelector('.ms-list');
+  if (!list) return;
+  // Удаляем все .ms-item, оставляем head + search
+  list.querySelectorAll('.ms-item').forEach(el => el.remove());
+  list.querySelector('.ms-list-head span').textContent = String(_msUiState.conversations.length);
+  if (!_msUiState.conversations.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'padding:2rem 1rem;text-align:center;color:var(--ink4);font-size:.78rem';
+    empty.innerHTML = 'Чатов пока нет.<br/>Откройте карточку в&nbsp;Реестре и&nbsp;напишите автору.';
+    list.appendChild(empty);
+    return;
+  }
+  for (const c of _msUiState.conversations) {
+    const it = document.createElement('div');
+    it.className = 'ms-item' + (c.id === _msUiState.activeId ? ' on' : '');
+    it.dataset.conv = c.id;
+    const initials = (c.peer?.fullName || '?').split(/\s+/).map(s => s[0] || '').slice(0,2).join('').toUpperCase();
+    const peerName = c.peer?.fullName || 'Собеседник';
+    const lastText = c.lastMessage ? (c.lastMessage.translations?.ru || c.lastMessage.originalText) : '';
+    const ago = c.lastMessageAt ? timeAgo(new Date(c.lastMessageAt)) : '';
+    it.innerHTML = `
+      <div class="ms-avatar">${escapeForAttr(initials || 'Ч')}</div>
+      <div class="ms-item-body">
+        <div class="ms-item-top"><div class="ms-item-name">${escapeForAttr(peerName)}</div><div class="ms-item-time">${escapeForAttr(ago)}</div></div>
+        <div class="ms-item-preview">${escapeForAttr(lastText)}</div>
+      </div>
+      ${c.unread ? `<div class="ms-item-unread">${c.unread}</div>` : ''}
+    `;
+    it.addEventListener('click', () => selectConversation(c.id));
+    list.appendChild(it);
+  }
+}
+
+function escapeForAttr(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function timeAgo(date){
+  const diff = (Date.now() - date.getTime()) / 1000;
+  if (diff < 60) return 'сейчас';
+  if (diff < 3600) return Math.floor(diff/60) + ' мин';
+  if (diff < 86400) return date.toLocaleTimeString('ru-RU', { hour:'2-digit', minute:'2-digit' });
+  return date.toLocaleDateString('ru-RU', { day:'2-digit', month:'short' });
+}
+
+async function selectConversation(id) {
+  _msUiState.activeId = id;
+  document.querySelectorAll('.ms-item').forEach(el => el.classList.toggle('on', el.dataset.conv === id));
+  // Обновляем head с инфой о собеседнике
+  const conv = _msUiState.conversations.find(c => c.id === id);
+  const extras = _msUiState.extras;
+  const head = extras.querySelector('.ms-chat-head');
+  if (head && conv) {
+    const av = head.querySelector('.ms-avatar');
+    const nm = head.querySelector('.ms-chat-name');
+    const meta = head.querySelector('.ms-chat-meta');
+    if (av) av.textContent = (conv.peer?.fullName || '?').split(/\s+/).map(s=>s[0]||'').slice(0,2).join('').toUpperCase();
+    if (nm) nm.textContent = conv.peer?.fullName || 'Собеседник';
+    if (meta) meta.innerHTML = `<span class="ms-lang-pill">${(conv.peer?.preferredLang || 'ru').toUpperCase()}</span>${conv.peer?.email || ''}`;
+    _msUiState.peerLang = conv.peer?.preferredLang || 'ru';
+  }
+  // Грузим историю
+  try {
+    const { items } = await AC.getMessages(id);
+    _msUiState.messages = items;
+    renderMessages();
+    // Refresh conversations to mark unread=0
+    setTimeout(loadConversations, 300);
+  } catch (e) { console.warn('getMessages failed', e); }
+}
+
+function renderMessages() {
+  const extras = _msUiState.extras;
+  const body = extras.querySelector('#ms-body');
+  if (!body) return;
+  const myId = (AC.getUser() && AC.getUser().id) || null;
+  const showTrans = extras.querySelector('#ms-translate')?.checked !== false;
+  const peerLang = (_msUiState.peerLang || 'ru').toLowerCase();
+  body.innerHTML = _msUiState.messages.map(m => {
+    const mine = m.senderId === myId;
+    const orig = m.originalText || '';
+    // Если оригинал не на моём языке — показываем перевод. Для отправителя
+    // показываем перевод, чтобы он видел, что собеседник прочтёт.
+    const translations = m.translations || {};
+    const translatedForOther = mine ? translations[peerLang] : translations['ru'];
+    const transTag = mine ? peerLang.toUpperCase() : 'RU';
+    return `
+      <div class="ms-msg ${mine ? 'mine' : 'them'}">
+        <div class="ms-bubble">${escapeForAttr(orig)}</div>
+        ${translatedForOther && translatedForOther !== orig ? `<div class="ms-trans"${showTrans?'':' style="display:none"'}><span class="ms-trans-tag">${escapeForAttr(transTag)}</span>${escapeForAttr(translatedForOther)}</div>` : ''}
+        <div class="ms-time">${escapeForAttr(timeAgo(new Date(m.createdAt)))}</div>
+      </div>
+    `;
+  }).join('');
+  body.scrollTop = body.scrollHeight;
+}
+
+function renderEmptyChatState(){
+  const extras = _msUiState.extras;
+  const body = extras.querySelector('#ms-body');
+  const head = extras.querySelector('.ms-chat-name');
+  const meta = extras.querySelector('.ms-chat-meta');
+  if (head) head.textContent = 'Сообщения';
+  if (meta) meta.textContent = '';
+  if (body) body.innerHTML = '<div style="text-align:center;color:var(--ink4);padding:2rem 1rem;font-size:.85rem">Чатов пока нет. Откройте карточку в&nbsp;Реестре — кнопка <strong>«Написать»</strong> начнёт первый диалог.</div>';
+}
+
+// ── WebSocket: получаем push новых сообщений в real-time ──
+function ensureChatSocket() {
+  if (_msUiState.ws && _msUiState.ws.readyState <= 1) return;
+  const url = AC.chatWsUrl();
+  if (!url) return;
+  try {
+    const ws = new WebSocket(url);
+    _msUiState.ws = ws;
+    ws.addEventListener('message', (ev) => {
+      try {
+        const data = JSON.parse(ev.data);
+        if (data.type === 'message' && data.message) {
+          // Если сообщение для активного чата — добавляем в renderMessages
+          if (data.message.conversationId === _msUiState.activeId) {
+            _msUiState.messages.push(data.message);
+            renderMessages();
+          }
+          // Обновляем сайдбар (preview + unread)
+          loadConversations();
+        }
+      } catch (_) {}
+    });
+    ws.addEventListener('close', () => { _msUiState.ws = null; });
+    ws.addEventListener('error', () => { _msUiState.ws = null; });
+  } catch (e) { console.warn('chat WS failed', e); }
 }
 
 function returnToCabinet() {
@@ -2276,6 +2464,7 @@ async function showPublicationDetail(id){
     const actionsHtml = `
       <div class="pd-actions">
         <a class="btn-r" href="/cabinet.html#activity-deal-support">Сопровождение сделки →</a>
+        <button class="btn-r" id="pdWriteBtn" data-pub-id="${_esc(p.id)}">✉ Написать автору</button>
         <button class="btn-o" id="pdFavBtn" data-pub-id="${_esc(p.id)}">★ В&nbsp;избранное</button>
         <button class="btn-o" id="pdReportBtn" data-pub-id="${_esc(p.id)}">Подать жалобу</button>
       </div>
@@ -2306,6 +2495,23 @@ async function showPublicationDetail(id){
         }
       });
     }
+
+    // Wire «Написать автору» — создаёт/находит conversation и ведёт в messages
+    const writeBtn = document.getElementById('pdWriteBtn');
+    if (writeBtn) writeBtn.addEventListener('click', async () => {
+      writeBtn.disabled = true; writeBtn.textContent = 'Открываем чат…';
+      try {
+        const { conversation } = await AC.createConversation({ publicationId: p.id });
+        location.hash = '#activity-messages';
+        // initMessagesUI() сам подхватит и выберет последний созданный чат
+        setTimeout(() => { if (typeof selectConversation === 'function') selectConversation(conversation.id); }, 800);
+      } catch (e) {
+        if (e.status === 401) { location.href = '/login.html'; return; }
+        alert('Не удалось открыть чат: ' + (e.message || 'ошибка'));
+      } finally {
+        writeBtn.disabled = false; writeBtn.textContent = '✉ Написать автору';
+      }
+    });
 
     // Wire actions
     const favBtn = document.getElementById('pdFavBtn');

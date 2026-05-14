@@ -130,6 +130,19 @@
     async paymentMockComplete(id) { return request('POST', '/wallet/payment/' + encodeURIComponent(id) + '/mock-complete', null, true); },
 
     // ── File uploads ──
+    // ── Чат (Сообщения с AI-переводчиком) ──
+    async listConversations() { return request('GET', '/chat/conversations', null, true); },
+    async createConversation(payload) { return request('POST', '/chat/conversations', payload, true); },
+    async getMessages(conversationId) { return request('GET', '/chat/conversations/' + encodeURIComponent(conversationId) + '/messages', null, true); },
+    async sendChatMessage(conversationId, text, lang) { return request('POST', '/chat/messages', { conversationId, text, lang }, true); },
+    async setConversationLang(conversationId, lang) { return request('PUT', '/chat/conversations/' + encodeURIComponent(conversationId) + '/lang', { lang }, true); },
+    chatWsUrl() {
+      const token = getToken();
+      if (!token) return null;
+      const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+      return `${proto}://${location.host}/chat/ws?token=${encodeURIComponent(token)}`;
+    },
+
     // ── Сделки (Сопровождение) ──
     async createDeal(payload) { return request('POST', '/deals', payload, true); },
     async myDeals() { return request('GET', '/deals/mine', null, true); },

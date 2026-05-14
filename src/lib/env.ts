@@ -33,6 +33,12 @@ export const env = {
   GOOGLE_SHEET_ID: optional('GOOGLE_SHEET_ID'),
   GOOGLE_SERVICE_ACCOUNT_BASE64: optional('GOOGLE_SERVICE_ACCOUNT_BASE64'),
 
+  // ── AI-переводчик (Сообщения) ──
+  // OpenAI API key для авто-перевода сообщений между языками собеседников.
+  // Если не задан — переводы не выполняются (показывается оригинальный текст).
+  OPENAI_API_KEY: optional('OPENAI_API_KEY'),
+  OPENAI_MODEL: optional('OPENAI_MODEL', 'gpt-4o-mini'),
+
   // ── File uploads ──
   // Локальный каталог для файлов публикаций (бизнес-план, финмодель, сертификаты).
   // На Render Free диск не персистится между деплоями — для прод нужен S3 / Spaces.

@@ -13,6 +13,7 @@ import complaintsRoutes from './routes/complaints';
 import walletRoutes from './routes/wallet';
 import uploadsRoutes from './routes/uploads';
 import dealsRoutes from './routes/deals';
+import chatRoutes from './routes/chat';
 import fs from 'node:fs';
 
 async function buildApp() {
@@ -50,6 +51,7 @@ async function buildApp() {
   await app.register(walletRoutes, { prefix: '/wallet' });
   await app.register(uploadsRoutes, { prefix: '/uploads' });
   await app.register(dealsRoutes, { prefix: '/deals' });
+  await app.register(chatRoutes, { prefix: '/chat' });
 
   // Раздаём загруженные файлы как статику. Должно идти ДО глобального
   // public/ static-плагина, чтобы /uploads/* не пересекалось.

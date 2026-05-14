@@ -48,6 +48,8 @@ model User {
   pendingPayments PendingPayment[]
   initiatedDeals  Deal[]          @relation("DealInitiator")
   signedDocuments SignedDocument[] @relation("DocumentSigner")
+  conversationParticipants ConversationParticipant[]
+  messagesSent     Message[]
 
   @@index([email])
 }
@@ -131,6 +133,7 @@ model Publication {
   complaints     Complaint[]
   purchasedBy    PurchasedCard[]
   deals          Deal[]
+  conversations  Conversation[]
 
   @@index([userId])
   @@index([type, status])
@@ -150,6 +153,53 @@ model Favorite {
   @@unique([userId, publicationId])
   @@index([userId])
   @@index([publicationId])
+}
+
+// ════ Чат (Сообщения) с AI-переводчиком ════
+model Conversation {
+  id            String                    @id @default(cuid())
+  publicationId String?
+  publication   Publication?              @relation(fields: [publicationId], references: [id], onDelete: SetNull)
+  lastMessageAt DateTime?
+  createdAt     DateTime                  @default(now())
+
+  participants  ConversationParticipant[]
+  messages      Message[]
+
+  @@index([lastMessageAt])
+  @@index([publicationId])
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preferredLang  String       @default("ru")   // ISO-код языка (ru/kz/en/zh/tr/...)
+  lastReadAt     DateTime?
+  joinedAt       DateTime     @default(now())
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id              String        @id @default(cuid())
+  conversationId  String
+  conversation    Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId        String
+  sender          User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  originalText    String
+  originalLang    String        @default("ru")
+  // Кэш переводов в JSON: {"en": "Hello", "zh": "你好", ...}
+  translations    Json?
+  createdAt       DateTime      @default(now())
+  editedAt        DateTime?
+  deletedAt       DateTime?
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
 }
 
 enum DealStatus {
