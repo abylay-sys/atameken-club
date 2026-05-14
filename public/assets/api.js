@@ -106,6 +106,17 @@
     async updatePublication(id, payload) { return request('PUT', '/publications/' + id, payload, true); },
     async deletePublication(id) { return request('DELETE', '/publications/' + id, null, true); },
 
+    // ── Избранное ──
+    async myFavorites() { return request('GET', '/favorites/mine', null, true); },
+    async addFavorite(publicationId) { return request('POST', '/favorites/' + encodeURIComponent(publicationId), null, true); },
+    async removeFavorite(publicationId) { return request('DELETE', '/favorites/' + encodeURIComponent(publicationId), null, true); },
+
+    // ── Жалобы ──
+    async reportComplaint(publicationId, reason, details) {
+      return request('POST', '/complaints', { publicationId, reason, details: details || null }, true);
+    },
+    async myComplaints() { return request('GET', '/complaints/mine', null, true); },
+
     getUser, getToken, clearSession,
     requireAuth(redirect) {
       if (!getToken()) {

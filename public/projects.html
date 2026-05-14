@@ -550,6 +550,110 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
     });
   });
 });
+
+// ════════════════════════════════════════════════════════════════
+// Звёздочка «Избранное» + «Подать жалобу» в каждой карточке Реестра
+// ════════════════════════════════════════════════════════════════
+(function(){
+  // Стили звёздочки + кнопки жалобы — инжектим один раз
+  const style = document.createElement('style');
+  style.textContent = `
+    .pcard-fav{position:absolute;top:.75rem;right:.75rem;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .2s;font-size:1.1rem;line-height:1;color:#cbd5e1}
+    .pcard-fav:hover{transform:scale(1.08);border-color:#C5963A;color:#C5963A}
+    .pcard-fav.on{background:#fffaf0;border-color:#C5963A;color:#C5963A}
+    .pcard-report{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--ink4);text-decoration:none;margin-top:.5rem;cursor:pointer;background:none;border:0;padding:0;font-family:inherit}
+    .pcard-report:hover{color:var(--red);text-decoration:underline}
+    .pcard-report svg{width:11px;height:11px}
+  `;
+  document.head.appendChild(style);
+
+  // У демо-карточек нет реальных Publication ID, используем slug из заголовка
+  function pubIdFor(card){
+    if (card.dataset.pubId) return card.dataset.pubId;
+    const title = card.querySelector('.pcard-title')?.textContent.trim() || '';
+    // detherminstic «demo-» id, чтобы можно было хранить в localStorage и потом перенести в БД
+    return 'demo-' + title.toLowerCase().replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,40);
+  }
+
+  // Локальная копия избранного для демо-карточек (т.к. в БД их пока нет).
+  const LOCAL_FAV_KEY = 'ac_demo_favs';
+  function localFavs(){ try { return new Set(JSON.parse(localStorage.getItem(LOCAL_FAV_KEY) || '[]')); } catch { return new Set(); } }
+  function saveLocalFavs(set){ localStorage.setItem(LOCAL_FAV_KEY, JSON.stringify([...set])); }
+
+  const favSet = localFavs();
+  const token = (typeof AC !== 'undefined') && AC.getToken();
+
+  // Подтягиваем серверные избранные (если залогинен) — мерджим с локальными
+  (async () => {
+    if (!token || typeof AC === 'undefined') return;
+    try {
+      const { items } = await AC.myFavorites();
+      items.forEach(it => favSet.add(it.publication.id));
+      // Перерисуем активные звёздочки после подтягивания
+      document.querySelectorAll('.pcard-fav').forEach(btn => {
+        const id = btn.dataset.pubId;
+        btn.classList.toggle('on', favSet.has(id));
+      });
+    } catch (_) { /* ignore — будем работать только с локальными */ }
+  })();
+
+  // Для каждой карточки — добавляем UI
+  document.querySelectorAll('#catGrid .pcard').forEach(card => {
+    const pubId = pubIdFor(card);
+    card.dataset.pubId = pubId;
+
+    // ★ Звёздочка
+    const star = document.createElement('button');
+    star.type = 'button';
+    star.className = 'pcard-fav' + (favSet.has(pubId) ? ' on' : '');
+    star.dataset.pubId = pubId;
+    star.title = 'Избранное';
+    star.textContent = '★';
+    star.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const isOn = star.classList.toggle('on');
+      if (isOn) favSet.add(pubId); else favSet.delete(pubId);
+      saveLocalFavs(favSet);
+      // Если залогинен — синхронизируем с сервером. Для демо-карточек API вернёт 404 — это ОК.
+      if (token && typeof AC !== 'undefined') {
+        try {
+          if (isOn) await AC.addFavorite(pubId); else await AC.removeFavorite(pubId);
+        } catch (err) {
+          // Демо-карточки не существуют в БД — молча игнорируем 404
+          if (err.status && err.status !== 404) console.warn('Favorite sync failed:', err);
+        }
+      }
+    });
+    card.appendChild(star);
+
+    // ⚠ «Подать жалобу» — добавим после tags блока
+    const foot = card.querySelector('.pcard-foot');
+    if (foot) {
+      const report = document.createElement('button');
+      report.type = 'button';
+      report.className = 'pcard-report';
+      report.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 2v12M3 2h9l-2 3 2 3H3"/></svg>Подать жалобу';
+      report.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!token) { alert('Войдите в кабинет, чтобы подать жалобу.'); location.href='/login.html'; return; }
+        const reason = prompt('Опишите причину жалобы (например: «Недостоверные данные», «Спам», «Нарушение правил»):');
+        if (!reason || reason.trim().length < 3) return;
+        const details = prompt('Дополнительные подробности (необязательно):') || '';
+        try {
+          await AC.reportComplaint(pubId, reason.trim(), details.trim() || null);
+          alert('Спасибо! Жалоба отправлена модератору.');
+        } catch (err) {
+          if (err.status === 404) {
+            alert('Демо-карточка — жалоба не отправлена. На реальной публикации Реестра функция работает.');
+          } else {
+            alert('Не удалось отправить: ' + (err.message || 'попробуйте позже'));
+          }
+        }
+      });
+      foot.parentNode.insertBefore(report, foot);
+    }
+  });
+})();
 </script>
 <script src="/assets/i18n.js"></script>
 </body>

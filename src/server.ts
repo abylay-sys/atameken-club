@@ -8,6 +8,8 @@ import profileRoutes from './routes/profile';
 import adminRoutes from './routes/admin';
 import servicesRoutes from './routes/services';
 import publicationsRoutes from './routes/publications';
+import favoritesRoutes from './routes/favorites';
+import complaintsRoutes from './routes/complaints';
 
 async function buildApp() {
   const app = Fastify({
@@ -39,6 +41,8 @@ async function buildApp() {
   await app.register(adminRoutes, { prefix: '/admin' });
   await app.register(servicesRoutes, { prefix: '/services' });
   await app.register(publicationsRoutes, { prefix: '/publications' });
+  await app.register(favoritesRoutes, { prefix: '/favorites' });
+  await app.register(complaintsRoutes, { prefix: '/complaints' });
 
   await app.register(fastifyStatic, {
     root: path.join(process.cwd(), 'public'),

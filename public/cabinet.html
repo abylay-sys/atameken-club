@@ -1814,6 +1814,48 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
       if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить объявления.</div>';
     });
   }
+
+  // ── Избранное (для покупателей) — investor-dashboard #investorFavs ──
+  function renderFavs(items, containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    if (!items.length) {
+      el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Нет добавленных в&nbsp;избранное карточек.<br/><span style="font-size:.78rem">Откройте Реестр и&nbsp;нажмите ★ в&nbsp;интересной карточке.</span></div>';
+      return;
+    }
+    el.innerHTML = items.map(({ publication: p }) => `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border)">
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);font-weight:500;line-height:1.3">${escapeHtml(p.title)}</div>
+          <div style="font-size:.72rem;color:var(--ink4);margin-top:.2rem">${TYPE_LABEL[p.type] || p.type} · ${escapeHtml(p.industry || '—')} · ${escapeHtml(p.region || '—')}</div>
+        </div>
+        <div style="font-family:'Cormorant Garamond',serif;color:var(--red);font-weight:600;font-size:1rem;white-space:nowrap">${escapeHtml(p.priceLabel || '')}</div>
+        <button class="btn-o btn-sm" style="font-size:.7rem;padding:.4rem .7rem" data-fav-remove="${p.id}">Убрать ★</button>
+      </div>
+    `).join('');
+    // Удаление из избранного — клик по кнопке «Убрать ★»
+    el.querySelectorAll('[data-fav-remove]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const pubId = btn.getAttribute('data-fav-remove');
+        try {
+          await AC.removeFavorite(pubId);
+          btn.closest('div').parentElement.style.transition = 'opacity .2s';
+          btn.closest('div').parentElement.style.opacity = '0';
+          setTimeout(() => btn.closest('div').parentElement.remove(), 200);
+          // Если после удаления контейнер пустой — перезагрузим
+          setTimeout(() => { if (!el.children.length) renderFavs([], containerId); }, 250);
+        } catch (e) { alert('Не удалось убрать из избранного: ' + (e.message || 'ошибка')); }
+      });
+    });
+  }
+  try {
+    const { items } = await AC.myFavorites();
+    renderFavs(items, 'investorFavs');
+  } catch (err) {
+    console.warn('Failed to load favorites:', err);
+    const el = document.getElementById('investorFavs');
+    if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить избранное.</div>';
+  }
 })();
 </script>
 </body>
