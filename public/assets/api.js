@@ -117,6 +117,12 @@
     },
     async myComplaints() { return request('GET', '/complaints/mine', null, true); },
 
+    // ── Кошелёк / токены ──
+    async wallet() { return request('GET', '/wallet', null, true); },
+    async purchaseTokens(packageSize) { return request('POST', '/wallet/purchase', { packageSize }, true); },
+    async spendCard(publicationId) { return request('POST', '/wallet/spend/card', { publicationId }, true); },
+    async purchasedCards() { return request('GET', '/wallet/purchased', null, true); },
+
     getUser, getToken, clearSession,
     requireAuth(redirect) {
       if (!getToken()) {

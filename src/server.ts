@@ -10,6 +10,7 @@ import servicesRoutes from './routes/services';
 import publicationsRoutes from './routes/publications';
 import favoritesRoutes from './routes/favorites';
 import complaintsRoutes from './routes/complaints';
+import walletRoutes from './routes/wallet';
 
 async function buildApp() {
   const app = Fastify({
@@ -43,6 +44,7 @@ async function buildApp() {
   await app.register(publicationsRoutes, { prefix: '/publications' });
   await app.register(favoritesRoutes, { prefix: '/favorites' });
   await app.register(complaintsRoutes, { prefix: '/complaints' });
+  await app.register(walletRoutes, { prefix: '/wallet' });
 
   await app.register(fastifyStatic, {
     root: path.join(process.cwd(), 'public'),

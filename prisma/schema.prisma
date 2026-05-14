@@ -43,6 +43,8 @@ model User {
   publications  Publication[]
   favorites     Favorite[]
   complaintsFiled Complaint[]   @relation("ComplaintReporter")
+  wallet        TokenWallet?
+  purchasedCards PurchasedCard[]
 
   @@index([email])
 }
@@ -122,8 +124,9 @@ model Publication {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
-  favorites   Favorite[]
-  complaints  Complaint[]
+  favorites      Favorite[]
+  complaints     Complaint[]
+  purchasedBy    PurchasedCard[]
 
   @@index([userId])
   @@index([type, status])
@@ -143,6 +146,56 @@ model Favorite {
   @@unique([userId, publicationId])
   @@index([userId])
   @@index([publicationId])
+}
+
+enum TokenTransactionType {
+  PURCHASE     // купил пакет токенов
+  SPEND_CARD   // открыл развёрнутую карточку
+  SPEND_VERIF  // открыл результат верификации
+  REFUND       // возврат
+  BONUS        // бонус от админа / промокод
+}
+
+model TokenWallet {
+  id           String             @id @default(cuid())
+  userId       String             @unique
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance      Int                @default(0)
+  totalEarned  Int                @default(0)
+  totalSpent   Int                @default(0)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  transactions TokenTransaction[]
+}
+
+model TokenTransaction {
+  id           String               @id @default(cuid())
+  walletId     String
+  wallet       TokenWallet          @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  type         TokenTransactionType
+  amount       Int                  // знаковый: +N пополнение, -N трата
+  balanceAfter Int                  // снимок баланса после транзакции
+  meta         Json?                // {packageSize}/{publicationId} и пр.
+  createdAt    DateTime             @default(now())
+
+  @@index([walletId])
+  @@index([type])
+}
+
+// Учёт оплаченных «Развёрнутых карточек» — чтобы при повторном открытии
+// не списывать токены дважды.
+model PurchasedCard {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publicationId String
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  tokensSpent   Int         @default(1)
+  purchasedAt   DateTime    @default(now())
+
+  @@unique([userId, publicationId])
+  @@index([userId])
 }
 
 enum ComplaintStatus {
