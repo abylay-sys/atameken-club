@@ -722,12 +722,62 @@ strong{color:var(--ink);font-weight:600}
     </div><!-- /type-sale -->
 
     <style>
+      /* ─── Форма публикации ─── */
+      .pub-form-card{overflow:hidden}
+      .pub-form-body{padding:1.85rem 2.1rem 1.6rem}
+      @media(max-width:720px){.pub-form-body{padding:1.4rem 1.15rem 1.25rem}}
+
+      /* Сетка полей */
+      .res-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem 1.5rem}
+      .res-field{display:flex;flex-direction:column;gap:.45rem;min-width:0}
+      .res-field.full{grid-column:1/-1}
+      .res-field label{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2);line-height:1.4}
+      .res-req{color:var(--red);margin-left:.15rem}
+
+      /* Инпуты, селекты, textarea — единый стиль */
+      .res-field input[type="text"],
+      .res-field input[type="email"],
+      .res-field input[type="tel"],
+      .res-field input[type="number"],
+      .res-field input:not([type]),
+      .res-field textarea,
+      .res-field select{
+        width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);
+        padding:.72rem .95rem;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:400;line-height:1.4;
+        outline:none;transition:border-color .22s,background .22s,box-shadow .22s;border-radius:4px;appearance:none;-webkit-appearance:none;
+      }
+      .res-field select{
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%234A5568' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M3 5l4 4 4-4'/></svg>");
+        background-repeat:no-repeat;background-position:right .85rem center;padding-right:2.4rem;cursor:pointer;
+      }
+      .res-field input:focus,.res-field textarea:focus,.res-field select:focus{
+        border-color:var(--red);background:#fff;box-shadow:0 0 0 3px rgba(200,40,42,.08);
+      }
+      .res-field input::placeholder,.res-field textarea::placeholder{color:var(--ink4);font-weight:400;opacity:1}
+      .res-field textarea{resize:vertical;min-height:108px;line-height:1.55}
+      .res-field-hint{font-size:.72rem;color:var(--ink4);line-height:1.5;margin-top:-.1rem}
+
+      /* Сабмит-блок */
+      .res-submit{margin-top:1.75rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+      .res-submit-btn{background:var(--red);color:#fff;border:none;padding:.88rem 2.4rem;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;letter-spacing:.02em;cursor:pointer;border-radius:3px;transition:background .22s,transform .12s;flex-shrink:0;min-width:200px}
+      .res-submit-btn:hover{background:var(--red2)}
+      .res-submit-btn:active{transform:translateY(1px)}
+      .res-submit-btn:disabled{opacity:.6;cursor:wait;transform:none}
+      .res-submit-note{font-size:.72rem;color:var(--ink4);line-height:1.6;max-width:520px;flex:1;min-width:220px}
+
+      @media(max-width:720px){
+        .res-form-grid{grid-template-columns:1fr;gap:1rem}
+        .res-submit{flex-direction:column;align-items:stretch;gap:.9rem}
+        .res-submit-btn{width:100%;min-width:0}
+        .res-submit-note{max-width:none}
+      }
+
       /* Стили кастомного file-uploader'а в форме публикации */
-      .pub-uploader{display:flex;flex-direction:column;gap:.45rem}
-      .pub-upload-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem .9rem;background:var(--bg);border:1.5px dashed var(--border2);color:var(--ink2);border-radius:3px;cursor:pointer;font-size:.82rem;font-weight:500;font-family:'Inter',sans-serif;transition:all .2s;width:fit-content}
-      .pub-upload-btn:hover{border-color:var(--red);color:var(--red)}
+      .pub-uploader{display:flex;flex-direction:column;gap:.45rem;margin-top:.05rem}
+      .pub-upload-btn{display:inline-flex;align-items:center;gap:.55rem;padding:.7rem 1.05rem;background:#fafbfc;border:1.5px dashed var(--border2);color:var(--ink2);border-radius:4px;cursor:pointer;font-size:.82rem;font-weight:500;font-family:'Inter',sans-serif;transition:all .2s;width:fit-content}
+      .pub-upload-btn:hover{border-color:var(--red);color:var(--red);background:#fff}
       .pub-upload-btn:disabled{opacity:.6;cursor:default}
-      .pub-upload-info{display:flex;align-items:center;gap:.5rem;background:#dcfce7;border:1px solid #86efac;border-radius:3px;padding:.5rem .75rem;font-size:.82rem;color:#15803d}
+      .pub-upload-info{display:flex;align-items:center;gap:.55rem;background:#dcfce7;border:1px solid #86efac;border-radius:4px;padding:.55rem .85rem;font-size:.82rem;color:#15803d}
       .pub-upload-icon{flex-shrink:0;font-size:1rem}
       .pub-upload-name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
       .pub-upload-size{color:#16a34a;font-size:.72rem;flex-shrink:0}
@@ -735,6 +785,15 @@ strong{color:var(--ink);font-weight:600}
       .pub-upload-remove:hover{opacity:1;color:#b91c1c}
       .pub-upload-spin{display:inline-block;width:12px;height:12px;border:2px solid #d4d4d8;border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
       @keyframes spin{to{transform:rotate(360deg)}}
+
+      /* Заголовок страницы публикации — крупнее и с акцентом */
+      #type-publication .page-hd-left h2{font-size:2.1rem;font-weight:500}
+      #type-publication .page-hd-left p{font-size:.92rem;color:var(--ink3);margin-top:.35rem;max-width:580px}
+
+      /* Внутренние разделители-секции в форме (опционально, для будущей группировки) */
+      .res-section-title{grid-column:1/-1;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);padding:.45rem 0 .25rem;border-bottom:1px solid var(--border);margin:.6rem 0 .15rem;display:flex;align-items:center;gap:.6rem}
+      .res-section-title::before{content:'';width:18px;height:2px;background:var(--red);display:block;border-radius:2px}
+      .res-section-title:first-child{margin-top:0}
     </style>
 
     <!-- ──────── НОВАЯ ПУБЛИКАЦИЯ (4 уникальные формы под 4 типа продавцов) ──────── -->
@@ -749,11 +808,11 @@ strong{color:var(--ink);font-weight:600}
             <button class="btn-o btn-sm" onclick="returnToCabinet()">Назад</button>
           </div>
         </div>
-        <div class="card">
-          <div class="card-body" style="padding:1.75rem 2rem">
-            <form class="res-form" id="pubForm" novalidate style="background:transparent;border:0;padding:0;box-shadow:none">
+        <div class="card pub-form-card">
+          <div class="card-body pub-form-body">
+            <form class="res-form" id="pubForm" novalidate>
               <div class="res-form-grid" id="pubFormFields"></div>
-              <div class="res-submit" style="margin-top:1.5rem">
+              <div class="res-submit">
                 <button type="submit" class="res-submit-btn">Опубликовать</button>
                 <span class="res-submit-note">Публикуя карточку, вы соглашаетесь с Пользовательским соглашением и принимаете ответственность за достоверность размещаемой информации.</span>
               </div>
@@ -1953,6 +2012,7 @@ const PUBLICATION_FORMS = {
     title: 'Новая публикация — инвест-проект',
     sub: 'Карточка проекта для привлечения инвестора',
     fields: [
+      {section:'Параметры проекта'},
       {name:'projectName', label:'Название проекта', required:true, full:true, placeholder:'Например, «Агропромышленный хаб Степной»'},
       {name:'industry', label:'Отрасль', placeholder:'Агропром, FoodTech, EdTech...'},
       {name:'stage', label:'Стадия проекта', type:'select', options:['Idea','MVP','Pre-Seed','Seed','Series A','Series B+']},
@@ -1960,9 +2020,12 @@ const PUBLICATION_FORMS = {
       {name:'payback', label:'Срок окупаемости', placeholder:'например, 3–5 лет'},
       {name:'equity', label:'Целевая доля инвестора', placeholder:'например, 20%'},
       {name:'location', label:'Локация', placeholder:'Алматы, Казахстан'},
+      {section:'Описание'},
       {name:'description', label:'Описание (публичное)', textarea:true, full:true, placeholder:'Без раскрытия конфиденциальных деталей'},
-      {name:'bizplan', label:'Бизнес-план (закрытое)', type:'file', full:true, hint:'PDF, открывается только после оплаты Развёрнутой карточки'},
-      {name:'finmodel', label:'Финансовая модель (закрытое)', type:'file', full:true, hint:'Excel, открывается только после оплаты Развёрнутой карточки'},
+      {section:'Закрытые документы'},
+      {name:'bizplan', label:'Бизнес-план', type:'file', full:true, hint:'PDF, открывается только после оплаты Развёрнутой карточки'},
+      {name:'finmodel', label:'Финансовая модель', type:'file', full:true, hint:'Excel, открывается только после оплаты Развёрнутой карточки'},
+      {section:'Контакты'},
       {name:'contactName', label:'Ф.И.О. контактного лица', full:true},
       {name:'contactInfo', label:'Контакты (телефон, e-mail)', full:true},
     ],
@@ -1971,6 +2034,7 @@ const PUBLICATION_FORMS = {
     title: 'Новая публикация — франшиза',
     sub: 'Карточка франшизы для привлечения франчайзи',
     fields: [
+      {section:'Параметры франшизы'},
       {name:'brand', label:'Название бренда', required:true, full:true, placeholder:'Например, «Stepnoy Kitchen»'},
       {name:'industry', label:'Отрасль', placeholder:'HoReCa, Retail, Beauty, Education...'},
       {name:'points', label:'Существующие точки', placeholder:'например, 12 точек, СНГ'},
@@ -1979,9 +2043,12 @@ const PUBLICATION_FORMS = {
       {name:'marketing', label:'Маркетинговый сбор', placeholder:'например, 2%'},
       {name:'payback', label:'Срок окупаемости', placeholder:'например, 18 мес.'},
       {name:'geography', label:'География франшизы', placeholder:'СНГ, Турция, ОАЭ...'},
+      {section:'Описание и поддержка'},
       {name:'description', label:'Описание бизнес-модели', textarea:true, full:true},
       {name:'support', label:'Поддержка франчайзи', textarea:true, full:true, placeholder:'Обучение, маркетинг, ИТ-системы, ребрендинг...'},
-      {name:'standards', label:'Стандарты и пакет (закрытое)', type:'file', full:true, hint:'Открывается только после оплаты Развёрнутой карточки'},
+      {section:'Закрытые документы'},
+      {name:'standards', label:'Стандарты и пакет', type:'file', full:true, hint:'Открывается только после оплаты Развёрнутой карточки'},
+      {section:'Контакты'},
       {name:'contactName', label:'Контактное лицо', full:true},
       {name:'contactInfo', label:'Контакты (телефон, e-mail)', full:true},
     ],
@@ -1990,6 +2057,7 @@ const PUBLICATION_FORMS = {
     title: 'Новая публикация — готовый бизнес',
     sub: 'Карточка действующего бизнеса на продажу',
     fields: [
+      {section:'Параметры бизнеса'},
       {name:'businessType', label:'Тип бизнеса', required:true, full:true, placeholder:'Например, «Завод металлообработки»'},
       {name:'industry', label:'Отрасль', placeholder:'Производство, Ритейл, Услуги, IT...'},
       {name:'location', label:'Локация', placeholder:'Алматы, Казахстан'},
@@ -1999,9 +2067,12 @@ const PUBLICATION_FORMS = {
       {name:'ebitda', label:'EBITDA', placeholder:'например, 240 млн KZT (20%)'},
       {name:'price', label:'Запрашиваемая цена', placeholder:'например, 850 млн KZT'},
       {name:'reason', label:'Причина продажи', full:true, placeholder:'Переезд, выход из бизнеса, смена деятельности...'},
+      {section:'Описание'},
       {name:'description', label:'Описание (публичное)', textarea:true, full:true, placeholder:'Без раскрытия названия и деталей'},
       {name:'whatIncluded', label:'Что входит в продажу', textarea:true, full:true, placeholder:'Активы, бренд, клиентская база, контракты...'},
-      {name:'finReports', label:'Финансовая отчётность (закрытое)', type:'file', full:true, hint:'Открывается только после NDA + Развёрнутой карточки'},
+      {section:'Закрытые документы'},
+      {name:'finReports', label:'Финансовая отчётность', type:'file', full:true, hint:'Открывается только после NDA + Развёрнутой карточки'},
+      {section:'Контакты'},
       {name:'contactName', label:'Контактное лицо', full:true},
       {name:'contactInfo', label:'Контакты (телефон, e-mail)', full:true},
     ],
@@ -2010,6 +2081,7 @@ const PUBLICATION_FORMS = {
     title: 'Новая публикация — товары / сырьё',
     sub: 'Карточка товара или сырьевой партии',
     fields: [
+      {section:'Параметры товара'},
       {name:'product', label:'Название продукции', required:true, full:true, placeholder:'Например, «Фиброцементные плиты»'},
       {name:'category', label:'Категория', type:'select', options:['Сырьё','Готовая продукция','Полуфабрикаты','Комплектующие']},
       {name:'industry', label:'Отрасль / сфера применения', placeholder:'Стройматериалы, Метизы, Текстиль...'},
@@ -2019,9 +2091,12 @@ const PUBLICATION_FORMS = {
       {name:'incoterms', label:'Условия поставки (Инкотермс)', placeholder:'FCA, EXW, CIF, DAP...'},
       {name:'payment', label:'Условия оплаты', placeholder:'30% предоплата + 70% по факту, аккредитив...'},
       {name:'certificates', label:'Сертификаты', placeholder:'СТ-1, СТ-КЗ, ISO 9001, Халяль...'},
+      {section:'Описание'},
       {name:'composition', label:'Состав / характеристики', textarea:true, full:true, placeholder:'Технические характеристики, состав, ТУ'},
       {name:'description', label:'Описание', textarea:true, full:true},
-      {name:'productionDocs', label:'Сертификаты производства (закрытое)', type:'file', full:true, hint:'PDF, открывается только после оплаты Развёрнутой карточки'},
+      {section:'Закрытые документы'},
+      {name:'productionDocs', label:'Сертификаты производства', type:'file', full:true, hint:'PDF, открывается только после оплаты Развёрнутой карточки'},
+      {section:'Контакты'},
       {name:'contactName', label:'Контактное лицо', full:true},
       {name:'contactInfo', label:'Контакты (телефон, e-mail)', full:true},
     ],
@@ -2045,11 +2120,19 @@ function showPublication(sellerType) {
   const grid = document.getElementById('pubFormFields');
   grid.innerHTML = '';
   form.fields.forEach(f => {
+    // Псевдо-поле «секция»: вставляем заголовок секции и идём дальше
+    if (f.section) {
+      const sec = document.createElement('div');
+      sec.className = 'res-section-title';
+      sec.textContent = f.section;
+      grid.appendChild(sec);
+      return;
+    }
     const wrap = document.createElement('div');
     wrap.className = 'res-field' + (f.full ? ' full' : '');
     const label = document.createElement('label');
     label.setAttribute('for', 'pub-' + f.name);
-    label.textContent = f.label + (f.required ? ' *' : '');
+    label.innerHTML = f.label + (f.required ? ' <span class="res-req">*</span>' : '');
     wrap.appendChild(label);
     let input;
     if (f.type === 'select') {
@@ -2140,6 +2223,7 @@ function showPublication(sellerType) {
     // Собираем все поля формы в объект data
     const formData = {};
     form.fields.forEach(f => {
+      if (f.section) return; // пропускаем псевдо-поля «секция»
       const el = document.getElementById('pub-' + f.name);
       if (!el) return;
       if (f.type === 'file') {
