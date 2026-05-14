@@ -129,6 +129,22 @@
     async paymentStatus(id) { return request('GET', '/wallet/payment/' + encodeURIComponent(id) + '/status', null, true); },
     async paymentMockComplete(id) { return request('POST', '/wallet/payment/' + encodeURIComponent(id) + '/mock-complete', null, true); },
 
+    // ── File uploads ──
+    async uploadFile(file) {
+      const fd = new FormData();
+      fd.append('file', file);
+      const token = getToken();
+      const headers = token ? { Authorization: 'Bearer ' + token } : {};
+      const res = await fetch(API + '/uploads/file', { method:'POST', headers, body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const err = new Error(data.error || ('HTTP ' + res.status));
+        err.status = res.status;
+        throw err;
+      }
+      return data;
+    },
+
     getUser, getToken, clearSession,
     requireAuth(redirect) {
       if (!getToken()) {

@@ -33,6 +33,15 @@ export const env = {
   GOOGLE_SHEET_ID: optional('GOOGLE_SHEET_ID'),
   GOOGLE_SERVICE_ACCOUNT_BASE64: optional('GOOGLE_SERVICE_ACCOUNT_BASE64'),
 
+  // ── File uploads ──
+  // Локальный каталог для файлов публикаций (бизнес-план, финмодель, сертификаты).
+  // На Render Free диск не персистится между деплоями — для прод нужен S3 / Spaces.
+  UPLOAD_DIR: optional('UPLOAD_DIR', '/tmp/atameken-uploads'),
+  UPLOAD_MAX_SIZE_MB: Number(process.env.UPLOAD_MAX_SIZE_MB ?? 10),
+  // Если задан внешний public-base — собираем абсолютный URL (для CDN/S3).
+  // По умолчанию — same-origin /uploads/{filename}.
+  UPLOAD_PUBLIC_BASE: optional('UPLOAD_PUBLIC_BASE', ''),
+
   // ── Kaspi Pay ──
   // Курс USD→KZT для биллинга пакетов токенов. Можно поменять без передеплоя
   // через переменную окружения KZT_PER_USD.

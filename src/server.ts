@@ -11,6 +11,8 @@ import publicationsRoutes from './routes/publications';
 import favoritesRoutes from './routes/favorites';
 import complaintsRoutes from './routes/complaints';
 import walletRoutes from './routes/wallet';
+import uploadsRoutes from './routes/uploads';
+import fs from 'node:fs';
 
 async function buildApp() {
   const app = Fastify({
@@ -45,6 +47,17 @@ async function buildApp() {
   await app.register(favoritesRoutes, { prefix: '/favorites' });
   await app.register(complaintsRoutes, { prefix: '/complaints' });
   await app.register(walletRoutes, { prefix: '/wallet' });
+  await app.register(uploadsRoutes, { prefix: '/uploads' });
+
+  // Раздаём загруженные файлы как статику. Должно идти ДО глобального
+  // public/ static-плагина, чтобы /uploads/* не пересекалось.
+  if (!fs.existsSync(env.UPLOAD_DIR)) fs.mkdirSync(env.UPLOAD_DIR, { recursive: true });
+  await app.register(fastifyStatic, {
+    root: env.UPLOAD_DIR,
+    prefix: '/uploads/',
+    decorateReply: false,
+    serve: true,
+  });
 
   await app.register(fastifyStatic, {
     root: path.join(process.cwd(), 'public'),

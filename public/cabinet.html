@@ -721,6 +721,22 @@ strong{color:var(--ink);font-weight:600}
       </div>
     </div><!-- /type-sale -->
 
+    <style>
+      /* Стили кастомного file-uploader'а в форме публикации */
+      .pub-uploader{display:flex;flex-direction:column;gap:.45rem}
+      .pub-upload-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem .9rem;background:var(--bg);border:1.5px dashed var(--border2);color:var(--ink2);border-radius:3px;cursor:pointer;font-size:.82rem;font-weight:500;font-family:'Inter',sans-serif;transition:all .2s;width:fit-content}
+      .pub-upload-btn:hover{border-color:var(--red);color:var(--red)}
+      .pub-upload-btn:disabled{opacity:.6;cursor:default}
+      .pub-upload-info{display:flex;align-items:center;gap:.5rem;background:#dcfce7;border:1px solid #86efac;border-radius:3px;padding:.5rem .75rem;font-size:.82rem;color:#15803d}
+      .pub-upload-icon{flex-shrink:0;font-size:1rem}
+      .pub-upload-name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+      .pub-upload-size{color:#16a34a;font-size:.72rem;flex-shrink:0}
+      .pub-upload-remove{background:none;border:0;color:#15803d;font-size:1.25rem;cursor:pointer;line-height:1;padding:0 .25rem;opacity:.7;transition:opacity .2s;flex-shrink:0}
+      .pub-upload-remove:hover{opacity:1;color:#b91c1c}
+      .pub-upload-spin{display:inline-block;width:12px;height:12px;border:2px solid #d4d4d8;border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+
     <!-- ──────── НОВАЯ ПУБЛИКАЦИЯ (4 уникальные формы под 4 типа продавцов) ──────── -->
     <div id="type-publication" style="display:none">
       <div class="panel on" id="publication-form">
@@ -1679,7 +1695,65 @@ function showPublication(sellerType) {
       input = document.createElement('textarea');
       input.placeholder = f.placeholder || '';
     } else if (f.type === 'file') {
+      // Кастомный uploader: показывает кнопку «Прикрепить файл», после
+      // успешной загрузки — имя файла + крестик «убрать».
       input = document.createElement('input'); input.type = 'file';
+      input.style.display = 'none';
+      const uploader = document.createElement('div');
+      uploader.className = 'pub-uploader';
+      uploader.innerHTML = `
+        <button type="button" class="pub-upload-btn">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M8 1v10M4 5l4-4 4 4M2 13h12"/></svg>
+          Прикрепить файл
+        </button>
+        <div class="pub-upload-info" style="display:none"></div>
+      `;
+      const btn = uploader.querySelector('.pub-upload-btn');
+      const info = uploader.querySelector('.pub-upload-info');
+      btn.addEventListener('click', () => input.click());
+      input.addEventListener('change', async () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="pub-upload-spin"></span> Загружаем…';
+        try {
+          const { file: uploaded } = await AC.uploadFile(file);
+          // Сохраняем URL в data-pub-url для последующего чтения при submit
+          input.dataset.pubUrl = uploaded.url;
+          input.dataset.pubName = uploaded.originalName || file.name;
+          info.innerHTML = `
+            <span class="pub-upload-icon">📄</span>
+            <span class="pub-upload-name">${(uploaded.originalName || file.name).replace(/[<>&]/g, '')}</span>
+            <span class="pub-upload-size">· ${(uploaded.size/1024).toFixed(0)} КБ</span>
+            <button type="button" class="pub-upload-remove" title="Убрать">×</button>
+          `;
+          info.style.display = 'flex';
+          btn.style.display = 'none';
+          info.querySelector('.pub-upload-remove').addEventListener('click', () => {
+            input.value = '';
+            delete input.dataset.pubUrl;
+            delete input.dataset.pubName;
+            info.style.display = 'none';
+            btn.style.display = '';
+            btn.disabled = false;
+            btn.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M8 1v10M4 5l4-4 4 4M2 13h12"/></svg> Прикрепить файл';
+          });
+        } catch (err) {
+          btn.disabled = false;
+          btn.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M8 1v10M4 5l4-4 4 4M2 13h12"/></svg> Прикрепить файл';
+          alert('Не удалось загрузить файл: ' + (err.message || 'попробуйте ещё раз'));
+        }
+      });
+      // Возвращаем-таки контейнер с двумя элементами: input (hidden) + uploader (visible)
+      wrap.appendChild(input);
+      wrap.appendChild(uploader);
+      if (f.hint) {
+        const hint = document.createElement('div'); hint.className = 'res-field-hint';
+        hint.textContent = f.hint;
+        wrap.appendChild(hint);
+      }
+      grid.appendChild(wrap);
+      return; // skip default wrap append flow below
     } else {
       input = document.createElement('input'); input.type = 'text';
       input.placeholder = f.placeholder || '';
@@ -1704,7 +1778,13 @@ function showPublication(sellerType) {
     form.fields.forEach(f => {
       const el = document.getElementById('pub-' + f.name);
       if (!el) return;
-      if (f.type === 'file') return; // файлы пока не загружаем, добавим в следующем шаге
+      if (f.type === 'file') {
+        // Если файл был загружен — сохраняем {url,name}, иначе пропускаем
+        if (el.dataset.pubUrl) {
+          formData[f.name] = { url: el.dataset.pubUrl, name: el.dataset.pubName || '' };
+        }
+        return;
+      }
       const v = el.value && el.value.trim();
       if (v) formData[f.name] = v;
     });
@@ -1821,6 +1901,22 @@ function _textBlock(label, value){
   if (!value) return '';
   return `<div class="pd-block"><h4>${_esc(label)}</h4><p class="pd-text">${_esc(value)}</p></div>`;
 }
+// Файловое поле может быть {url,name} (новый формат) или строкой (легаси).
+// Возвращает HTML карточки с кликабельной ссылкой, или пустую строку если нет файла.
+function _fileField(label, file, hint){
+  if (!file) return '';
+  if (typeof file === 'string') {
+    return `<div class="pd-field"><div class="pd-field-l">${_esc(label)}</div><div class="pd-field-v">📄 ${_esc(hint || 'Прикреплён · открывается по запросу')}</div></div>`;
+  }
+  const name = file.name || 'Файл';
+  const url = file.url || '';
+  if (!url) return `<div class="pd-field"><div class="pd-field-l">${_esc(label)}</div><div class="pd-field-v">📄 ${_esc(name)}</div></div>`;
+  return `<div class="pd-field"><div class="pd-field-l">${_esc(label)}</div><div class="pd-field-v">📄 <a href="${_esc(url)}" target="_blank" rel="noopener" style="color:var(--red);text-decoration:none;font-weight:600">${_esc(name)} →</a></div></div>`;
+}
+function _fileBlock(label, file, hint){
+  if (!file) return '';
+  return `<div class="pd-block"><h4>${_esc(label)}</h4>${_fileField('Документ', file, hint).replace('pd-field', 'pd-field') || `<p class="pd-text">📄 ${_esc(hint || 'Прикреплено')}</p>`}</div>`;
+}
 
 // ── Шаблон 1: Инвест-проект ──
 function renderInvestProject(p){
@@ -1841,8 +1937,8 @@ function renderInvestProject(p){
     ${(d.bizplan || d.finmodel) ? `<div class="pd-block">
       <h4>Документы по запросу</h4>
       <div class="pd-grid">
-        ${d.bizplan ? '<div class="pd-field"><div class="pd-field-l">Бизнес-план</div><div class="pd-field-v">📄 Прикреплён · открывается по запросу контактных данных</div></div>' : ''}
-        ${d.finmodel ? '<div class="pd-field"><div class="pd-field-l">Фин. модель</div><div class="pd-field-v">📄 Прикреплена · открывается по запросу контактных данных</div></div>' : ''}
+        ${_fileField('Бизнес-план', d.bizplan, 'PDF · открывается после оплаты контактов')}
+        ${_fileField('Финансовая модель', d.finmodel, 'Excel · открывается после оплаты контактов')}
       </div>
     </div>` : ''}
   `;
@@ -1866,7 +1962,7 @@ function renderFranchise(p){
       </div>
     </div>
     ${_textBlock('Поддержка франчайзи', d.support)}
-    ${d.standards ? `<div class="pd-block"><h4>Стандарты и пакет</h4><p class="pd-text">📄 Прикреплены · открываются по запросу контактных данных</p></div>` : ''}
+    ${d.standards ? `<div class="pd-block"><h4>Стандарты и пакет</h4><div class="pd-grid">${_fileField('Документ', d.standards, 'Открывается после оплаты контактов')}</div></div>` : ''}
   `;
 }
 
@@ -1890,7 +1986,7 @@ function renderBusinessForSale(p){
     </div>
     ${_textBlock('Причина продажи', d.reason)}
     ${_textBlock('Что входит в продажу', d.whatIncluded)}
-    ${d.finReports ? `<div class="pd-block"><h4>Финансовая отчётность</h4><p class="pd-text">📄 Прикреплена · открывается после подписания NDA</p></div>` : ''}
+    ${d.finReports ? `<div class="pd-block"><h4>Финансовая отчётность</h4><div class="pd-grid">${_fileField('Отчётность', d.finReports, 'Открывается после NDA + оплаты контактов')}</div></div>` : ''}
   `;
 }
 
@@ -1913,7 +2009,7 @@ function renderGoods(p){
     </div>
     ${_textBlock('Состав / характеристики', d.composition)}
     ${d.certificates ? _textBlock('Сертификаты', d.certificates) : ''}
-    ${d.productionDocs ? `<div class="pd-block"><h4>Сертификаты производства</h4><p class="pd-text">📄 Прикреплены · открываются по запросу</p></div>` : ''}
+    ${d.productionDocs ? `<div class="pd-block"><h4>Сертификаты производства</h4><div class="pd-grid">${_fileField('Сертификат', d.productionDocs, 'Открывается после оплаты контактов')}</div></div>` : ''}
   `;
 }
 
