@@ -376,18 +376,32 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
 // ═══ Унифицированные 8 шевронов на каждой карточке (Task D) ═══
+// 8 активностей с уникальным цветом + аббревиатура. Серый = неактивно.
+// Выносим SHEVS наружу IIFE, чтобы renderApiCards мог пользоваться тем же набором.
+const SHEVS = [
+  {id:'verify-company',   abbr:'ВК', color:'#16a34a', title:'Верификация компании'},
+  {id:'market-analysis',  abbr:'АР', color:'#0891b2', title:'Анализ рынка'},
+  {id:'business-plan-audit', abbr:'БП', color:'#ea580c', title:'Аудит Бизнес-плана'},
+  {id:'financial-audit',  abbr:'ФА', color:'#1A6FC4', title:'Аудит фин. модели / бухгалтерский аудит'},
+  {id:'contracts-audit',  abbr:'АД', color:'#7c3aed', title:'Аудит договоров'},
+  {id:'product-certification', abbr:'ПС', color:'#15803d', title:'Верификация состава / сертификатов производства'},
+  {id:'stock-verification', abbr:'ЗП', color:'#1d4ed8', title:'Верификация наличия запасов'},
+  {id:'deal-support',     abbr:'СС', color:'#C5963A', title:'Сопровождение сделки'},
+];
+function renderShevStripHTML(activeIds, opts){
+  const active = new Set(activeIds || []);
+  const clubOn = !!(opts && opts.club);
+  const clubBadge = `<div class="shev shev-club${clubOn ? '' : ' off'}">${clubOn ? '★' : '☆'}<span class="shev-tip">${clubOn ? 'Резидент ATAMEKEN Club' : 'Не Резидент Клуба'}</span></div>`;
+  const items = SHEVS.map(s => {
+    const isOn = active.has(s.id);
+    const style = isOn ? ` style="color:${s.color};border-color:${s.color};background:${s.color}14"` : '';
+    return `<div class="shev${isOn ? ' on' : ''}"${style}>${s.abbr}<span class="shev-tip">${s.title}${isOn ? '' : ' (не пройдено)'}</span></div>`;
+  }).join('');
+  return `<div class="shev-strip">${clubBadge}${items}</div>`;
+}
+window.renderShevStripHTML = renderShevStripHTML;
+
 (function(){
-  // 8 активностей с уникальным цветом + аббревиатура. Серый = неактивно.
-  const SHEVS = [
-    {id:'verify-company',   abbr:'ВК', color:'#16a34a', title:'Верификация компании'},
-    {id:'market-analysis',  abbr:'АР', color:'#0891b2', title:'Анализ рынка'},
-    {id:'business-plan-audit', abbr:'БП', color:'#ea580c', title:'Аудит Бизнес-плана'},
-    {id:'financial-audit',  abbr:'ФА', color:'#1A6FC4', title:'Аудит фин. модели / бухгалтерский аудит'},
-    {id:'contracts-audit',  abbr:'АД', color:'#7c3aed', title:'Аудит договоров'},
-    {id:'product-certification', abbr:'ПС', color:'#15803d', title:'Верификация состава / сертификатов производства'},
-    {id:'stock-verification', abbr:'ЗП', color:'#1d4ed8', title:'Верификация наличия запасов'},
-    {id:'deal-support',     abbr:'СС', color:'#C5963A', title:'Сопровождение сделки'},
-  ];
 
   // Маппинг старых .bdg-классов на новые activity-id (для определения «активных» шевронов)
   const BDG_TO_SHEV = {
@@ -586,6 +600,7 @@ const TYPE_META = {
   GOODS:             { tab:'goods',     color:'purple', label:'Товары и сырьё',    btn:'Запросить', lockMsg:'Цена, логистика и контакты — только для верифицированных участников' },
 };
 function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
 function renderApiCards(items){
   const grid = document.getElementById('catGrid');
   if (!grid) return false;
@@ -598,12 +613,17 @@ function renderApiCards(items){
     const region = p.region ? `<div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 3.3 4.5 7.5 4.5 7.5s4.5-4.2 4.5-7.5c0-2.5-2-4.5-4.5-4.5z"/></svg><strong>${escapeHtml(p.region)}</strong></div>` : '';
     const industry = p.industry ? `<span class="ptag">${escapeHtml(p.industry)}</span>` : '';
     const price = p.priceLabel ? `<div class="pcard-price">${escapeHtml(p.priceLabel)}</div><div class="pcard-price-l">&nbsp;</div>` : `<div class="pcard-price">—</div>`;
+    // verifications приходит из publication.data.verifications (array of activity ids)
+    const verifs = (p && p.data && Array.isArray(p.data.verifications)) ? p.data.verifications : [];
+    const isResident = !!(p && p.data && p.data.isResident);
+    const shevHtml = (typeof window.renderShevStripHTML === 'function') ? window.renderShevStripHTML(verifs, { club: isResident }) : '';
     return `
       <div class="pcard locked blurred" data-tab="${meta.tab}" data-pub-id="${escapeHtml(p.id)}" style="position:relative">
         <div class="pcard-top ${meta.color}"></div>
         <div class="pcard-body">
           <div class="pcard-type">${escapeHtml(meta.label)}</div>
           <div class="pcard-title">${escapeHtml(p.title)}</div>
+          ${shevHtml}
           <div class="pcard-meta">${region}</div>
           <div class="pcard-desc">${escapeHtml(p.shortDesc || '')}</div>
           <div class="pcard-tags">${industry}</div>
