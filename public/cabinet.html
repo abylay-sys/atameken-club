@@ -43,13 +43,20 @@ strong{color:var(--ink);font-weight:600}
 .tn-back:hover{color:var(--red)}
 .tn-back svg{width:13px;height:13px}
 
-/* TYPE SELECTOR (top switcher) */
-.type-bar{background:#fff;border-bottom:1px solid var(--border);padding:.6rem 1.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem .5rem;box-shadow:0 1px 0 var(--border)}
-.type-btn{padding:.55rem .9rem;font-size:.78rem;font-weight:500;color:var(--ink3);background:#fafafa;border:1px solid var(--border);cursor:pointer;font-family:'Inter',sans-serif;border-radius:4px;transition:all .2s;text-align:center;line-height:1.25}
-.type-btn.on{color:#fff;background:var(--red);border-color:var(--red);font-weight:600}
+/* «ЧЕРДАК» — 8 категорий в 2 этажа (как «8 типов активностей» на главной) */
+.type-bar{background:#fff;border-bottom:1px solid var(--border);padding:.85rem 1.5rem .9rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem .55rem;box-shadow:0 1px 0 var(--border)}
+.type-bar-row{display:contents}
+.type-bar-label{grid-column:1/-1;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink4);margin:.15rem 0 -.1rem}
+.type-btn{position:relative;padding:.7rem .75rem .65rem;font-size:.72rem;font-weight:600;color:var(--ink2);background:#fafafa;border:1px solid var(--border);cursor:pointer;font-family:'Inter',sans-serif;border-radius:5px;transition:all .2s;text-align:left;line-height:1.25;display:flex;align-items:center;gap:.55rem}
+.type-btn-ico{width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--ink3);flex-shrink:0;transition:all .2s}
+.type-btn-ico svg{width:13px;height:13px}
+.type-btn-txt{flex:1;min-width:0;display:block}
+.type-btn.on{color:#fff;background:var(--red);border-color:var(--red)}
+.type-btn.on .type-btn-ico{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);color:#fff}
 .type-btn:not(.on):hover{background:#fff;border-color:var(--red);color:var(--red)}
-@media(max-width:980px){.type-bar{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.type-bar{grid-template-columns:1fr}}
+.type-btn:not(.on):hover .type-btn-ico{border-color:var(--red);color:var(--red)}
+@media(max-width:980px){.type-bar{grid-template-columns:repeat(2,1fr)}.type-bar-label{margin-top:.35rem}}
+@media(max-width:560px){.type-bar{grid-template-columns:1fr}.type-btn{padding:.6rem .7rem}}
 
 /* LAYOUT */
 .cab-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 91px)}
@@ -255,18 +262,44 @@ strong{color:var(--ink);font-weight:600}
   </div>
 </div>
 
-<!-- TYPE SWITCHER — 8 категорий в 2 ряда (как «8 типов активностей» на главной) -->
-<div class="type-bar">
-  <!-- 1-й ряд: «условные продавцы» — те, кто публикует -->
-  <button class="type-btn on" data-type="seeker" onclick="switchType('seeker',this)">Соискатели инвестиций</button>
-  <button class="type-btn" data-type="franchiser" onclick="switchType('franchiser',this)">Франчайзеры</button>
-  <button class="type-btn" data-type="biz-seller" onclick="switchType('biz-seller',this)">Продавцы готового бизнеса</button>
-  <button class="type-btn" data-type="goods-seller" onclick="switchType('goods-seller',this)">Продавцы товаров и&nbsp;сырья</button>
-  <!-- 2-й ряд: «условные покупатели» — те, кто выбирает / платит -->
-  <button class="type-btn" data-type="investor" onclick="switchType('investor',this)">Инвесторы</button>
-  <button class="type-btn" data-type="franchisee" onclick="switchType('franchisee',this)">Франчайзи</button>
-  <button class="type-btn" data-type="biz-buyer" onclick="switchType('biz-buyer',this)">Покупатели готового бизнеса</button>
-  <button class="type-btn" data-type="goods-buyer" onclick="switchType('goods-buyer',this)">Покупатели товаров и&nbsp;сырья</button>
+<!-- TYPE SWITCHER — «Чердак» Личного Кабинета: 8 категорий в 2 этажа (как «8 типов активностей» на Главной) -->
+<div class="type-bar" aria-label="8 категорий">
+  <!-- 1-й этаж: продавцы (те, кто публикует) -->
+  <div class="type-bar-label">Продавцы — публикация</div>
+  <button class="type-btn on" data-type="seeker" onclick="switchType('seeker',this)" title="Стартапы и инвест-проекты, ищут финансирование">
+    <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+    <span class="type-btn-txt">Соискатели инвестиций</span>
+  </button>
+  <button class="type-btn" data-type="franchiser" onclick="switchType('franchiser',this)" title="Владельцы франшиз — масштабирование">
+    <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+    <span class="type-btn-txt">Франчайзеры</span>
+  </button>
+  <button class="type-btn" data-type="biz-seller" onclick="switchType('biz-seller',this)" title="Продают действующий бизнес">
+    <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+    <span class="type-btn-txt">Продавцы готового бизнеса</span>
+  </button>
+  <button class="type-btn" data-type="goods-seller" onclick="switchType('goods-seller',this)" title="Производители, дистрибьюторы, трейдеры">
+    <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18l-2 13H5L3 7z"/><path d="M8 7V4a2 2 0 012-2h4a2 2 0 012 2v3"/></svg></span>
+    <span class="type-btn-txt">Продавцы товаров и&nbsp;сырья</span>
+  </button>
+  <!-- 2-й этаж: покупатели (те, кто выбирает) -->
+  <div class="type-bar-label">Покупатели — выбор и&nbsp;доступ к&nbsp;Реестру</div>
+  <button class="type-btn" data-type="investor" onclick="switchType('investor',this)" title="Частные, фонды, бизнес-ангелы">
+    <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></span>
+    <span class="type-btn-txt">Инвесторы</span>
+  </button>
+  <button class="type-btn" data-type="franchisee" onclick="switchType('franchisee',this)" title="Хотят купить франшизу">
+    <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a2 2 0 002 2h10a2 2 0 002-2V10"/><path d="M9 22v-6h6v6"/></svg></span>
+    <span class="type-btn-txt">Франчайзи</span>
+  </button>
+  <button class="type-btn" data-type="biz-buyer" onclick="switchType('biz-buyer',this)" title="Покупают действующий бизнес">
+    <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 11h6M9 15h6M9 7h6"/></svg></span>
+    <span class="type-btn-txt">Покупатели готового бизнеса</span>
+  </button>
+  <button class="type-btn" data-type="goods-buyer" onclick="switchType('goods-buyer',this)" title="Оптовые покупатели, торговые сети">
+    <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l3 12h12l2-8H6"/></svg></span>
+    <span class="type-btn-txt">Покупатели товаров и&nbsp;сырья</span>
+  </button>
 </div>
 
 <div class="cab-layout">
