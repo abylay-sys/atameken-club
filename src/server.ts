@@ -15,6 +15,7 @@ import uploadsRoutes from './routes/uploads';
 import dealsRoutes from './routes/deals';
 import chatRoutes from './routes/chat';
 import fs from 'node:fs';
+import { s3Enabled } from './lib/s3';
 
 async function buildApp() {
   const app = Fastify({
@@ -53,15 +54,18 @@ async function buildApp() {
   await app.register(dealsRoutes, { prefix: '/deals' });
   await app.register(chatRoutes, { prefix: '/chat' });
 
-  // Раздаём загруженные файлы как статику. Должно идти ДО глобального
-  // public/ static-плагина, чтобы /uploads/* не пересекалось.
-  if (!fs.existsSync(env.UPLOAD_DIR)) fs.mkdirSync(env.UPLOAD_DIR, { recursive: true });
-  await app.register(fastifyStatic, {
-    root: env.UPLOAD_DIR,
-    prefix: '/uploads/',
-    decorateReply: false,
-    serve: true,
-  });
+  // Раздаём загруженные файлы как статику ТОЛЬКО если S3 не настроен (dev-режим).
+  // В прод S3-режиме файлы отдаются напрямую с CDN провайдера (R2/Spaces), а
+  // /uploads/* остаётся свободным маршрутом.
+  if (!s3Enabled) {
+    if (!fs.existsSync(env.UPLOAD_DIR)) fs.mkdirSync(env.UPLOAD_DIR, { recursive: true });
+    await app.register(fastifyStatic, {
+      root: env.UPLOAD_DIR,
+      prefix: '/uploads/',
+      decorateReply: false,
+      serve: true,
+    });
+  }
 
   await app.register(fastifyStatic, {
     root: path.join(process.cwd(), 'public'),

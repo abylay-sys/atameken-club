@@ -36,3 +36,20 @@ services:
         sync: false
       - key: GOOGLE_SERVICE_ACCOUNT_BASE64
         sync: false
+      # ── S3-совместимое хранилище для файлов публикаций ──
+      # Рекомендуется Cloudflare R2 (10GB бесплатно + 0 egress).
+      # Если эти переменные не заданы — fallback на /tmp/ (файлы стираются при деплое!).
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_REGION
+        value: auto
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_PUBLIC_BASE
+        sync: false
+      - key: S3_PREFIX
+        value: uploads

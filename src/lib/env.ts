@@ -39,14 +39,39 @@ export const env = {
   OPENAI_API_KEY: optional('OPENAI_API_KEY'),
   OPENAI_MODEL: optional('OPENAI_MODEL', 'gpt-4o-mini'),
 
-  // ── File uploads ──
+  // ── File uploads (local fallback) ──
   // Локальный каталог для файлов публикаций (бизнес-план, финмодель, сертификаты).
-  // На Render Free диск не персистится между деплоями — для прод нужен S3 / Spaces.
+  // ВНИМАНИЕ: на Render Free диск НЕ персистится между деплоями. Для прод обязательно
+  // используем S3 (см. ниже S3_* переменные). Этот режим — только для локального dev.
   UPLOAD_DIR: optional('UPLOAD_DIR', '/tmp/atameken-uploads'),
   UPLOAD_MAX_SIZE_MB: Number(process.env.UPLOAD_MAX_SIZE_MB ?? 10),
-  // Если задан внешний public-base — собираем абсолютный URL (для CDN/S3).
-  // По умолчанию — same-origin /uploads/{filename}.
   UPLOAD_PUBLIC_BASE: optional('UPLOAD_PUBLIC_BASE', ''),
+
+  // ── S3-совместимое хранилище (Cloudflare R2 / DigitalOcean Spaces / AWS S3) ──
+  // Если все 4 переменные ниже заданы — файлы пишутся в S3, локальный fs не используется.
+  // Иначе работает fallback на локальный диск (для dev).
+  // Рекомендуется Cloudflare R2: бесплатные 10GB + 0 egress = практически бесплатно.
+  //
+  // Пример для R2:
+  //   S3_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+  //   S3_REGION=auto
+  //   S3_BUCKET=atameken-uploads
+  //   S3_PUBLIC_BASE=https://pub-<HASH>.r2.dev    (или свой домен через Custom Domain)
+  //
+  // Пример для DigitalOcean Spaces:
+  //   S3_ENDPOINT=https://fra1.digitaloceanspaces.com
+  //   S3_REGION=fra1
+  //   S3_BUCKET=atameken-uploads
+  //   S3_PUBLIC_BASE=https://atameken-uploads.fra1.cdn.digitaloceanspaces.com
+  S3_ENDPOINT: optional('S3_ENDPOINT'),
+  S3_REGION: optional('S3_REGION', 'auto'),
+  S3_ACCESS_KEY_ID: optional('S3_ACCESS_KEY_ID'),
+  S3_SECRET_ACCESS_KEY: optional('S3_SECRET_ACCESS_KEY'),
+  S3_BUCKET: optional('S3_BUCKET'),
+  // Публичный URL-префикс bucket'а. Если не задан — соберём из S3_ENDPOINT + S3_BUCKET.
+  S3_PUBLIC_BASE: optional('S3_PUBLIC_BASE'),
+  // Префикс-папка внутри bucket'а (опционально). Например, 'uploads' → файлы пишутся как uploads/<filename>.
+  S3_PREFIX: optional('S3_PREFIX', 'uploads'),
 
   // ── Kaspi Pay ──
   // Курс USD→KZT для биллинга пакетов токенов. Можно поменять без передеплоя

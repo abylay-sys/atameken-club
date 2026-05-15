@@ -55,6 +55,7 @@ Render попросит ввести значения переменных, по
 | `KASPI_PAY_BASE_URL` | по умолчанию `https://kaspi.kz/pay`. Менять не нужно, если Kaspi не сменит endpoint |
 | `OPENAI_API_KEY` | API-ключ OpenAI для AI-переводчика в Сообщениях. Без него сообщения отправляются и сохраняются, но без авто-перевода |
 | `OPENAI_MODEL` | по умолчанию `gpt-4o-mini` (быстрая и недорогая). Менять только при необходимости |
+| `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_BUCKET`, `S3_PUBLIC_BASE` | Cloudflare R2 / DO Spaces — см. раздел **«S3-хранилище для файлов»** ниже. **Без них файлы пользователей теряются при каждом деплое!** |
 
 Нажми **Apply changes**.
 
@@ -161,6 +162,60 @@ Render → Custom Domains → у `atameken.club` нажать **Set as Primary**
 - `https://atameken-backend.onrender.com/` → тоже 301-редирект (после Set as Primary)
 - Зайти в `https://atameken.club/login.html`, авторизоваться, открыть кабинет — должно работать как на onrender.
 - Открыть DevTools → Network → убедиться, что нет CORS-ошибок на API-запросы.
+
+---
+
+## S3-хранилище для файлов (Cloudflare R2)
+
+**Зачем:** в формах публикаций пользователи прикрепляют PDF/Excel/Word (бизнес-планы, финмодели, сертификаты). На Render Free `/tmp/atameken-uploads` стирается при каждом деплое — файлы пропадут после первого `git push`. Нужно внешнее S3-совместимое хранилище.
+
+**Рекомендуется Cloudflare R2** — бесплатно 10 ГБ + **0₸ за egress** (важно: на S3/Spaces платишь за каждый просмотр файла). Запасной вариант — DigitalOcean Spaces ($5/мес flat).
+
+### Шаг 1. Создать R2 bucket
+1. Регистрация на [cloudflare.com](https://cloudflare.com) (можно тем же email что Render).
+2. Dashboard → **R2 Object Storage** → **Create bucket** → имя `atameken-uploads` → **Create**.
+3. Открыть созданный bucket → **Settings** → **Public access** → **Allow Access** (для домена R2.dev) → подтвердить. Теперь файлы видны по `https://pub-<HASH>.r2.dev/<key>`.
+4. Скопировать выданный **Public R2.dev URL** — он нужен для `S3_PUBLIC_BASE`.
+
+### Шаг 2. Создать API-токен
+1. R2 → **Manage R2 API Tokens** → **Create API Token**.
+2. Permission: **Object Read & Write**. Specify bucket: `atameken-uploads`. TTL: бессрочный.
+3. **Create API Token** → запиши:
+   - `Access Key ID` → `S3_ACCESS_KEY_ID`
+   - `Secret Access Key` → `S3_SECRET_ACCESS_KEY`
+   - `Endpoint` (Use jurisdiction-specific endpoints for S3 clients) → `S3_ENDPOINT`. Будет вид `https://<ACCOUNT_ID>.r2.cloudflarestorage.com`.
+
+⚠ Secret показывается **один раз** — сохрани сразу в надёжное место.
+
+### Шаг 3. Прописать env vars в Render
+[dashboard.render.com](https://dashboard.render.com) → сервис **atameken-backend** → **Settings** → **Environment** → добавить:
+
+| Key | Value |
+|---|---|
+| `S3_ENDPOINT` | `https://<ACCOUNT_ID>.r2.cloudflarestorage.com` (из шага 2) |
+| `S3_REGION` | `auto` |
+| `S3_ACCESS_KEY_ID` | из шага 2 |
+| `S3_SECRET_ACCESS_KEY` | из шага 2 |
+| `S3_BUCKET` | `atameken-uploads` |
+| `S3_PUBLIC_BASE` | `https://pub-<HASH>.r2.dev` (из шага 1.4) |
+| `S3_PREFIX` | `uploads` (по умолчанию, можно опустить) |
+
+Save → Render автоматически передеплоится (~2 мин).
+
+### Шаг 4. Проверить
+1. Зайти в кабинет `https://atameken.club/cabinet.html` → новая публикация (например, инвест-проект) → прикрепить PDF к полю «Бизнес-план» → опубликовать.
+2. Открыть R2 bucket в Cloudflare dashboard → должен появиться файл вида `uploads/<timestamp>-<userhash>-<rand>.pdf`.
+3. В Реестре открыть карточку → кнопка «Скачать бизнес-план» (после оплаты) ведёт на `https://pub-...r2.dev/uploads/<filename>.pdf` → файл скачивается.
+
+### Кастомный домен для файлов (опционально)
+Если хочешь, чтобы файлы лежали на красивом URL (например, `https://files.atameken.club/<key>`):
+1. R2 bucket → **Settings** → **Custom Domains** → **Connect Domain** → `files.atameken.club`.
+2. В hoster.kz → DNS-зона `atameken.club` → добавить **CNAME** `files` на значение, которое выдал R2 (обычно `*.cloudflare.net`).
+3. Дождаться SSL (15–30 мин).
+4. В Render env: `S3_PUBLIC_BASE` → `https://files.atameken.club`.
+
+### Если без S3 (только для локального dev)
+Не задавай ни одну из `S3_*` переменных — код упадёт на локальный `UPLOAD_DIR=/tmp/atameken-uploads`. В прод это запрещено — файлы умрут при следующем деплое.
 
 ---
 
