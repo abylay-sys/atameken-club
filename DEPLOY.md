@@ -43,8 +43,8 @@ Render попросит ввести значения переменных, по
 | `DATABASE_URL` | из `.env` (Neon connection string) |
 | `JWT_ACCESS_SECRET` | из `.env` |
 | `JWT_REFRESH_SECRET` | из `.env` |
-| `CORS_ORIGIN` | `https://<имя-твоего-render>.onrender.com,https://<твой-tilda-домен>` (замени на реальные) |
-| `ADMIN_EMAILS` | `admin@atameken.kz` (или какой email модератора нужен) |
+| `CORS_ORIGIN` | `https://atameken.club,https://www.atameken.club,https://atameken-backend.onrender.com` (после подключения домена) |
+| `ADMIN_EMAILS` | email модератора, через запятую — кто видит админ-панель |
 | `TELEGRAM_BOT_TOKEN` | из `.env` |
 | `TELEGRAM_MODERATOR_CHAT_ID` | из `.env` (`-5292322000`) |
 | `GOOGLE_SHEET_ID` | из `.env` |
@@ -100,69 +100,67 @@ https://atameken-backend-xxxx.onrender.com/register.html
 https://atameken-backend-xxxx.onrender.com/cabinet.html
 ```
 
-### Свой домен (например, `cabinet.atameken.kz`)
-1. В Render → твой сервис → **Settings** → **Custom Domain** → `cabinet.atameken.kz`.
-2. Render даст CNAME-запись типа `atameken-backend-xxxx.onrender.com`.
-3. В DNS своего регистратора (где зарегистрирован `atameken.kz`) добавь:
-   - Type: `CNAME`
-   - Name: `cabinet`
-   - Value: `atameken-backend-xxxx.onrender.com`
-4. Через 5–60 минут Render выдаст SSL автоматически.
-5. После этого добавь домен в `CORS_ORIGIN`:
-   `https://cabinet.atameken.kz,https://atameken.kz,https://<твой-tilda>.tilda.ws`
-6. Commit изменения в `.env` Render → он передеплоит.
-
----
-
 ## Подключение основного домена `atameken.club`
 
-Сервис уже запущен на `https://atameken-backend.onrender.com`. Нужно завести основной домен `atameken.club` (и `www.atameken.club`).
+Сервис запущен на `https://atameken-backend.onrender.com`. Цель — перевести на основной `atameken.club` (и `www.atameken.club`).
 
 DNS домена обслуживается через `hoster.kz` (NS: `ns1/ns2/ns3.hoster.kz`, регистратор NameSilo).
 
 ### Шаг 1. В Render — добавить кастомные домены
-1. Открыть [dashboard.render.com](https://dashboard.render.com) → сервис **atameken-backend** → **Settings** → **Custom Domains** → **Add Custom Domain**.
-2. Добавить `atameken.club` → Render покажет инструкцию для apex-домена: либо **A**-запись на IP Render (обычно несколько IP), либо **ALIAS/ANAME** на `atameken-backend.onrender.com`.
-3. Добавить вторым шагом `www.atameken.club` → Render выдаст **CNAME** на `atameken-backend.onrender.com`.
-4. Записать значения — нужны для DNS на следующем шаге.
+1. [dashboard.render.com](https://dashboard.render.com) → сервис **atameken-backend** → **Settings** → **Custom Domains** → **Add Custom Domain**.
+2. Добавить `atameken.club` → Render покажет инструкцию для apex-домена. Будет один из двух вариантов:
+   - **A**-запись на IP (обычно `216.24.57.1` или похожие)
+   - **ALIAS/ANAME** на `atameken-backend.onrender.com` (если регистратор поддерживает)
+3. Добавить `www.atameken.club` → Render выдаст **CNAME** на `atameken-backend.onrender.com`.
+4. **Записать выданные значения** — Render показывает их прямо в Custom Domains. Эти значения нужны для DNS.
 
 ### Шаг 2. В hoster.kz — добавить DNS-записи
-Зайти в панель `hoster.kz`, открыть DNS-зону `atameken.club` и добавить то, что выдал Render. Обычно так:
+Логин на [hoster.kz](https://hoster.kz) → панель → выбрать домен `atameken.club` → **Управление DNS-зоной**.
+
+**Если hoster.kz поддерживает ANAME / ALIAS** (предпочтительный вариант — не нужно перебивать IP, если Render сменит):
+
+| Type  | Name | Value                            | TTL |
+|-------|------|----------------------------------|-----|
+| ANAME | `@`  | `atameken-backend.onrender.com`  | 300 |
+| CNAME | `www`| `atameken-backend.onrender.com`  | 300 |
+
+**Если только A-запись** (фолбэк):
 
 | Type  | Name | Value                                  | TTL |
 |-------|------|----------------------------------------|-----|
-| A     | `@`  | IP, который выдал Render               | 300 |
+| A     | `@`  | IP, который выдал Render (см. шаг 1.2) | 300 |
 | CNAME | `www`| `atameken-backend.onrender.com`        | 300 |
 
-Если hoster.kz поддерживает **ANAME/ALIAS** для apex — это предпочтительнее A-записи (на корне нельзя CNAME, но ANAME можно):
+⚠ Если уже есть какие-то A или CNAME-записи на `@` или `www` (от старого хостинга) — **удалить их**, иначе DNS будет резолвиться в неправильное место.
 
-| Type  | Name | Value                            |
-|-------|------|----------------------------------|
-| ANAME | `@`  | `atameken-backend.onrender.com`  |
-| CNAME | `www`| `atameken-backend.onrender.com`  |
-
-DNS обновляется обычно за 5–60 минут.
+DNS-пропагация: 5–60 минут (иногда до 24 часов в худшем случае). Проверить можно через `dig atameken.club` в терминале или [dnschecker.org](https://dnschecker.org).
 
 ### Шаг 3. Дождаться SSL
-В Render → Custom Domains: статус каждой записи `Pending` → `Verified`, после чего автоматически выдастся Let's Encrypt SSL. Это занимает до часа.
+Render → Custom Domains: статус каждой записи перейдёт `Pending` → `Verified`. После Verified автоматически выдастся Let's Encrypt SSL — это занимает 1–10 минут после Verified, в худшем случае до часа.
+
+Если зависло в Pending дольше часа — проверь, что DNS реально указывает куда надо: в терминале `dig atameken.club +short`.
 
 ### Шаг 4. Обновить `CORS_ORIGIN` в Render
-**Settings → Environment** → `CORS_ORIGIN` →
+**Settings → Environment** → найти переменную `CORS_ORIGIN` → **Edit** →
 
 ```
 https://atameken.club,https://www.atameken.club,https://atameken-backend.onrender.com
 ```
 
-Сохранить — Render передеплоится (~2 мин).
+(Сохраняем onrender-домен в списке — он будет работать как fallback пока DNS не пропагируется везде.)
 
-### Шаг 5. Проверить
+Save → Render автоматически передеплоится (~2 мин).
+
+### Шаг 5. Set as Primary
+Render → Custom Domains → у `atameken.club` нажать **Set as Primary** → все остальные домены (`www.atameken.club`, `atameken-backend.onrender.com`) будут редиректить на apex.
+
+### Шаг 6. Проверить
 - `https://atameken.club/health` → `{ok:true,...}`
-- `https://atameken.club/` → главная
-- `https://www.atameken.club/` → редирект или та же главная
-- Зайти в кабинет, отправить тестовую заявку — должно работать как на onrender-домене.
-
-### Дополнительно — редирект www → apex
-Render позволяет пометить один домен как **Primary** — все остальные будут редиректить на него. Settings → Custom Domains → `Set as Primary` на `atameken.club`.
+- `https://atameken.club/` → главная страница
+- `https://www.atameken.club/` → 301-редирект на `https://atameken.club/`
+- `https://atameken-backend.onrender.com/` → тоже 301-редирект (после Set as Primary)
+- Зайти в `https://atameken.club/login.html`, авторизоваться, открыть кабинет — должно работать как на onrender.
+- Открыть DevTools → Network → убедиться, что нет CORS-ошибок на API-запросы.
 
 ---
 
