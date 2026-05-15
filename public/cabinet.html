@@ -43,7 +43,13 @@ strong{color:var(--ink);font-weight:600}
 .tn-back:hover{color:var(--red)}
 .tn-back svg{width:13px;height:13px}
 
-/* «ЧЕРДАК» — 8 категорий в 2 этажа (как «8 типов активностей» на главной) */
+/* ВКЛАДКИ ПЕРЕДНЕГО БЛОКА — strip между top-nav и Чердаком */
+.cab-front-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.15rem;padding:.5rem 1.5rem;overflow-x:auto;scrollbar-width:thin}
+.cab-front-link{font-size:.78rem;font-weight:500;color:var(--ink3);padding:.45rem .85rem;border-radius:4px;white-space:nowrap;transition:all .18s;flex-shrink:0}
+.cab-front-link:hover{background:var(--bg);color:var(--red)}
+@media(max-width:720px){.cab-front-nav{padding:.4rem .85rem;gap:0}.cab-front-link{font-size:.72rem;padding:.4rem .65rem}}
+
+/* «ЧЕРДАК» — 8 категорий (как «8 типов активностей» на главной) */
 .type-bar{background:#fff;border-bottom:1px solid var(--border);padding:.85rem 1.5rem .9rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem .55rem;box-shadow:0 1px 0 var(--border)}
 .type-bar-row{display:contents}
 .type-bar-label{grid-column:1/-1;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink4);margin:.15rem 0 -.1rem}
@@ -262,10 +268,18 @@ strong{color:var(--ink);font-weight:600}
   </div>
 </div>
 
-<!-- TYPE SWITCHER — «Чердак» Личного Кабинета: 8 категорий в 2 этажа (как «8 типов активностей» на Главной) -->
+<!-- ВКЛАДКИ ПЕРЕДНЕГО БЛОКА — продублированы внутри Кабинета для удобной навигации -->
+<nav class="cab-front-nav" aria-label="Передний блок">
+  <a href="/projects.html" class="cab-front-link">Реестр</a>
+  <a href="/events.html" class="cab-front-link">Календарь</a>
+  <a href="/pricing.html" class="cab-front-link">Тарифы</a>
+  <a href="/services.html" class="cab-front-link">Дополнительные услуги</a>
+  <a href="/partners.html" class="cab-front-link">Партнёры</a>
+  <a href="/residents.html" class="cab-front-link">Резиденты</a>
+</nav>
+
+<!-- TYPE SWITCHER — «Чердак» Личного Кабинета: 8 категорий (4 продавца сверху, 4 покупателя снизу) -->
 <div class="type-bar" aria-label="8 категорий">
-  <!-- 1-й этаж: продавцы (те, кто публикует) -->
-  <div class="type-bar-label">Продавцы — публикация</div>
   <button class="type-btn on" data-type="seeker" onclick="switchType('seeker',this)" title="Стартапы и инвест-проекты, ищут финансирование">
     <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
     <span class="type-btn-txt">Соискатели инвестиций</span>
@@ -282,8 +296,6 @@ strong{color:var(--ink);font-weight:600}
     <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18l-2 13H5L3 7z"/><path d="M8 7V4a2 2 0 012-2h4a2 2 0 012 2v3"/></svg></span>
     <span class="type-btn-txt">Продавцы товаров и&nbsp;сырья</span>
   </button>
-  <!-- 2-й этаж: покупатели (те, кто выбирает) -->
-  <div class="type-bar-label">Покупатели — выбор и&nbsp;доступ к&nbsp;Реестру</div>
   <button class="type-btn" data-type="investor" onclick="switchType('investor',this)" title="Частные, фонды, бизнес-ангелы">
     <span class="type-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></span>
     <span class="type-btn-txt">Инвесторы</span>
@@ -341,7 +353,7 @@ strong{color:var(--ink);font-weight:600}
         </div>
 
         <!-- Унифицированная инфо-плашка: ценность верификации + скидка резидентам. Без «светофора». -->
-        <div class="info-banner" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+        <div class="info-banner" data-show-for="seller" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
           <div style="flex-shrink:0;color:#C5963A;font-size:1.25rem;line-height:1">★</div>
           <div style="flex:1;font-size:.85rem;color:var(--ink2);line-height:1.55">
             <strong style="color:var(--ink)">Верифицируйте карточку</strong> — это повышает шансы на&nbsp;матчмейкинг с&nbsp;надёжным партнёром. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — скидка 10% на&nbsp;все услуги.</strong>
@@ -356,18 +368,18 @@ strong{color:var(--ink);font-weight:600}
         </div>
 
         <!-- Кошелёк (токены): 1 токен = 1 открытие развёрнутой карточки. Психологически проще тратить токены, чем деньги. -->
-        <div class="wallet-card" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
+        <div class="wallet-card" data-show-for="buyer" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
           <div>
             <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:.35rem">Кошелёк · Токены</div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;line-height:1"><span class="walletBalance">0</span> <small style="font-size:.75rem;font-weight:400;opacity:.7">токенов</small></div>
-            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
+            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = $5&nbsp;USD = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
           </div>
           <button class="btn-r btn-sm" style="background:#C5963A;border:none;color:#fff;font-weight:600;padding:.55rem 1.1rem;border-radius:3px;cursor:pointer" onclick="location.hash='#packages'">Пополнить →</button>
         </div>
 
         <!-- Stats -->
         <!-- Мои объявления — заполняется из API /publications/mine -->
-        <div class="card" style="margin-bottom:1.5rem">
+        <div class="card" data-show-for="seller" style="margin-bottom:1.5rem">
           <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
             <h3>Мои объявления</h3>
             <button class="btn-r btn-sm" onclick="document.querySelector('.sidebar-item:not(.exit) [data-id=\'new-publication\']') ? document.querySelector('.sidebar-item:not(.exit) [data-id=\'new-publication\']').click() : (typeof showPublication === 'function' && showPublication(currentType))">+ Новая публикация</button>
@@ -449,7 +461,7 @@ strong{color:var(--ink);font-weight:600}
         </div>
 
         <!-- Унифицированная инфо-плашка для покупателей: ценность развёрнутого отчёта + скидка резидентам -->
-        <div class="info-banner" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+        <div class="info-banner" data-show-for="buyer" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
           <div style="flex-shrink:0;color:#C5963A;font-size:1.25rem;line-height:1">★</div>
           <div style="flex:1;font-size:.85rem;color:var(--ink2);line-height:1.55">
             Помимо стандартных отметок о&nbsp;верификации, по&nbsp;любой карточке Реестра можно получить <strong style="color:var(--ink)">развёрнутый отчёт</strong>. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — скидка 10% на&nbsp;все услуги.</strong>
@@ -457,11 +469,11 @@ strong{color:var(--ink);font-weight:600}
         </div>
 
         <!-- Кошелёк (токены) -->
-        <div class="wallet-card" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
+        <div class="wallet-card" data-show-for="buyer" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
           <div>
             <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:.35rem">Кошелёк · Токены</div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;line-height:1"><span class="walletBalance">0</span> <small style="font-size:.75rem;font-weight:400;opacity:.7">токенов</small></div>
-            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
+            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = $5&nbsp;USD = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
           </div>
           <button class="btn-r btn-sm" style="background:#C5963A;border:none;color:#fff;font-weight:600;padding:.55rem 1.1rem;border-radius:3px;cursor:pointer" onclick="location.hash='#packages'">Пополнить →</button>
         </div>
@@ -581,21 +593,28 @@ strong{color:var(--ink);font-weight:600}
         <div class="page-hd">
           <div class="page-hd-left"><h2>Личный кабинет</h2></div>
         </div>
-        <div class="info-banner" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+        <div class="info-banner" data-show-for="seller" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
           <div style="flex-shrink:0;color:#C5963A;font-size:1.25rem;line-height:1">★</div>
           <div style="flex:1;font-size:.85rem;color:var(--ink2);line-height:1.55">
             <strong style="color:var(--ink)">Верифицируйте карточку</strong> — это повышает шансы на&nbsp;матчмейкинг с&nbsp;надёжным партнёром. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — скидка 10% на&nbsp;все услуги.</strong>
           </div>
         </div>
-        <div class="wallet-card" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
+        <!-- Покупательский баннер: видим только для франчайзи -->
+        <div class="info-banner" data-show-for="buyer" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+          <div style="flex-shrink:0;color:#C5963A;font-size:1.25rem;line-height:1">★</div>
+          <div style="flex:1;font-size:.85rem;color:var(--ink2);line-height:1.55">
+            Помимо стандартных отметок о&nbsp;верификации, по&nbsp;любой карточке Реестра можно получить <strong style="color:var(--ink)">развёрнутый отчёт</strong>. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — скидка 10% на&nbsp;все услуги.</strong>
+          </div>
+        </div>
+        <div class="wallet-card" data-show-for="buyer" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
           <div>
             <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:.35rem">Кошелёк · Токены</div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;line-height:1"><span class="walletBalance">0</span> <small style="font-size:.75rem;font-weight:400;opacity:.7">токенов</small></div>
-            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
+            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = $5&nbsp;USD = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
           </div>
           <button class="btn-r btn-sm" style="background:#C5963A;border:none;color:#fff;font-weight:600;padding:.55rem 1.1rem;border-radius:3px;cursor:pointer" onclick="location.hash='#packages'">Пополнить →</button>
         </div>
-        <div class="card">
+        <div class="card" data-show-for="seller">
           <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
             <h3>Мои объявления</h3>
             <button class="btn-r btn-sm" onclick="typeof showPublication==='function' && showPublication(currentType)">+ Новая публикация</button>
@@ -638,21 +657,28 @@ strong{color:var(--ink);font-weight:600}
         <div class="page-hd">
           <div class="page-hd-left"><h2>Личный кабинет</h2></div>
         </div>
-        <div class="info-banner" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+        <div class="info-banner" data-show-for="seller" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
           <div style="flex-shrink:0;color:#C5963A;font-size:1.25rem;line-height:1">★</div>
           <div style="flex:1;font-size:.85rem;color:var(--ink2);line-height:1.55">
             <strong style="color:var(--ink)">Верифицируйте карточку</strong> — это повышает шансы на&nbsp;матчмейкинг с&nbsp;надёжным партнёром. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — скидка 10% на&nbsp;все услуги.</strong>
           </div>
         </div>
-        <div class="wallet-card" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
+        <!-- Покупательский баннер: видим только для биз-байеров и гудс-байеров -->
+        <div class="info-banner" data-show-for="buyer" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+          <div style="flex-shrink:0;color:#C5963A;font-size:1.25rem;line-height:1">★</div>
+          <div style="flex:1;font-size:.85rem;color:var(--ink2);line-height:1.55">
+            Помимо стандартных отметок о&nbsp;верификации, по&nbsp;любой карточке Реестра можно получить <strong style="color:var(--ink)">развёрнутый отчёт</strong>. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — скидка 10% на&nbsp;все услуги.</strong>
+          </div>
+        </div>
+        <div class="wallet-card" data-show-for="buyer" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
           <div>
             <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:.35rem">Кошелёк · Токены</div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;line-height:1"><span class="walletBalance">0</span> <small style="font-size:.75rem;font-weight:400;opacity:.7">токенов</small></div>
-            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
+            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = $5&nbsp;USD = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
           </div>
           <button class="btn-r btn-sm" style="background:#C5963A;border:none;color:#fff;font-weight:600;padding:.55rem 1.1rem;border-radius:3px;cursor:pointer" onclick="location.hash='#packages'">Пополнить →</button>
         </div>
-        <div class="card">
+        <div class="card" data-show-for="seller">
           <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
             <h3>Мои объявления</h3>
             <button class="btn-r btn-sm" onclick="typeof showPublication==='function' && showPublication(currentType)">+ Новая публикация</button>
@@ -835,7 +861,7 @@ strong{color:var(--ink);font-weight:600}
           <div class="card-body" style="display:flex;flex-direction:column;gap:1.25rem">
             <div style="display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap">
               <div style="flex:1;min-width:280px">
-                <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.85rem;color:var(--ink);font-weight:500;line-height:1.2;margin:0 0 .85rem" id="actDtHead">—</h3>
+                <!-- Заголовок не дублируем — он уже в page-hd выше (#actDtTitle) -->
                 <p style="font-size:var(--t2);color:var(--ink2);line-height:1.65;margin:0" id="actDtDesc">—</p>
               </div>
               <div style="background:#fafafa;border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.5rem;text-align:center;min-width:180px">
@@ -879,7 +905,7 @@ strong{color:var(--ink);font-weight:600}
         <div class="info-banner" style="background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start">
           <div style="flex-shrink:0;color:#C5963A;font-size:1.25rem;line-height:1">★</div>
           <div style="flex:1;font-size:.85rem;color:var(--ink2);line-height:1.55">
-            <strong style="color:var(--ink)">1 токен = 1 открытие развёрнутой карточки</strong> или 1 пункт верификации в Реестре. Чем больше пакет — тем выгоднее. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — дополнительно −10%.</strong>
+            <strong style="color:var(--ink)">1 токен = $5 USD = 1 открытие развёрнутой карточки</strong> или 1 пункт верификации в Реестре. Чем больше пакет — тем выгоднее. <strong style="color:#C5963A">Резидентам Бизнес-сообщества — дополнительно −10%.</strong>
           </div>
         </div>
         <div id="pkgGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:1.5rem"></div>
@@ -1055,6 +1081,10 @@ strong{color:var(--ink);font-weight:600}
     .ms-list-head h4{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink);margin:0}
     .ms-search{width:100%;border:1px solid var(--border);background:#fff;padding:.45rem .7rem;font-size:.78rem;border-radius:4px;font-family:'Inter',sans-serif;margin:.55rem 1.15rem;width:calc(100% - 2.3rem)}
     .ms-item{padding:.7rem 1.15rem;border-bottom:1px solid var(--border);cursor:pointer;display:flex;gap:.7rem;align-items:flex-start;transition:background .15s}
+    .ms-item-pinned{background:linear-gradient(180deg,#fffaf0 0%,#fff8e9 100%);border-bottom:2px solid #C5963A}
+    .ms-item-pinned:hover{background:#fff5e0}
+    .ms-item-pinned.on{background:#ffefcc;border-left:3px solid var(--red)}
+    .ms-pin-mark{font-size:.65rem;opacity:.7;margin-left:.2rem;vertical-align:middle}
     .ms-item:hover{background:#fff}
     .ms-item.on{background:#fff;border-left:3px solid var(--red);padding-left:calc(1.15rem - 3px)}
     .ms-avatar{width:38px;height:38px;border-radius:50%;background:var(--red-dim);color:var(--red);font-weight:700;font-size:.78rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Cormorant Garamond',serif}
@@ -1254,11 +1284,11 @@ const ACTIVITIES = {
   },
   'packages': {
     badge: 'Группа В',
-    title: 'Пакеты карточек',
-    desc: 'Покупка карточек Реестра пакетами 10 / 25 / 50 / 100 со скидкой до 30%. Чем больше карточек в пакете — тем ниже стоимость одной.',
+    title: 'Пакеты токенов',
+    desc: 'Покупка токенов пакетами 10 / 25 / 50 / 100 со скидкой до 50%. 1 токен = $5 USD = 1 открытие развёрнутой карточки в Реестре. Чем больше токенов в пакете — тем ниже стоимость одного.',
     price: 'от $40',
-    priceSub: 'за пакет 10 карточек',
-    includes: ['Пакет 10 карточек — $40 (скидка 20%)', 'Пакет 25 карточек — $87 (скидка 30%)', 'Пакет 50 карточек — $150 (скидка 40%)', 'Пакет 100 карточек — $250 (скидка 50%)'],
+    priceSub: 'за пакет 10 токенов',
+    includes: ['Пакет 10 токенов — $40 (скидка 20%)', 'Пакет 25 токенов — $87 (скидка 30%)', 'Пакет 50 токенов — $150 (скидка 40%)', 'Пакет 100 токенов — $250 (скидка 50%)'],
     duration: 'мгновенный доступ',
     audience: 'Инвесторы · Франчайзи · Покупатели готового бизнеса · Покупатели товаров'
   },
@@ -1300,11 +1330,10 @@ function showActivity(id) {
   // Hide all user-type sections
   document.querySelectorAll('[id^="type-"]').forEach(d => d.style.display = 'none');
   document.getElementById('type-activity').style.display = 'block';
-  // Заголовок страницы
+  // Заголовок страницы (один, без дубля внутри карточки)
   document.getElementById('actDtTitle').textContent = data.title;
   // Очищаем неактивный текст (eGov/Statsnet) — убираем из текста перед рендером
   const cleanText = (s) => (s || '').replace(/\s*\(eGov\s*\/\s*Statsnet[^)]*\)/g, '').replace(/\s*по\s*Statsnet\s*/g, ' ');
-  document.getElementById('actDtHead').textContent = data.title;
   document.getElementById('actDtDesc').textContent = cleanText(data.desc);
   document.getElementById('actDtPrice').textContent = data.price;
   document.getElementById('actDtPriceSub').textContent = data.priceSub || '';
@@ -1614,8 +1643,11 @@ async function loadConversations() {
     const { items } = await AC.listConversations();
     _msUiState.conversations = items;
     renderConversationList();
-    if (items.length) selectConversation(items[0].id);
-    else renderEmptyChatState();
+    // Авто-выбор: только если ещё ничего не открыто (первый заход)
+    if (!_msUiState.activeId) {
+      if (items.length) selectConversation(items[0].id);
+      else selectSupportChat(); // если других чатов нет — открываем Поддержку
+    }
   } catch (e) {
     console.warn('listConversations failed', e);
     extras.querySelectorAll('.ms-list-head ~ *').forEach(el => el.classList?.contains('ms-search') || el.remove?.());
@@ -1628,11 +1660,29 @@ function renderConversationList(){
   if (!list) return;
   // Удаляем все .ms-item, оставляем head + search
   list.querySelectorAll('.ms-item').forEach(el => el.remove());
-  list.querySelector('.ms-list-head span').textContent = String(_msUiState.conversations.length);
+  list.querySelector('.ms-list-head span').textContent = String(_msUiState.conversations.length + 1); // +1 за «Службу Поддержки»
+
+  // ═══ Всегда-первый, неудаляемый pinned-чат «Служба Поддержки» ═══
+  const support = document.createElement('div');
+  support.className = 'ms-item ms-item-pinned' + (_msUiState.activeId === '__support__' ? ' on' : '');
+  support.dataset.conv = '__support__';
+  support.innerHTML = `
+    <div class="ms-avatar" style="background:var(--red);color:#fff">🛎</div>
+    <div class="ms-item-body">
+      <div class="ms-item-top">
+        <div class="ms-item-name">Служба Поддержки <span class="ms-pin-mark" title="Закреплён">📌</span></div>
+        <div class="ms-item-time">24/7</div>
+      </div>
+      <div class="ms-item-preview">Вопрос по платформе? Мы на связи.</div>
+    </div>
+  `;
+  support.addEventListener('click', () => selectSupportChat());
+  list.appendChild(support);
+
   if (!_msUiState.conversations.length) {
     const empty = document.createElement('div');
-    empty.style.cssText = 'padding:2rem 1rem;text-align:center;color:var(--ink4);font-size:.78rem';
-    empty.innerHTML = 'Чатов пока нет.<br/>Откройте карточку в&nbsp;Реестре и&nbsp;напишите автору.';
+    empty.style.cssText = 'padding:1.25rem 1rem;text-align:center;color:var(--ink4);font-size:.78rem';
+    empty.innerHTML = 'Других чатов пока нет.<br/>Откройте карточку в&nbsp;Реестре и&nbsp;напишите автору.';
     list.appendChild(empty);
     return;
   }
@@ -1669,6 +1719,15 @@ function timeAgo(date){
 async function selectConversation(id) {
   _msUiState.activeId = id;
   document.querySelectorAll('.ms-item').forEach(el => el.classList.toggle('on', el.dataset.conv === id));
+  // Если ранее был открыт support-чат — возвращаем input в рабочее состояние
+  const inputArea = _msUiState.extras?.querySelector('.ms-input');
+  if (inputArea) {
+    inputArea.style.opacity = '';
+    const inp = inputArea.querySelector('input');
+    if (inp) { inp.disabled = false; inp.placeholder = 'Напишите сообщение… (будет переведено на язык собеседника)'; }
+    const sendBtn = inputArea.querySelector('.ms-send, button');
+    if (sendBtn) sendBtn.disabled = false;
+  }
   // Обновляем head с инфой о собеседнике
   const conv = _msUiState.conversations.find(c => c.id === id);
   const extras = _msUiState.extras;
@@ -1691,6 +1750,54 @@ async function selectConversation(id) {
     setTimeout(loadConversations, 300);
   } catch (e) { console.warn('getMessages failed', e); }
 }
+
+// ═══ Псевдо-чат «Служба Поддержки» — не висит в БД, статика на фронте ═══
+function selectSupportChat() {
+  _msUiState.activeId = '__support__';
+  document.querySelectorAll('.ms-item').forEach(el => el.classList.toggle('on', el.dataset.conv === '__support__'));
+  const extras = _msUiState.extras;
+  const head = extras.querySelector('.ms-chat-head');
+  if (head) {
+    const av = head.querySelector('.ms-avatar');
+    const nm = head.querySelector('.ms-chat-name');
+    const meta = head.querySelector('.ms-chat-meta');
+    if (av) { av.textContent = '🛎'; av.style.background = 'var(--red)'; av.style.color = '#fff'; }
+    if (nm) nm.textContent = 'Служба Поддержки';
+    if (meta) meta.innerHTML = '<span class="ms-lang-pill" style="background:#dcfce7;color:#15803d">ONLINE 24/7</span>обычно отвечаем в течение часа';
+  }
+  const body = extras.querySelector('#ms-body');
+  if (body) {
+    body.innerHTML = `
+      <div class="ms-msg them">
+        <div class="ms-bubble" style="background:#fffaf0;border:1px solid #C5963A">
+          👋 Здравствуйте! Я — Служба Поддержки «ATAMEKEN&nbsp;Club». Опишите ваш вопрос — поможем разобраться.
+        </div>
+      </div>
+      <div class="ms-msg them">
+        <div class="ms-bubble">
+          <strong>Частые вопросы:</strong><br/>
+          • Как получить верификацию?<br/>
+          • Что такое токены и как их купить?<br/>
+          • Как опубликовать карточку в Реестре?<br/>
+          • Как подключиться к Сопровождению сделки?<br/><br/>
+          Также можно написать нам напрямую:<br/>
+          ✉ <a href="mailto:support@atameken.club" style="color:var(--red);font-weight:600">support@atameken.club</a><br/>
+          ✈ <a href="https://t.me/atameken_support" target="_blank" rel="noopener" style="color:var(--red);font-weight:600">@atameken_support</a>
+        </div>
+      </div>
+    `;
+  }
+  // Блокируем input — пока что отправка не подключена к реальному support backend
+  const inputArea = extras.querySelector('.ms-input');
+  if (inputArea) {
+    inputArea.style.opacity = '.6';
+    const inp = inputArea.querySelector('input');
+    if (inp) { inp.disabled = true; inp.placeholder = 'Напишите на support@atameken.club или Telegram @atameken_support'; }
+    const sendBtn = inputArea.querySelector('.ms-send, button');
+    if (sendBtn) sendBtn.disabled = true;
+  }
+}
+window.selectSupportChat = selectSupportChat;
 
 function renderMessages() {
   const extras = _msUiState.extras;
@@ -2638,12 +2745,10 @@ const SIDEBAR_SELLER_A = [
     {id:'a-contracts-audit',icon:'check',text:'Аудит договоров',activity:'contracts-audit'},
     {id:'a-deal-support',icon:'handshake',text:'Сопровождение сделки',activity:'deal-support'},
   ]},
-  {label:'Размещение',sections:[
-    {id:'new-publication',icon:'plus',text:'+ Новая публикация'},
-  ]},
+  // Блок «Размещение» убран — кнопка «+ Новая публикация» доступна прямо из обзора
   {label:'Сервис',sections:[
     {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
-    {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
+    {id:'additional-services',icon:'star',text:'Дополнительные услуги',href:'/services.html'},
   ]},
 ];
 
@@ -2659,12 +2764,10 @@ const SIDEBAR_SELLER_B = [
     {id:'b-contracts-audit',icon:'check',text:'Верификация договоров',activity:'contracts-audit'},
     {id:'b-deal-support',icon:'handshake',text:'Сопровождение сделки',activity:'deal-support'},
   ]},
-  {label:'Размещение',sections:[
-    {id:'new-publication',icon:'plus',text:'+ Новая публикация'},
-  ]},
+  // Блок «Размещение» убран — кнопка «+ Новая публикация» доступна прямо из обзора
   {label:'Сервис',sections:[
     {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
-    {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
+    {id:'additional-services',icon:'star',text:'Дополнительные услуги',href:'/services.html'},
   ]},
 ];
 
@@ -2676,12 +2779,12 @@ const SIDEBAR_BUYER = [
   {label:'Доступ к Реестру',sections:[
     {id:'v-expanded-card',icon:'card',text:'Развёрнутая информация',activity:'expanded-card'},
     {id:'v-verification-access',icon:'check',text:'Развёрнутый отчёт',activity:'verification-access'},
-    {id:'v-packages',icon:'package',text:'Пакеты карточек',activity:'packages'},
+    {id:'v-packages',icon:'package',text:'Пакеты токенов',activity:'packages'},
     {id:'v-deal-support',icon:'handshake',text:'Сопровождение сделки',activity:'deal-support'},
   ]},
   {label:'Сервис',sections:[
     {id:'professional-translation',icon:'globe',text:'Профессиональный перевод',activity:'professional-translation'},
-    {id:'additional-services',icon:'star',text:'Дополнительные услуги',activity:'additional-services'},
+    {id:'additional-services',icon:'star',text:'Дополнительные услуги',href:'/services.html'},
   ]},
 ];
 
@@ -2758,7 +2861,10 @@ function buildSidebar(type){
       div.className = 'sidebar-item' + (isActive ? ' on' : '');
       div.innerHTML = (icons[item.icon] || '') + item.text + (item.badge ? `<span class="badge">${item.badge}</span>` : '');
       div.onclick = () => {
-        if (item.activity) {
+        if (item.href) {
+          // Внешняя ссылка (например, на переднюю вкладку Дополнительные услуги)
+          window.location.href = item.href;
+        } else if (item.activity) {
           // Открываем activity-панель через hash — единая логика с тарифной страницей
           location.hash = '#activity-' + item.activity;
         } else if (item.id === 'dashboard') {
@@ -2812,6 +2918,20 @@ function showPanel(type, panelId){
   window.scrollTo(0,0);
 }
 
+// 4 продавца и 4 покупателя — кто есть кто
+const SELLER_TYPES = new Set(['seeker', 'franchiser', 'biz-seller', 'goods-seller']);
+function isBuyerType(t) { return !SELLER_TYPES.has(t); }
+
+// Прячет/показывает элементы с data-show-for="seller|buyer" по текущей роли
+function applyRoleVisibility(type) {
+  const isBuyer = isBuyerType(type);
+  document.querySelectorAll('[data-show-for]').forEach(el => {
+    const want = el.dataset.showFor;
+    const show = want === 'both' || (want === 'buyer' && isBuyer) || (want === 'seller' && !isBuyer);
+    el.style.display = show ? '' : 'none';
+  });
+}
+
 function switchType(type, btn){
   // Сбрасываем activity-хэш — иначе курсор в Менюшке остаётся на той же услуге
   if (location.hash) history.replaceState(null, '', '/cabinet.html');
@@ -2821,10 +2941,12 @@ function switchType(type, btn){
   document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   showPanel(type, 'dashboard');
+  applyRoleVisibility(type);
 }
 
-// Init
+// Init: дефолтный «seeker» — продавец, сразу прячем покупательские блоки
 buildSidebar('seeker');
+applyRoleVisibility('seeker');
 
 // Filter pills (non-functional UI demo)
 document.querySelectorAll('.pf-btn').forEach(btn => {
@@ -2948,6 +3070,8 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
     const type = ROLE_TO_TYPE[user.role] || 'seeker';
     const btn = document.querySelector('.type-btn[data-type="' + type + '"]');
     if (btn && type !== 'seeker') switchType(type, btn);
+    // Применяем role-based показ/скрытие (кошелёк, баннеры, «Мои объявления»)
+    if (typeof applyRoleVisibility === 'function') applyRoleVisibility(type);
   }
 
   $('btn-logout').addEventListener('click', async (e) => {

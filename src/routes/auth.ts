@@ -5,12 +5,18 @@ import { hashPassword, verifyPassword, sha256, randomToken } from '../lib/hash';
 import { signAccessToken, refreshExpiryDate } from '../lib/jwt';
 import { requireAuth } from '../middleware/auth';
 
+// Текущая версия Пользовательского соглашения. Меняем при правках текста —
+// пользователи, регистрирующиеся после этой даты, фиксируются с новой версией.
+const TERMS_VERSION = '2026.05.1';
+
 const registerSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
   password: z.string().min(8).max(128),
   role: z.enum(['SEEKER', 'INVESTOR', 'FRANCHISE', 'SALE', 'FRANCHISER', 'FRANCHISEE', 'BIZ_SELLER', 'BIZ_BUYER', 'GOODS_SELLER', 'GOODS_BUYER']),
   fullName: z.string().min(2).max(120).optional(),
   phone: z.string().max(32).optional(),
+  // Click-wrap: фронт обязан передать true после галочки в модалке.
+  acceptedTerms: z.literal(true, { errorMap: () => ({ message: 'Необходимо принять Пользовательское соглашение' }) }),
 });
 
 const loginSchema = z.object({
@@ -43,7 +49,11 @@ export default async function authRoutes(app: FastifyInstance) {
 
     const passwordHash = await hashPassword(password);
     const user = await prisma.user.create({
-      data: { email, passwordHash, role, fullName, phone },
+      data: {
+        email, passwordHash, role, fullName, phone,
+        termsAcceptedAt: new Date(),
+        termsVersion: TERMS_VERSION,
+      },
     });
 
     const { accessToken, refreshToken } = issueTokensFor(user);

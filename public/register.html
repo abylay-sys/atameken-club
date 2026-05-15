@@ -232,6 +232,8 @@
       role: document.getElementById('role-input').value,
       fullName: document.getElementById('fullName').value.trim(),
       phone: document.getElementById('phone').value.trim() || undefined,
+      // Подтверждение Пользовательского соглашения — модалка не закроется без галочки
+      acceptedTerms: true,
     };
 
     try {

@@ -477,86 +477,8 @@ window.renderShevStripHTML = renderShevStripHTML;
   });
 })();
 
-// ═══ Избранное (звёздочка) + Подать жалобу — инжект в каждую карточку Реестра ═══
-(function(){
-  const FAV_KEY = 'ac_favorites_v1';
-  const favs = () => { try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch { return []; } };
-  const toggleFav = (id) => {
-    let list = favs();
-    if (list.includes(id)) list = list.filter(x => x !== id);
-    else list.push(id);
-    localStorage.setItem(FAV_KEY, JSON.stringify(list));
-    return list.includes(id);
-  };
-
-  // Стили для звёздочки и кнопки жалобы
-  const style = document.createElement('style');
-  style.textContent = `
-    .pcard-fav{position:absolute;top:.6rem;right:.6rem;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;transition:all .2s;color:var(--ink3)}
-    .pcard:not(.card-priority-on) .pcard-fav{top:.6rem;right:.6rem}
-    .card-priority + .pcard-fav,
-    .pcard:has(.card-priority) .pcard-fav{top:.6rem;right:6.5rem}
-    .pcard-fav:hover{border-color:#C5963A;color:#C5963A;background:#fff}
-    .pcard-fav.on{color:#C5963A;border-color:#C5963A;background:#fffaf0}
-    .pcard-fav svg{width:16px;height:16px}
-    .pcard-report{margin-top:.55rem;padding-top:.55rem;border-top:1px dashed var(--border);display:flex;align-items:center;justify-content:flex-end}
-    .pcard-report-btn{background:none;border:0;font-size:.65rem;color:var(--ink4);font-weight:500;letter-spacing:.04em;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem;padding:.15rem .3rem;transition:color .15s}
-    .pcard-report-btn:hover{color:var(--red)}
-    .pcard-report-btn svg{width:11px;height:11px}
-  `;
-  document.head.appendChild(style);
-
-  const favIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5"/></svg>';
-  const favIconFill = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5"/></svg>';
-  const reportIcon = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 14V3a1 1 0 011-1h7l3 3v9"/><line x1="3" y1="14" x2="14" y2="14"/><circle cx="8" cy="8" r="1" fill="currentColor"/></svg>';
-
-  const list = favs();
-  document.querySelectorAll('.pcard').forEach((card, idx) => {
-    // Уникальный id карточки по позиции/title
-    const titleEl = card.querySelector('.pcard-title');
-    const cardId = card.dataset.cardId || ((titleEl?.textContent.trim() + '#' + idx).slice(0, 80));
-    card.dataset.cardId = cardId;
-    const isFav = list.includes(cardId);
-
-    // Звёздочка «Избранное»
-    if (!card.querySelector('.pcard-fav')) {
-      const fav = document.createElement('div');
-      fav.className = 'pcard-fav' + (isFav ? ' on' : '');
-      fav.title = isFav ? 'В избранном' : 'Добавить в избранное';
-      fav.innerHTML = isFav ? favIconFill : favIcon;
-      fav.addEventListener('click', (e) => {
-        e.stopPropagation(); e.preventDefault();
-        const now = toggleFav(cardId);
-        fav.classList.toggle('on', now);
-        fav.innerHTML = now ? favIconFill : favIcon;
-        fav.title = now ? 'В избранном' : 'Добавить в избранное';
-      });
-      card.appendChild(fav);
-    }
-
-    // Кнопка «Подать жалобу» — добавляем после pcard-foot
-    if (!card.querySelector('.pcard-report')) {
-      const body = card.querySelector('.pcard-body');
-      if (body) {
-        const wrap = document.createElement('div');
-        wrap.className = 'pcard-report';
-        const btn = document.createElement('button');
-        btn.className = 'pcard-report-btn';
-        btn.innerHTML = reportIcon + 'Подать жалобу';
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation(); e.preventDefault();
-          const reason = prompt('Опишите причину жалобы на эту карточку:');
-          if (reason && reason.trim()) {
-            alert('Жалоба принята. Мы рассмотрим её в ближайшее время.\n\nКарточка: ' + cardId);
-            // TODO: отправлять на /complaints API когда подключим бэкенд
-          }
-        });
-        wrap.appendChild(btn);
-        body.appendChild(wrap);
-      }
-    }
-  });
-})();
+// Звёздочка + «Пожаловаться» инжектятся через setupCardActions() ниже —
+// один источник правды, с реальным API (AC.addFavorite / AC.reportComplaint).
 
 // Catalog tabs
 function applyTabFilter(){
@@ -582,9 +504,9 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
     .pcard-fav{position:absolute;top:.75rem;right:.75rem;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .2s;font-size:1.1rem;line-height:1;color:#cbd5e1}
     .pcard-fav:hover{transform:scale(1.08);border-color:#C5963A;color:#C5963A}
     .pcard-fav.on{background:#fffaf0;border-color:#C5963A;color:#C5963A}
-    .pcard-report{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--ink4);text-decoration:none;margin-top:.5rem;cursor:pointer;background:none;border:0;padding:0;font-family:inherit}
-    .pcard-report:hover{color:var(--red);text-decoration:underline}
-    .pcard-report svg{width:11px;height:11px}
+    .pcard-report{display:flex;align-items:center;justify-content:center;gap:.35rem;font-size:.7rem;color:var(--ink4);font-weight:500;letter-spacing:.02em;margin-top:.65rem;padding:.5rem .75rem;cursor:pointer;background:transparent;border:1px dashed var(--border2);border-radius:4px;font-family:'Inter',sans-serif;transition:all .15s;width:100%}
+    .pcard-report:hover{color:var(--red);border-color:var(--red);background:#fffafa}
+    .pcard-report svg{width:12px;height:12px}
   `;
   document.head.appendChild(style);
 })();
