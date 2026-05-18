@@ -60,7 +60,42 @@
 </nav>
 
 <main style="padding-top:6rem">
-<!-- ══ ЗАГЛУШКА ══ -->
+<style>
+  /* ── Прайс-лист услуг ── */
+  #services .svc-intro{max-width:780px;font-size:.95rem;color:var(--ink2);line-height:1.7;margin:1.25rem 0 0}
+  #services .svc-intro b{color:var(--ink);font-weight:600}
+  #services .svc-filters{display:flex;flex-wrap:wrap;gap:.55rem;margin:2.25rem 0 1.75rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+  #services .svc-chip{background:#fff;border:1.5px solid var(--border);color:var(--ink2);padding:.58rem 1.15rem;border-radius:24px;cursor:pointer;font-size:.82rem;font-weight:500;font-family:'Inter',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:.5rem;line-height:1}
+  #services .svc-chip:hover{border-color:var(--red);color:var(--red)}
+  #services .svc-chip.on{background:var(--red);color:#fff;border-color:var(--red)}
+  #services .svc-chip-n{display:inline-block;background:rgba(0,0,0,.08);color:inherit;font-size:.66rem;font-weight:700;padding:.14rem .46rem;border-radius:10px;min-width:18px;text-align:center;line-height:1}
+  #services .svc-chip.on .svc-chip-n{background:rgba(255,255,255,.24)}
+
+  #services .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1.1rem}
+  #services .svc-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.4rem 1.45rem 1.15rem;display:flex;flex-direction:column;gap:.7rem;transition:all .22s;box-shadow:var(--shadow);min-height:240px}
+  #services .svc-card:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+  #services .svc-card-seg{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--red)}
+  #services .svc-card-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);font-weight:500;line-height:1.25;margin:0}
+  #services .svc-card-incl{font-size:.82rem;color:var(--ink2);line-height:1.55;flex:1;margin:0}
+  #services .svc-card-meta{display:flex;justify-content:space-between;align-items:flex-end;padding-top:.75rem;border-top:1px solid var(--border);margin-top:.4rem;gap:.85rem;flex-wrap:wrap}
+  #services .svc-card-price{font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--ink);font-weight:600;line-height:1.15}
+  #services .svc-card-price-cur{font-size:.72rem;color:var(--ink4);font-weight:400;margin-left:.2rem}
+  #services .svc-card-model{font-size:.72rem;color:var(--ink3);font-weight:500;margin-top:.25rem}
+  #services .svc-card-term{font-size:.78rem;color:var(--ink2);font-weight:500;text-align:right;line-height:1.3;flex-shrink:0}
+  #services .svc-card-term-lbl{display:block;font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:.18rem}
+
+  #services .svc-empty{grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--ink4);font-size:.92rem}
+
+  #services .svc-cta{margin-top:3rem;background:#fff;border:1px solid var(--border);border-left:3px solid var(--red);border-radius:8px;padding:2rem 2.25rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;box-shadow:var(--shadow)}
+  #services .svc-cta-text h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);font-weight:500;margin:0 0 .35rem}
+  #services .svc-cta-text p{font-size:.88rem;color:var(--ink3);line-height:1.6;margin:0;max-width:560px}
+
+  @media(max-width:720px){
+    #services .svc-card-meta{flex-direction:column;align-items:flex-start;gap:.6rem}
+    #services .svc-card-term{text-align:left}
+  }
+</style>
+
 <section id="services">
   <div class="inner">
     <div class="sh reveal">
@@ -68,12 +103,28 @@
         <div>
           <div class="red-bar"></div>
           <span class="tag" style="display:block;margin-bottom:.75rem">Дополнительные услуги</span>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--ink);font-weight:500;line-height:1.15;margin:0">Полный прайс-лист услуг</h2>
+          <p class="svc-intro">37 услуг от аккредитованных Партнёров — <b>Вход на рынок</b>, <b>Продавцы</b>, <b>Покупатели</b> и <b>Сквозные</b>. Цены в тенге, окончательная стоимость — после брифа под конкретную задачу. Скидка 10% для Резидентов сообщества.</p>
         </div>
       </div>
     </div>
-    <div class="reveal" style="margin-top:2rem;background:#fff;border:1px solid var(--border);border-left:3px solid var(--red);border-radius:6px;padding:2rem 2.25rem;box-shadow:var(--shadow);max-width:780px">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);line-height:1.3;margin:0 0 .85rem">Данный раздел находится в&nbsp;разработке</p>
-      <p style="font-size:.92rem;color:var(--ink2);line-height:1.65;margin:0">По любым вопросам — <a href="mailto:info@atameken.club" style="color:var(--red);font-weight:500">info@atameken.club</a></p>
+
+    <div class="svc-filters reveal">
+      <button class="svc-chip on" data-seg="all" type="button">Все <span class="svc-chip-n">37</span></button>
+      <button class="svc-chip" data-seg="Вход на рынок" type="button">Вход на рынок <span class="svc-chip-n">6</span></button>
+      <button class="svc-chip" data-seg="Продавцы" type="button">Продавцы <span class="svc-chip-n">14</span></button>
+      <button class="svc-chip" data-seg="Покупатели" type="button">Покупатели <span class="svc-chip-n">7</span></button>
+      <button class="svc-chip" data-seg="Сквозные" type="button">Сквозные <span class="svc-chip-n">10</span></button>
+    </div>
+
+    <div class="svc-grid reveal" id="svcGrid"></div>
+
+    <div class="svc-cta reveal">
+      <div class="svc-cta-text">
+        <h3>Не нашли нужную услугу?</h3>
+        <p>Опишите задачу — подберём конкретного партнёра и сформируем коммерческое предложение за 1–2 рабочих дня.</p>
+      </div>
+      <a href="mailto:info@atameken.club?subject=Запрос%20на%20услугу" class="btn-red" style="padding:.75rem 1.6rem;font-size:.82rem;white-space:nowrap">Написать в info@atameken.club</a>
     </div>
   </div>
 </section>
@@ -118,44 +169,92 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), {threshold:.06});
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// Services filter
-document.querySelectorAll('.svc-f-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.svc-f-btn').forEach(b => b.classList.remove('on'));
-    btn.classList.add('on');
-    const f = btn.dataset.svc;
-    document.querySelectorAll('#svcGrid .svc-card').forEach(c => {
-      if(f === 'all') { c.style.display = 'flex'; return; }
-      c.style.display = c.dataset.svc.split(' ').includes(f) ? 'flex' : 'none';
-    });
-  });
-});
-// Cart wiring (lightweight, points to same backend)
-const CART_KEY = 'ac_cart_v1';
-const cartState = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } };
-const cartSave = (items) => localStorage.setItem(CART_KEY, JSON.stringify(items));
-const cartHas = (id) => cartState().some(it => it.id === id);
-function cartAdd(id,name){ const items = cartState(); if(items.some(it=>it.id===id)) return; items.push({id,name}); cartSave(items); }
-function cartRemove(id){ cartSave(cartState().filter(it=>it.id!==id)); }
-function cartSyncBtns(){
-  document.querySelectorAll('.svc-card[data-svc-id]').forEach(card => {
-    const id = card.dataset.svcId; const btn = card.querySelector('[data-add]');
-    if(!btn) return;
-    if(cartHas(id)){ btn.classList.add('added'); btn.textContent = 'В корзине'; }
-    else { btn.classList.remove('added'); btn.textContent = 'Добавить в корзину'; }
-  });
+// ──────── ПРАЙС-ЛИСТ УСЛУГ (37 позиций из Atameken_Club_Услуги.xlsx) ────────
+const SVC_DATA = [
+  {n:1,  seg:'Вход на рынок', name:'Market Entry Audit',                       incl:'Анализ ниши, ёмкость, регуляторика, налоги, форма присутствия (ТОО/филиал/СЭЗ/МФЦА), модель и дорожная карта',                  pf:1500000, pt:5000000,  m:'разово',                       t:'3–6 нед'},
+  {n:2,  seg:'Вход на рынок', name:'Регистрация юрлица под ключ',              incl:'ИИН/БИН, регистрация ТОО или филиала, устав, банковский счёт, ЭЦП, печать, юр. адрес, налоговый учёт',                       pf:250000,  pt:1500000,  m:'разово',                       t:'5–14 дн'},
+  {n:3,  seg:'Вход на рынок', name:'Tax & Legal Setup',                        incl:'Выбор режима налогообложения, постановка на НДС, договор с бухгалтерией, шаблоны договоров, политики ПОД/ФТ',           pf:300000,  pt:1200000,  m:'разово + ежемес.',             t:'2–4 нед'},
+  {n:4,  seg:'Вход на рынок', name:'Визы и разрешения на работу',              incl:'Виза C5 бизнес-иммигранта, РВП, разрешение на ИРС, ВНЖ — сопровождение в ЦОН и миграционной полиции',                   pf:300000,  pt:1500000,  m:'за человека',                  t:'2 нед – 3 мес'},
+  {n:5,  seg:'Вход на рынок', name:'Executive search ключевых ролей',          incl:'Хантинг Country Manager, Sales Director, CFO, главбух, юрист, HR — глубинные интервью, ассессмент',                       pf:800000,  pt:3500000,  m:'за позицию',                   t:'4–10 нед'},
+  {n:6,  seg:'Вход на рынок', name:'Культурно-регуляторная адаптация',         incl:'Брифинг по деловой культуре РК, коммуникация с госорганами, обязательная локализация, сезонность',                       pf:300000,  pt:800000,   m:'разово',                       t:'1–2 нед'},
+
+  {n:7,  seg:'Продавцы',      name:'Аудит бизнес-плана / финмодели',           incl:'Проверка допущений, юнит-экономики, P&L, ДДС, баланса, сценарного анализа; отчёт с рисками и точками роста',              pf:300000,  pt:1200000,  m:'разово',                       t:'2–4 нед'},
+  {n:8,  seg:'Продавцы',      name:'Разработка бизнес-плана (UNIDO/TACIS)',    incl:'Полный бизнес-план под стандарты ЕБРР, БРК, ДАМУ, банков второго уровня, инвестора; финмодель в Excel',                  pf:500000,  pt:3000000,  m:'разово',                       t:'3–6 нед'},
+  {n:9,  seg:'Продавцы',      name:'Маркетинговое исследование рынка',         incl:'Ёмкость, доли игроков, профили 5–15 конкурентов, импорт/экспорт за 3–5 лет, прогноз 3 сценария',                          pf:500000,  pt:2500000,  m:'разово',                       t:'3–6 нед'},
+  {n:10, seg:'Продавцы',      name:'Анализ ЦА и сегментация',                  incl:'Глубинные интервью (10–20), количественный опрос (300–1000), портреты сегментов, CJM, JTBD',                              pf:470000,  pt:2000000,  m:'разово',                       t:'3–5 нед'},
+  {n:11, seg:'Продавцы',      name:'Брендинговая упаковка (комплекс)',         incl:'Позиционирование, УТП, нейминг, фирменный стиль, логотип, брендбук, презентация, сайт, видеоролик',                      pf:800000,  pt:5000000,  m:'разово',                       t:'4–10 нед'},
+  {n:12, seg:'Продавцы',      name:'Сайт / лендинг',                           incl:'Дизайн, верстка, контент, SEO-базовая оптимизация, аналитика, форма заявки + интеграция с CRM',                           pf:500000,  pt:0,        m:'разово',                       t:'3–8 нед'},
+  {n:13, seg:'Продавцы',      name:'Брендбук и фирменный стиль',               incl:'Логотип, цветовая палитра, типографика, паттерны, шаблоны документов и презентаций, гайдлайны',                         pf:300000,  pt:1500000,  m:'разово',                       t:'3–5 нед'},
+  {n:14, seg:'Продавцы',      name:'Запуск воронки продаж под ключ',           incl:'Аудит продаж, CRM (Bitrix24/amoCRM/Salesforce), скрипты, регламенты, KPI, найм и обучение РОПа',                          pf:2000000, pt:8000000,  m:'разово',                       t:'6–12 нед'},
+  {n:15, seg:'Продавцы',      name:'Колл-центр на аутсорсе',                   incl:'Холодные и тёплые звонки, входящая линия, скрипты, запись разговоров, отчётность',                                      pf:250000,  pt:1200000,  m:'ежемес.',                      t:'подписка'},
+  {n:16, seg:'Продавцы',      name:'Performance-маркетинг',                    incl:'Google Ads, Meta Ads, Яндекс.Директ, TikTok Ads — настройка, ведение, оптимизация конверсий',                            pf:300000,  pt:3000000,  m:'ежемес. + бюджет',             t:'подписка'},
+  {n:17, seg:'Продавцы',      name:'SMM-ведение',                              incl:'Контент-план, копирайт, дизайн постов, видео, таргетированная реклама, комьюнити-менеджмент',                              pf:200000,  pt:1500000,  m:'ежемес.',                      t:'подписка'},
+  {n:18, seg:'Продавцы',      name:'Выход на маркетплейсы',                    incl:'Регистрация и упаковка карточек на Kaspi, Ozon, Wildberries, Halyk Market, Forte Market; A+ контент; реклама',           pf:300000,  pt:1500000,  m:'разово + ежемес.',             t:'3–6 нед'},
+  {n:19, seg:'Продавцы',      name:'Экспортный консалтинг',                    incl:'Подбор экспортного рынка, пошлины, сертификация (СТ-1, EAC, CE, Halal), поиск дистрибьюторов, QazTrade',                pf:800000,  pt:3500000,  m:'разово',                       t:'6–14 нед'},
+  {n:20, seg:'Продавцы',      name:'Привлечение финансирования',               incl:'Пакет документов для банков, БРК, ДАМУ, Astana Hub, инвесторов; защита проекта',                                          pf:500000,  pt:3000000,  m:'разово + 1–5% success fee',    t:'6–16 нед'},
+
+  {n:21, seg:'Покупатели',    name:'Поиск и верификация поставщиков',          incl:'Подбор 5–20 поставщиков по ТЗ (РК, ЕАЭС, Китай, Турция, ЕС), сравнение, тестовая партия',                                pf:500000,  pt:2500000,  m:'разово',                       t:'3–8 нед'},
+  {n:22, seg:'Покупатели',    name:'Due diligence контрагента (РК)',           incl:'Регистрация, бенефициары, налоговая, суды, банкротства, санкции, репутация; полевой выезд',                              pf:100000,  pt:500000,   m:'за контрагента',               t:'5–15 дн'},
+  {n:23, seg:'Покупатели',    name:'Due diligence контрагента (зарубеж.)',     incl:'Расширенный due diligence для иностранных контрагентов: международные реестры, санкции, OFAC/EU/UK',                     pf:500000,  pt:2200000,  m:'за контрагента',               t:'10–20 дн'},
+  {n:24, seg:'Покупатели',    name:'Сопровождение закупочной сделки',          incl:'Аудит контракта, Incoterms, валютные риски, аккредитив/эскроу, предотгрузочная инспекция',                                pf:400000,  pt:3500000,  m:'за сделку или 1–3%',           t:'под сделку'},
+  {n:25, seg:'Покупатели',    name:'Таможенный и логистический консалтинг',    incl:'Код ТН ВЭД, расчёт пошлин/НДС, выбор брокера, мультимодальная логистика, оптимизация затрат',                            pf:200000,  pt:1000000,  m:'разово или ежемес.',           t:'1–4 нед'},
+  {n:26, seg:'Покупатели',    name:'Автоматизация закупок',                    incl:'Внедрение SRM/тендерной системы, регламенты, KPI отдела закупок, обучение',                                              pf:800000,  pt:4000000,  m:'разово',                       t:'6–12 нед'},
+  {n:27, seg:'Покупатели',    name:'Аналитика цен и бенчмаркинг',              incl:'Регулярный мониторинг цен на сырьё и товары, бенчмарк, отчёт раз в месяц/квартал',                                       pf:100000,  pt:500000,   m:'ежемес.',                      t:'подписка'},
+
+  {n:28, seg:'Сквозные',      name:'Письменный перевод',                       incl:'Стандартный перевод документов и контента (русский, казахский, английский и др.); 1 стр = 1800 знаков',                  pf:1500,    pt:5000,     m:'за страницу',                  t:'по объёму'},
+  {n:29, seg:'Сквозные',      name:'Технический / юридический перевод',        incl:'Договоры, тех. документация, инструкции, финансовая отчётность, нотариальное заверение',                                 pf:2100,    pt:7000,     m:'за страницу',                  t:'по объёму'},
+  {n:30, seg:'Сквозные',      name:'Устный последовательный перевод',          incl:'Переговоры, встречи, выезды, сопровождение делегаций; минимальный заказ 4 часа',                                          pf:8000,    pt:15000,    m:'за час',                       t:'по запросу'},
+  {n:31, seg:'Сквозные',      name:'Синхронный перевод',                       incl:'Конференции, форумы, крупные мероприятия; минимум 2 переводчика; аренда оборудования отдельно',                          pf:30000,   pt:100000,   m:'за час',                       t:'по запросу'},
+  {n:32, seg:'Сквозные',      name:'Локализация сайта и материалов',           incl:'Перевод и культурная адаптация сайта, маркетинговых материалов, презентаций под РК',                                     pf:500000,  pt:2500000,  m:'разово',                       t:'3–6 нед'},
+  {n:33, seg:'Сквозные',      name:'Финансовое моделирование',                 incl:'Модель в Excel с открытыми формулами, сценарии, чувствительность, презентация для инвестора',                            pf:500000,  pt:3000000,  m:'разово + 1–5% success fee',    t:'3–8 нед'},
+  {n:34, seg:'Сквозные',      name:'Growth Audit (маркетинг и продажи)',       incl:'Аудит сайта, рекламы, воронки, скриптов, отдела продаж по 20–30 метрикам; дорожная карта роста',                         pf:300000,  pt:1500000,  m:'разово',                       t:'2–4 нед'},
+  {n:35, seg:'Сквозные',      name:'Бухгалтерский и кадровый аутсорсинг',      incl:'Ведение бухгалтерии, налогового учёта, отчётность, ЗП, кадровое делопроизводство',                                       pf:80000,   pt:600000,   m:'ежемес.',                      t:'подписка'},
+  {n:36, seg:'Сквозные',      name:'PR и работа с медиа',                      incl:'Пресс-релизы, размещения в Forbes.kz, Kursiv, Kapital.kz, Atameken Business; интервью; антикризис',                      pf:500000,  pt:3000000,  m:'ежемес.',                      t:'подписка'},
+  {n:37, seg:'Сквозные',      name:'Рекрутинг (линейные и middle)',            incl:'Менеджеры по продажам, маркетологи, бухгалтеры, операторы; массовый подбор; оценка',                                    pf:200000,  pt:1500000,  m:'0,5–1,5 оклада',               t:'2–6 нед'},
+];
+
+function fmtN(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' ').replace(/ /g, ' '); }
+
+function priceHtml(s) {
+  const f = fmtN(s.pf);
+  if (s.pt && s.pt > s.pf) {
+    return `${f} – ${fmtN(s.pt)} <span class="svc-card-price-cur">тг</span>`;
+  }
+  return `от ${f} <span class="svc-card-price-cur">тг</span>`;
 }
-document.querySelectorAll('.svc-card[data-svc-id]').forEach(card => {
-  const btn = card.querySelector('[data-add]'); if(!btn) return;
-  btn.addEventListener('click', e => {
-    e.preventDefault();
-    const id = card.dataset.svcId, name = card.dataset.svcName;
-    if(cartHas(id)){ cartRemove(id); } else { cartAdd(id,name); }
-    cartSyncBtns();
-    alert(cartHas(id) ? 'Добавлено в корзину. Перейдите на главную, чтобы оформить.' : 'Удалено из корзины.');
+
+function renderServices(filter) {
+  const grid = document.getElementById('svcGrid');
+  const items = (filter === 'all') ? SVC_DATA : SVC_DATA.filter(s => s.seg === filter);
+  if (!items.length) {
+    grid.innerHTML = '<div class="svc-empty">В этом сегменте пока пусто.</div>';
+    return;
+  }
+  grid.innerHTML = items.map(s => `
+    <div class="svc-card">
+      <span class="svc-card-seg">${s.seg}</span>
+      <h3 class="svc-card-name">${s.name}</h3>
+      <p class="svc-card-incl">${s.incl}</p>
+      <div class="svc-card-meta">
+        <div>
+          <div class="svc-card-price">${priceHtml(s)}</div>
+          <div class="svc-card-model">${s.m}</div>
+        </div>
+        <div class="svc-card-term"><span class="svc-card-term-lbl">Срок</span>${s.t}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+renderServices('all');
+
+document.querySelectorAll('.svc-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.svc-chip').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    renderServices(btn.dataset.seg);
   });
 });
-cartSyncBtns();
 
 </script>
 
