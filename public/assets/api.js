@@ -136,6 +136,8 @@
     async getMessages(conversationId) { return request('GET', '/chat/conversations/' + encodeURIComponent(conversationId) + '/messages', null, true); },
     async sendChatMessage(conversationId, text, lang) { return request('POST', '/chat/messages', { conversationId, text, lang }, true); },
     async setConversationLang(conversationId, lang) { return request('PUT', '/chat/conversations/' + encodeURIComponent(conversationId) + '/lang', { lang }, true); },
+    // Закреплённый чат «Служба Поддержки» — форвардит в Telegram-группу модераторов
+    async sendSupportMessage(text) { return request('POST', '/chat/support', { text }, true); },
     chatWsUrl() {
       const token = getToken();
       if (!token) return null;

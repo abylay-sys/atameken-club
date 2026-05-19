@@ -367,15 +367,8 @@ strong{color:var(--ink);font-weight:600}
           <div class="sb-actions" id="status-actions"></div>
         </div>
 
-        <!-- Кошелёк (токены): 1 токен = 1 открытие развёрнутой карточки. Психологически проще тратить токены, чем деньги. -->
-        <div class="wallet-card" data-show-for="buyer" style="background:linear-gradient(135deg,#1A3A6B 0%,#0f2746 100%);color:#fff;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;box-shadow:0 4px 16px rgba(26,58,107,.2)">
-          <div>
-            <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:.35rem">Кошелёк · Токены</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;line-height:1"><span class="walletBalance">0</span> <small style="font-size:.75rem;font-weight:400;opacity:.7">токенов</small></div>
-            <div style="font-size:.72rem;opacity:.7;margin-top:.4rem;line-height:1.4">1&nbsp;токен = $5&nbsp;USD = 1&nbsp;открытие развёрнутой карточки в&nbsp;Реестре</div>
-          </div>
-          <button class="btn-r btn-sm" style="background:#C5963A;border:none;color:#fff;font-weight:600;padding:.55rem 1.1rem;border-radius:3px;cursor:pointer" onclick="location.hash='#packages'">Пополнить →</button>
-        </div>
+        <!-- Wallet-card удалён: seeker-dashboard используется только для соискателей (продавцов).
+             Кошелёк токенов нужен только покупателям — он остаётся в investor/franchise/sale dashboards. -->
 
         <!-- Stats -->
         <!-- Мои объявления — заполняется из API /publications/mine -->
@@ -1623,9 +1616,14 @@ function initMessagesUI() {
     if (!_msUiState.activeId) { alert('Выберите чат слева, чтобы написать.'); return; }
     const text = (input.value || '').trim();
     if (!text) return;
+    input.value = '';
+    // Закреплённый чат «Служба Поддержки» — отдельный канал в Telegram
+    if (_msUiState.activeId === '__support__') {
+      sendSupportMessage(text);
+      return;
+    }
     const langSel = extras.querySelector('#ms-mylang');
     const lang = langSel ? langSel.value : 'ru';
-    input.value = '';
     // Шлём через WS если есть, иначе REST
     if (_msUiState.ws && _msUiState.ws.readyState === 1) {
       _msUiState.ws.send(JSON.stringify({ type:'send', conversationId: _msUiState.activeId, text, lang }));
@@ -1751,7 +1749,53 @@ async function selectConversation(id) {
   } catch (e) { console.warn('getMessages failed', e); }
 }
 
-// ═══ Псевдо-чат «Служба Поддержки» — не висит в БД, статика на фронте ═══
+// ═══ Закреплённый чат «Служба Поддержки» — Telegram-форвард + история в localStorage ═══
+function _supportStorageKey() {
+  const u = AC.getUser && AC.getUser();
+  return 'ac_support_thread_' + (u?.id || 'guest');
+}
+function _loadSupportThread() {
+  try { return JSON.parse(localStorage.getItem(_supportStorageKey()) || '[]'); } catch { return []; }
+}
+function _saveSupportThread(arr) {
+  try { localStorage.setItem(_supportStorageKey(), JSON.stringify(arr.slice(-100))); } catch { /* ignore quota */ }
+}
+function _renderSupportBody() {
+  const extras = _msUiState.extras;
+  const body = extras.querySelector('#ms-body');
+  if (!body) return;
+  const thread = _loadSupportThread();
+  let html = `
+    <div class="ms-msg them">
+      <div class="ms-bubble" style="background:#fffaf0;border:1px solid #C5963A">
+        👋 Здравствуйте! Я — Служба Поддержки «ATAMEKEN&nbsp;Club». Опишите ваш вопрос — менеджер ответит на email/телефон в течение часа.
+      </div>
+    </div>`;
+  if (!thread.length) {
+    html += `
+      <div class="ms-msg them">
+        <div class="ms-bubble">
+          <strong>Частые вопросы:</strong><br/>
+          • Как получить верификацию?<br/>
+          • Что такое токены и как их купить?<br/>
+          • Как опубликовать карточку в Реестре?<br/>
+          • Как подключиться к Сопровождению сделки?<br/><br/>
+          Также можно написать нам напрямую:<br/>
+          ✉ <a href="mailto:support@atameken.club" style="color:var(--red);font-weight:600">support@atameken.club</a><br/>
+          ✈ <a href="https://t.me/atameken_support" target="_blank" rel="noopener" style="color:var(--red);font-weight:600">@atameken_support</a>
+        </div>
+      </div>`;
+  }
+  for (const m of thread) {
+    html += `
+      <div class="ms-msg ${m.mine ? 'mine' : 'them'}">
+        <div class="ms-bubble"${m.status === 'sending' ? ' style="opacity:.6"' : ''}>${escapeForAttr(m.text)}</div>
+        <div class="ms-time">${escapeForAttr(timeAgo(new Date(m.ts)))}${m.status === 'sending' ? ' · отправляется…' : (m.status === 'error' ? ' · не отправлено' : '')}</div>
+      </div>`;
+  }
+  body.innerHTML = html;
+  body.scrollTop = body.scrollHeight;
+}
 function selectSupportChat() {
   _msUiState.activeId = '__support__';
   document.querySelectorAll('.ms-item').forEach(el => el.classList.toggle('on', el.dataset.conv === '__support__'));
@@ -1765,39 +1809,46 @@ function selectSupportChat() {
     if (nm) nm.textContent = 'Служба Поддержки';
     if (meta) meta.innerHTML = '<span class="ms-lang-pill" style="background:#dcfce7;color:#15803d">ONLINE 24/7</span>обычно отвечаем в течение часа';
   }
-  const body = extras.querySelector('#ms-body');
-  if (body) {
-    body.innerHTML = `
-      <div class="ms-msg them">
-        <div class="ms-bubble" style="background:#fffaf0;border:1px solid #C5963A">
-          👋 Здравствуйте! Я — Служба Поддержки «ATAMEKEN&nbsp;Club». Опишите ваш вопрос — поможем разобраться.
-        </div>
-      </div>
-      <div class="ms-msg them">
-        <div class="ms-bubble">
-          <strong>Частые вопросы:</strong><br/>
-          • Как получить верификацию?<br/>
-          • Что такое токены и как их купить?<br/>
-          • Как опубликовать карточку в Реестре?<br/>
-          • Как подключиться к Сопровождению сделки?<br/><br/>
-          Также можно написать нам напрямую:<br/>
-          ✉ <a href="mailto:support@atameken.club" style="color:var(--red);font-weight:600">support@atameken.club</a><br/>
-          ✈ <a href="https://t.me/atameken_support" target="_blank" rel="noopener" style="color:var(--red);font-weight:600">@atameken_support</a>
-        </div>
-      </div>
-    `;
-  }
-  // Блокируем input — пока что отправка не подключена к реальному support backend
+  _renderSupportBody();
+  // Активируем input — отправка работает через POST /chat/support → Telegram
   const inputArea = extras.querySelector('.ms-input');
   if (inputArea) {
-    inputArea.style.opacity = '.6';
+    inputArea.style.opacity = '';
     const inp = inputArea.querySelector('input');
-    if (inp) { inp.disabled = true; inp.placeholder = 'Напишите на support@atameken.club или Telegram @atameken_support'; }
+    if (inp) { inp.disabled = false; inp.placeholder = 'Опишите вашу проблему или вопрос…'; inp.value = ''; }
     const sendBtn = inputArea.querySelector('.ms-send, button');
-    if (sendBtn) sendBtn.disabled = true;
+    if (sendBtn) sendBtn.disabled = false;
+  }
+}
+async function sendSupportMessage(text) {
+  if (!text || !text.trim()) return;
+  if (!AC.getToken()) { alert('Войдите в кабинет, чтобы написать в Службу Поддержки.'); location.href = '/login.html'; return; }
+  const thread = _loadSupportThread();
+  const msg = { mine: true, text: text.trim(), ts: Date.now(), status: 'sending' };
+  thread.push(msg);
+  _saveSupportThread(thread);
+  _renderSupportBody();
+  try {
+    await AC.sendSupportMessage(msg.text);
+    msg.status = 'sent';
+    // Авто-ответ от системы — показывает, что сообщение принято
+    thread.push({
+      mine: false,
+      text: '✓ Сообщение получено. Менеджер ATAMEKEN Club свяжется с вами в течение часа в рабочее время на указанные при регистрации email и/или телефон.',
+      ts: Date.now(),
+      status: 'sent',
+    });
+    _saveSupportThread(thread);
+    _renderSupportBody();
+  } catch (e) {
+    msg.status = 'error';
+    _saveSupportThread(thread);
+    _renderSupportBody();
+    alert('Не удалось отправить сообщение: ' + (e?.message || 'попробуйте ещё раз через минуту'));
   }
 }
 window.selectSupportChat = selectSupportChat;
+window.sendSupportMessage = sendSupportMessage;
 
 function renderMessages() {
   const extras = _msUiState.extras;

@@ -5,6 +5,7 @@ import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
 import { verifyAccessToken } from '../lib/jwt';
 import { translateToMany, normalizeLang, SUPPORTED_LANGS, type Lang } from '../services/translation';
+import { notifySupportMessage } from '../services/telegram';
 
 const createConvSchema = z.object({
   // Минимум один из: peerUserId или publicationId (которые открывает чат с автором публикации)
@@ -17,6 +18,10 @@ const sendSchema = z.object({
   conversationId: z.string(),
   text: z.string().min(1).max(4000),
   lang: z.string().optional(),
+});
+
+const supportSchema = z.object({
+  text: z.string().min(1).max(4000),
 });
 
 // Реестр подключённых WebSocket'ов — userId → Set<WebSocket>
@@ -45,6 +50,32 @@ async function ensureParticipant(conversationId: string, userId: string) {
 
 export default async function chatRoutes(app: FastifyInstance) {
   await app.register(websocket);
+
+  // ── POST /chat/support — закреплённый чат «Служба Поддержки» ──
+  // Сообщения форвардятся в Telegram-группу модераторов через тот же бот,
+  // что уведомляет о новых верификациях и заявках на услуги.
+  app.post('/support', { preHandler: requireAuth }, async (req, reply) => {
+    const parsed = supportSchema.safeParse(req.body);
+    if (!parsed.success) return reply.code(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
+    const user = await prisma.user.findUnique({
+      where: { id: req.user!.sub },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        phone: true,
+        profile: { select: { companyName: true } },
+      },
+    });
+    if (!user) return reply.code(401).send({ error: 'Не найден аккаунт' });
+    // Fire-and-forget: даже если Telegram моргнёт, не блокируем пользователя
+    notifySupportMessage({
+      user: { id: user.id, email: user.email, fullName: user.fullName, phone: user.phone },
+      text: parsed.data.text,
+      companyName: user.profile?.companyName ?? null,
+    }).catch((err) => req.log.error({ err }, 'support telegram notify failed'));
+    return reply.send({ ok: true });
+  });
 
   // ── Создание / поиск разговора с peer-юзером ──
   app.post('/conversations', { preHandler: requireAuth }, async (req, reply) => {

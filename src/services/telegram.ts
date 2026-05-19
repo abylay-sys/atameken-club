@@ -75,6 +75,48 @@ export async function notifyModerators(profile: CompanyProfile, user: User): Pro
   }
 }
 
+export async function notifySupportMessage(payload: {
+  user: { id: string; email: string; fullName?: string | null; phone?: string | null };
+  text: string;
+  companyName?: string | null;
+}): Promise<void> {
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_MODERATOR_CHAT_ID) {
+    // eslint-disable-next-line no-console
+    console.warn('[telegram] Skipping support — TELEGRAM_BOT_TOKEN or TELEGRAM_MODERATOR_CHAT_ID not configured');
+    return;
+  }
+  const text = [
+    '<b>🛎 Сообщение в Службу Поддержки</b>',
+    '',
+    `<b>От:</b> ${esc(payload.user.fullName || payload.user.email)}`,
+    payload.companyName ? `<b>Компания:</b> ${esc(payload.companyName)}` : null,
+    `<b>Email:</b> ${esc(payload.user.email)}`,
+    payload.user.phone ? `<b>Телефон:</b> ${esc(payload.user.phone)}` : null,
+    `<b>User ID:</b> <code>${esc(payload.user.id)}</code>`,
+    '',
+    '<b>Сообщение:</b>',
+    esc(payload.text).slice(0, 3500),
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: env.TELEGRAM_MODERATOR_CHAT_ID,
+      text,
+      parse_mode: 'HTML',
+      disable_web_page_preview: true,
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Telegram API error ${res.status}: ${body}`);
+  }
+}
+
 export async function notifyCartOrder(payload: {
   name: string;
   contact: string;
