@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Пользовательское Соглашение - Бизнес-сообщество «ATAMEKEN Club»</title>
+<meta name="description" content="Полный текст Пользовательского Соглашения ATAMEKEN Club: регистрация, верификация, токены, NDA/NCNDA, права и обязанности сторон, юрисдикция РК."/>
+<link rel="canonical" href="https://atameken.club/terms.html"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="ATAMEKEN Club"/>
+<meta property="og:url" content="https://atameken.club/terms.html"/>
+<meta property="og:title" content="Пользовательское Соглашение — ATAMEKEN Club"/>
+<meta property="og:description" content="26 разделов: регистрация, верификация, токены, NDA/NCNDA, ответственность, юрисдикция Республики Казахстан."/>
+<meta property="og:image" content="https://atameken.club/assets/logo.png"/>
+<meta property="og:locale" content="ru_RU"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/landing.css"/>
+
+<style>
+  /* ──────── Стили Пользовательского Соглашения ──────── */
+  body{background:#fff}
+  #terms-page{padding:1.5rem 0 4rem}
+  .tp-wrap{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:grid;grid-template-columns:240px 1fr;gap:3rem;align-items:start}
+  @media(max-width:920px){.tp-wrap{grid-template-columns:1fr;gap:1.5rem}.tp-toc{position:static !important;max-height:none !important;border:1px solid var(--border);border-radius:6px;padding:1rem 1.15rem;background:#fafafa}}
+
+  /* TOC (sticky на десктопе) */
+  .tp-toc{position:sticky;top:100px;max-height:calc(100vh - 140px);overflow-y:auto;font-size:.78rem;line-height:1.5}
+  .tp-toc-title{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--ink);margin:0 0 .8rem;letter-spacing:.01em}
+  .tp-toc ol{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.35rem;counter-reset:tp-toc}
+  .tp-toc li{counter-increment:tp-toc;font-size:.74rem;color:var(--ink3);line-height:1.4}
+  .tp-toc a{color:inherit;text-decoration:none;display:block;padding:.25rem .35rem;border-radius:3px;transition:all .15s;border-left:2px solid transparent;padding-left:.55rem}
+  .tp-toc a::before{content:counter(tp-toc) ". ";color:var(--ink4);font-variant-numeric:tabular-nums}
+  .tp-toc a:hover{color:var(--red);background:#fff5f5}
+  .tp-toc a.on{color:var(--red);border-left-color:var(--red);background:#fff5f5;font-weight:500}
+
+  /* Шапка документа */
+  .tp-head{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+  .tp-head .red-bar{margin-bottom:.8rem}
+  .tp-eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+  .tp-title{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:500;line-height:1.1;color:var(--ink);margin:0 0 .8rem}
+  @media(max-width:680px){.tp-title{font-size:2rem}}
+  .tp-meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.78rem;color:var(--ink3);margin-top:1rem}
+  .tp-meta strong{color:var(--ink);font-weight:600;margin-right:.3rem}
+
+  /* Preamble (предупреждение) */
+  .tp-warning{background:#fffaf0;border:1px solid #C5963A;border-left:3px solid #C5963A;border-radius:6px;padding:1.1rem 1.35rem;margin-bottom:2rem;font-size:.85rem;color:var(--ink2);line-height:1.6}
+  .tp-warning strong{color:#7a5810;font-weight:600}
+
+  /* Секции */
+  .tp-section{margin-bottom:2.5rem;scroll-margin-top:90px}
+  .tp-section h2{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;color:var(--ink);line-height:1.2;margin:0 0 1rem;padding-top:.4rem;display:flex;align-items:baseline;gap:.75rem}
+  .tp-section h2 .tp-num{font-size:.78rem;font-weight:700;letter-spacing:.14em;color:var(--red);font-family:'Inter',sans-serif;text-transform:uppercase;flex-shrink:0}
+  .tp-section p{font-size:.9rem;color:var(--ink2);line-height:1.7;margin:0 0 .85rem}
+  .tp-section ul,.tp-section ol{margin:.5rem 0 1rem 0;padding-left:1.5rem;color:var(--ink2);line-height:1.7;font-size:.9rem}
+  .tp-section li{margin-bottom:.4rem}
+  .tp-section strong{color:var(--ink);font-weight:600}
+  .tp-section em{color:var(--ink2);font-style:italic}
+
+  /* Нумерованные подпункты */
+  .tp-clause{display:block;font-size:.9rem;color:var(--ink2);line-height:1.7;margin:0 0 .75rem}
+  .tp-clause-num{display:inline-block;color:var(--ink3);font-weight:600;min-width:2.5rem;margin-right:.4rem;font-variant-numeric:tabular-nums}
+
+  /* Подсекция (заголовок 3-го уровня) */
+  .tp-section h3{font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:none;color:var(--ink);margin:1.25rem 0 .55rem}
+
+  /* Аккентированный блок (NB, важное) */
+  .tp-note{background:#fafbfc;border-left:3px solid var(--ink3);padding:.85rem 1.15rem;margin:1rem 0;font-size:.85rem;color:var(--ink2);line-height:1.65;border-radius:0 4px 4px 0}
+  .tp-note-danger{border-left-color:var(--red);background:#fff5f5}
+  .tp-note-info{border-left-color:#1A6FC4;background:#f0f7ff}
+
+  /* Ссылка-якорь рядом с h2 (#) */
+  .tp-anchor{color:var(--ink4);text-decoration:none;font-size:.85rem;margin-left:.5rem;opacity:0;transition:opacity .15s}
+  .tp-section h2:hover .tp-anchor{opacity:1}
+  .tp-anchor:hover{color:var(--red)}
+
+  /* Контактная карточка в конце */
+  .tp-contact{background:linear-gradient(135deg,#fffaf0 0%,#fff8e9 100%);border:1px solid #C5963A;border-radius:8px;padding:1.5rem 1.85rem;margin-top:2.5rem}
+  .tp-contact h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--ink);margin:0 0 1rem;letter-spacing:0;text-transform:none}
+  .tp-contact-grid{display:grid;grid-template-columns:max-content 1fr;gap:.55rem 1.1rem;font-size:.88rem;color:var(--ink2);line-height:1.6}
+  .tp-contact-grid b{color:var(--ink);font-weight:600}
+
+  /* Печать-friendly */
+  @media print{
+    nav,footer,.tp-toc{display:none}
+    .tp-wrap{grid-template-columns:1fr;padding:0}
+    .tp-section{break-inside:avoid;page-break-inside:avoid}
+    body{font-size:11pt}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <a href="/" class="logo">
+    <div class="logo-emblem">
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
+    </div>
+    <div class="logo-text">
+      <span class="logo-main">Бизнес-сообщество</span>
+      <span class="logo-sub-name">«ATAMEKEN Club»</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/index.html">Главная</a></li>
+    <li><a href="/projects.html">Реестр</a></li>
+    <li><a href="/events.html">Календарь</a></li>
+    <li><a href="/pricing.html">Тарифы</a></li>
+    <li><a href="/services.html">Дополнительные услуги</a></li>
+    <li><a href="/partners.html">Партнёры</a></li>
+    <li><a href="/residents.html">Резиденты</a></li>
+    <li style="display:none"><a href="/about.html">О нас</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-dd" id="langDD">
+      <button class="lang-dd-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-dd-current">RU</span>
+        <svg class="lang-dd-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 5 6 8 9 5"/></svg>
+      </button>
+      <div class="lang-switch">
+        <button class="lang-btn active">RU</button>
+        <button class="lang-btn">KZ</button>
+        <button class="lang-btn">EN</button>
+        <button class="lang-btn">中文</button>
+      </div>
+    </div>
+    <a href="/login.html" class="btn-red" style="padding:.48rem 1.2rem;font-size:.75rem">Войти</a>
+  </div>
+</nav>
+
+<main id="terms-page">
+  <div class="tp-wrap">
+    <!-- ──────── СОДЕРЖАНИЕ (sticky TOC) ──────── -->
+    <aside class="tp-toc" aria-label="Содержание">
+      <p class="tp-toc-title">Содержание</p>
+      <ol>
+        <li><a href="#s1">Определения</a></li>
+        <li><a href="#s2">Акцепт и область применения</a></li>
+        <li><a href="#s3">Регистрация и учётная запись</a></li>
+        <li><a href="#s4">Верификация и шевроны</a></li>
+        <li><a href="#s5">Услуги Платформы</a></li>
+        <li><a href="#s6">Токены и внутренние расчёты</a></li>
+        <li><a href="#s7">Платные услуги и оплата</a></li>
+        <li><a href="#s8">Контент пользователей</a></li>
+        <li><a href="#s9">Сделки между пользователями</a></li>
+        <li><a href="#s10">NDA / NCNDA / Сопровождение</a></li>
+        <li><a href="#s11">Электронная подпись</a></li>
+        <li><a href="#s12">Запрещённые действия</a></li>
+        <li><a href="#s13">Персональные данные</a></li>
+        <li><a href="#s14">Интеллектуальная собственность</a></li>
+        <li><a href="#s15">Риски</a></li>
+        <li><a href="#s16">Ограничение ответственности</a></li>
+        <li><a href="#s17">Возмещение убытков</a></li>
+        <li><a href="#s18">Приостановка и блокировка</a></li>
+        <li><a href="#s19">Срок действия и расторжение</a></li>
+        <li><a href="#s20">Изменения Соглашения</a></li>
+        <li><a href="#s21">Разрешение споров</a></li>
+        <li><a href="#s22">Уведомления</a></li>
+        <li><a href="#s23">Уступка и правопреемство</a></li>
+        <li><a href="#s24">Форс-мажор</a></li>
+        <li><a href="#s25">Прочие условия</a></li>
+        <li><a href="#s26">Контактная информация Оператора</a></li>
+      </ol>
+    </aside>
+
+    <!-- ──────── ОСНОВНОЙ ТЕКСТ ──────── -->
+    <article>
+      <header class="tp-head">
+        <div class="red-bar"></div>
+        <span class="tp-eyebrow">Юридический контур</span>
+        <h1 class="tp-title">Пользовательское Соглашение</h1>
+        <p style="font-size:.95rem;color:var(--ink2);line-height:1.6;max-width:640px;margin:0">Настоящее Соглашение регулирует отношения между Вами и ТОО «ATAMEKEN Club» при использовании Бизнес-сообщества «ATAMEKEN Club» — Платформы, доступной по адресу <a href="https://atameken.club" style="color:var(--red);font-weight:500">atameken.club</a>.</p>
+        <div class="tp-meta">
+          <div><strong>Версия:</strong>2.0</div>
+          <div><strong>Дата вступления в силу:</strong>с момента публикации</div>
+          <div><strong>Последняя редакция:</strong>2026</div>
+          <div><strong>Юрисдикция:</strong>Республика Казахстан</div>
+        </div>
+      </header>
+
+      <div class="tp-warning">
+        <strong>⚠ Внимание.</strong> Настоящее Соглашение является юридически обязывающим договором. Просим внимательно прочитать все положения. Регистрация на Платформе или использование любого её функционала означает безусловное принятие условий Соглашения в полном объёме. Если Вы не согласны с любым положением — прекратите использование Платформы.
+      </div>
+
+      <!-- ─── 1. ОПРЕДЕЛЕНИЯ ─── -->
+      <section id="s1" class="tp-section">
+        <h2><span class="tp-num">Раздел 1</span>Определения</h2>
+        <p>В настоящем Соглашении нижеуказанные термины используются в следующих значениях:</p>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.1.</span><strong>«Платформа»</strong> или <strong>«Сайт»</strong> — программно-аппаратный комплекс, доступный по адресу <code>atameken.club</code> и его поддоменам, включая мобильную версию, и связанные сервисы.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.2.</span><strong>«Оператор»</strong> — Товарищество с ограниченной ответственностью «ATAMEKEN Club», БИН [указывается в разделе 26], адрес: Республика Казахстан, г. Алматы.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.3.</span><strong>«Пользователь»</strong> — физическое или юридическое лицо, использующее Платформу путём регистрации или иного предоставленного функционала.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.4.</span><strong>«Аккаунт»</strong>, <strong>«Учётная запись»</strong> — уникальная запись Пользователя в системе Платформы, защищённая паролем.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.5.</span><strong>«Реестр»</strong> — общедоступный каталог верифицированных публикаций Пользователей, размещённый по адресу <code>/projects.html</code>.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.6.</span><strong>«Публикация»</strong>, <strong>«Карточка»</strong> — структурированное объявление Пользователя в Реестре одного из четырёх типов: инвест-проект, франшиза, готовый бизнес, товары/сырьё.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.7.</span><strong>«Верификация»</strong> — процедура независимой проверки сведений Пользователя или его деятельности, проводимая Оператором или аккредитованными Партнёрами по согласованным методикам.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.8.</span><strong>«Шеврон»</strong> — графический индикатор в Карточке Реестра, отражающий объём пройденных Пользователем верификаций.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.9.</span><strong>«Токен»</strong> — внутренняя расчётная единица Платформы, не являющаяся электронным средством платежа, цифровой валютой, криптоактивом или ценной бумагой, обмениваемая на услуги Платформы согласно опубликованным Тарифам.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.10.</span><strong>«Сопровождение сделки»</strong> — комплексная услуга юридического и переговорного сопровождения сделки между Пользователями, оказываемая Платформой за фиксированную комиссию.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.11.</span><strong>«NDA»</strong> — Соглашение о неразглашении (Non-Disclosure Agreement), оформляемое в составе пакета документов Сопровождения сделки.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.12.</span><strong>«NCNDA»</strong> — Соглашение о ненарушении каналов и неразглашении (Non-Circumvention, Non-Disclosure Agreement), оформляемое в составе пакета документов Сопровождения сделки.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.13.</span><strong>«Партнёры»</strong> — юридические лица, аккредитованные Оператором для оказания услуг верификации, аудита, перевода, маркетинга и иных профессиональных услуг.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.14.</span><strong>«Резидент»</strong> — Пользователь, рекомендованный Партнёром и прошедший базовую верификацию, имеющий преимущественные условия пользования услугами Платформы.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.15.</span><strong>«Тарифы»</strong> — действующая редакция цен на услуги Платформы и Партнёров, размещённая на страницах <code>/pricing.html</code> и <code>/services.html</code>.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.16.</span><strong>«Контент»</strong> — любые материалы (тексты, изображения, документы, видео, аудио, ссылки), размещаемые Пользователем на Платформе.</span>
+
+        <span class="tp-clause"><span class="tp-clause-num">1.17.</span><strong>«Конфиденциальная информация»</strong> — сведения, прямо обозначенные стороной как конфиденциальные либо очевидно являющиеся таковыми по характеру.</span>
+      </section>
+
+      <!-- ─── 2. АКЦЕПТ ─── -->
+      <section id="s2" class="tp-section">
+        <h2><span class="tp-num">Раздел 2</span>Акцепт и область применения</h2>
+        <span class="tp-clause"><span class="tp-clause-num">2.1.</span>Соглашение вступает в силу с момента акцепта Пользователем при регистрации (отметка в чек-боксе с явным согласием) и действует до момента его расторжения в порядке, предусмотренном Соглашением.</span>
+        <span class="tp-clause"><span class="tp-clause-num">2.2.</span>Регистрация на Платформе и/или использование любого функционала означает безусловное принятие Соглашения в полном объёме без каких-либо изъятий.</span>
+        <span class="tp-clause"><span class="tp-clause-num">2.3.</span>Если Пользователь не согласен с любым положением Соглашения — он обязан прекратить использование Платформы и удалить Аккаунт.</span>
+        <span class="tp-clause"><span class="tp-clause-num">2.4.</span>Совокупность Соглашения, Политики конфиденциальности, Тарифов, NDA, NCNDA, Договоров о сопровождении и иных размещённых на Сайте документов образует единый договор между Сторонами.</span>
+      </section>
+
+      <!-- ─── 3. РЕГИСТРАЦИЯ ─── -->
+      <section id="s3" class="tp-section">
+        <h2><span class="tp-num">Раздел 3</span>Регистрация и учётная запись</h2>
+        <span class="tp-clause"><span class="tp-clause-num">3.1.</span>Регистрация доступна:</span>
+        <ul>
+          <li>физическим лицам, достигшим 18 лет и обладающим полной дееспособностью;</li>
+          <li>юридическим лицам, действующим через уполномоченное лицо.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">3.2.</span>При регистрации Пользователь обязуется предоставить достоверные, точные и актуальные сведения. Передача недостоверных сведений является основанием для блокировки Аккаунта без возврата уплаченных средств.</span>
+        <span class="tp-clause"><span class="tp-clause-num">3.3.</span>Один Пользователь — одна Учётная запись. Регистрация нескольких Аккаунтов одним лицом запрещена, за исключением случаев, прямо разрешённых Оператором (например, отдельный Аккаунт для юридического лица и его собственника-физического лица).</span>
+        <span class="tp-clause"><span class="tp-clause-num">3.4.</span>Пароль является конфиденциальной информацией Пользователя. Передача учётных данных третьим лицам, в том числе сотрудникам Оператора, запрещена. Ответственность за все действия, совершённые под Аккаунтом, несёт его владелец.</span>
+        <span class="tp-clause"><span class="tp-clause-num">3.5.</span>Пользователь обязан незамедлительно уведомить Оператора о любых случаях несанкционированного доступа к Аккаунту по email <code>info@atameken.club</code>.</span>
+        <span class="tp-clause"><span class="tp-clause-num">3.6.</span>Оператор вправе временно или постоянно отказать в регистрации, заблокировать или удалить Аккаунт при наличии оснований полагать, что Пользователь нарушил условия Соглашения или применимое законодательство.</span>
+        <span class="tp-clause"><span class="tp-clause-num">3.7.</span>При регистрации юридическое лицо подтверждает наличие у уполномоченного лица всех необходимых полномочий и одобрений для заключения настоящего Соглашения.</span>
+      </section>
+
+      <!-- ─── 4. ВЕРИФИКАЦИЯ ─── -->
+      <section id="s4" class="tp-section">
+        <h2><span class="tp-num">Раздел 4</span>Верификация и шевроны</h2>
+        <span class="tp-clause"><span class="tp-clause-num">4.1.</span>Платформа предлагает несколько уровней и категорий верификации, оказываемых Оператором или аккредитованными Партнёрами по согласованным методикам.</span>
+        <span class="tp-clause"><span class="tp-clause-num">4.2.</span>Уровни и стоимость верификаций установлены в Тарифах.</span>
+        <span class="tp-clause"><span class="tp-clause-num">4.3.</span>По результатам каждой верификации Карточке присваивается Шеврон с указанием объёма, даты и источника проверки.</span>
+
+        <div class="tp-note tp-note-danger">
+          <strong>4.4.</strong> Прохождение верификации <strong>не является гарантией</strong>:
+          <ul style="margin:.4rem 0 0;padding-left:1.2rem">
+            <li>добросовестности Пользователя;</li>
+            <li>финансовой устойчивости;</li>
+            <li>выполнения Пользователем обязательств перед третьими лицами;</li>
+            <li>качества предлагаемых товаров или услуг.</li>
+          </ul>
+        </div>
+
+        <span class="tp-clause"><span class="tp-clause-num">4.5.</span>Шеврон отражает только объём проверок на момент их присвоения и может потерять актуальность с течением времени. Срок действия каждого Шеврона указан в его описании.</span>
+        <span class="tp-clause"><span class="tp-clause-num">4.6.</span>Пользователь обязан незамедлительно уведомить Оператора об изменениях, существенно влияющих на ранее присвоенные Шевроны (банкротство, смена бенефициара, потеря лицензии). Сокрытие таких изменений является основанием для аннулирования верификации без возврата стоимости.</span>
+        <span class="tp-clause"><span class="tp-clause-num">4.7.</span>Оператор и Партнёры действуют разумно и добросовестно, но не гарантируют выявление всех возможных рисков, связанных с Пользователем.</span>
+      </section>
+
+      <!-- ─── 5. УСЛУГИ ─── -->
+      <section id="s5" class="tp-section">
+        <h2><span class="tp-num">Раздел 5</span>Услуги Платформы</h2>
+        <span class="tp-clause"><span class="tp-clause-num">5.1.</span>Платформа предоставляет Пользователям следующий набор сервисов:</span>
+        <h3>5.1.1. Реестр публикаций</h3>
+        <p>Размещение и поиск Карточек по четырём типам: инвест-проекты, франшизы, готовый бизнес, товары/сырьё.</p>
+        <h3>5.1.2. Сообщения</h3>
+        <p>Встроенный мессенджер с AI-переводом между языками собеседников (русский, казахский, английский, китайский, турецкий, испанский, немецкий, французский, арабский).</p>
+        <h3>5.1.3. Сопровождение сделки</h3>
+        <p>Комплексная услуга юридического и переговорного сопровождения с подписанием пакета NDA, NCNDA, Договора о сопровождении.</p>
+        <h3>5.1.4. Закреплённый чат «Служба Поддержки»</h3>
+        <p>Канал связи с Оператором для решения технических и организационных вопросов.</p>
+        <h3>5.1.5. Услуги Партнёров</h3>
+        <p>Каталог дополнительных услуг, оказываемых аккредитованными Партнёрами (анализ рынка, брендинг, performance-маркетинг и др.).</p>
+        <h3>5.1.6. Личный кабинет</h3>
+        <p>Управление публикациями, верификациями, токенами, сделками, сообщениями.</p>
+        <span class="tp-clause"><span class="tp-clause-num">5.2.</span>Перечень и описание услуг могут изменяться. Актуальный состав сервисов и Тарифы публикуются на Сайте.</span>
+        <span class="tp-clause"><span class="tp-clause-num">5.3.</span>Базовая регистрация и просмотр публичной части Реестра — бесплатны. Платные функции (развёрнутые карточки, верификации, сопровождение) оплачиваются согласно Тарифам.</span>
+      </section>
+
+      <!-- ─── 6. ТОКЕНЫ ─── -->
+      <section id="s6" class="tp-section">
+        <h2><span class="tp-num">Раздел 6</span>Токены и внутренние расчёты</h2>
+        <span class="tp-clause"><span class="tp-clause-num">6.1.</span>Токен является внутренней расчётной единицей Платформы, предназначенной исключительно для оплаты услуг Платформы и аккредитованных Партнёров.</span>
+
+        <div class="tp-note tp-note-danger">
+          <strong>6.2. Токен НЕ является:</strong>
+          <ul style="margin:.4rem 0 0;padding-left:1.2rem">
+            <li>электронным средством платежа в значении Закона РК «О платежах и платёжных системах»;</li>
+            <li>цифровой валютой, криптоактивом или цифровым активом;</li>
+            <li>ценной бумагой;</li>
+            <li>денежным средством, подлежащим возврату в наличной или безналичной форме;</li>
+            <li>инвестиционным инструментом.</li>
+          </ul>
+        </div>
+
+        <span class="tp-clause"><span class="tp-clause-num">6.3.</span>Базовая стоимость одного Токена: эквивалент 5 (пяти) долларов США в тенге по курсу на дату приобретения. Окончательная цена Токена зависит от объёма приобретаемого пакета и публикуется в Тарифах.</span>
+        <span class="tp-clause"><span class="tp-clause-num">6.4.</span>Токены приобретаются пакетами 10 / 25 / 50 / 100 со скидкой до 50%. Резиденты получают дополнительную скидку 10%.</span>
+
+        <div class="tp-note tp-note-danger">
+          <strong>6.5. Токены не подлежат:</strong>
+          <ul style="margin:.4rem 0 0;padding-left:1.2rem">
+            <li>обмену на денежные средства, наличные или безналичные;</li>
+            <li>передаче другому Пользователю;</li>
+            <li>наследованию;</li>
+            <li>выводу с Платформы.</li>
+          </ul>
+        </div>
+
+        <span class="tp-clause"><span class="tp-clause-num">6.6.</span>Токены аннулируются:</span>
+        <ul>
+          <li>при удалении Аккаунта по инициативе Пользователя;</li>
+          <li>при блокировке Аккаунта за грубые нарушения Соглашения;</li>
+          <li>по истечении 36 месяцев с момента последнего использования (в случае неактивности).</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">6.7.</span>Пользователь самостоятельно несёт обязанности по налогообложению операций с Токенами в соответствии с применимым законодательством.</span>
+        <span class="tp-clause"><span class="tp-clause-num">6.8.</span>Оператор вправе вводить иные формы внутренних расчётов с предварительным уведомлением Пользователей за 14 дней.</span>
+      </section>
+
+      <!-- ─── 7. ОПЛАТА ─── -->
+      <section id="s7" class="tp-section">
+        <h2><span class="tp-num">Раздел 7</span>Платные услуги и оплата</h2>
+        <span class="tp-clause"><span class="tp-clause-num">7.1.</span>Перечень платных услуг и их стоимость указаны в Тарифах.</span>
+        <span class="tp-clause"><span class="tp-clause-num">7.2.</span>Способы оплаты:</span>
+        <ul>
+          <li>Kaspi Pay — для Пользователей с РК-картами;</li>
+          <li>Банковский перевод по реквизитам Оператора;</li>
+          <li>Внутренние Токены — для отдельных услуг.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">7.3.</span>Оплата считается совершённой с момента поступления средств на счёт Оператора или подтверждения платежа платёжным оператором.</span>
+        <span class="tp-clause"><span class="tp-clause-num">7.4.</span>Все цены указаны в тенге (KZT) с учётом НДС, если иное не указано в счёте.</span>
+        <span class="tp-clause"><span class="tp-clause-num">7.5.</span><strong>Возврат средств</strong> возможен исключительно в случаях:</span>
+        <ul>
+          <li>технического сбоя, при котором услуга не была оказана;</li>
+          <li>ошибочного двойного списания;</li>
+          <li>прямо предусмотренных применимым правом РК (право потребителя на отказ).</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">7.6.</span>Услуги, оказанные надлежащим образом или находящиеся в процессе оказания, возврату не подлежат.</span>
+        <span class="tp-clause"><span class="tp-clause-num">7.7.</span>При Сопровождении сделки комиссия Платформы составляет <strong>1,5% от суммы сделки</strong>. Сумма может быть разделена пополам между сторонами сделки (по 0,75% с каждой стороны) при подключении обеих сторон.</span>
+        <span class="tp-clause"><span class="tp-clause-num">7.8.</span>Чек или счёт-фактура направляется на email Пользователя в течение 3 рабочих дней с даты оплаты.</span>
+      </section>
+
+      <!-- ─── 8. КОНТЕНТ ─── -->
+      <section id="s8" class="tp-section">
+        <h2><span class="tp-num">Раздел 8</span>Контент пользователей</h2>
+        <span class="tp-clause"><span class="tp-clause-num">8.1.</span>Право собственности на Контент сохраняется за Пользователем, его опубликовавшим.</span>
+        <span class="tp-clause"><span class="tp-clause-num">8.2.</span>Размещая Контент, Пользователь предоставляет Оператору <strong>неисключительную, безвозмездную, мировую, бессрочную лицензию</strong> на использование Контента в следующих целях:</span>
+        <ul>
+          <li>отображение в Реестре и связанных интерфейсах;</li>
+          <li>индексирование поисковыми системами;</li>
+          <li>использование в маркетинговых материалах Платформы (с уведомлением Пользователя);</li>
+          <li>передача аккредитованным Партнёрам в рамках оказания услуг;</li>
+          <li>архивирование и резервное копирование.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">8.3.</span>Лицензия сохраняет силу после удаления Контента в части резервных копий и архивов. Оператор приложит разумные усилия для исключения такого Контента из публичного доступа.</span>
+        <span class="tp-clause"><span class="tp-clause-num">8.4.</span><strong>Пользователь гарантирует, что:</strong></span>
+        <ul>
+          <li>обладает всеми правами на размещаемый Контент;</li>
+          <li>размещение не нарушает прав третьих лиц (интеллектуальная собственность, право на изображение, коммерческая тайна);</li>
+          <li>Контент не содержит вирусов, вредоносного кода, спама;</li>
+          <li>Контент не нарушает применимое законодательство.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">8.5.</span>Оператор оставляет за собой право, но не обязанность, модерировать Контент. Контент, нарушающий Соглашение или законодательство, может быть удалён без предварительного уведомления.</span>
+        <span class="tp-clause"><span class="tp-clause-num">8.6.</span>Пользователь несёт полную ответственность за достоверность размещаемых сведений.</span>
+      </section>
+
+      <!-- ─── 9. СДЕЛКИ ─── -->
+      <section id="s9" class="tp-section">
+        <h2><span class="tp-num">Раздел 9</span>Сделки между пользователями</h2>
+        <div class="tp-note tp-note-danger">
+          <strong>9.1. Платформа НЕ является стороной сделок</strong> между Пользователями. Платформа предоставляет инфраструктуру для взаимного контакта и переговоров.
+        </div>
+        <span class="tp-clause"><span class="tp-clause-num">9.2.</span>Платформа не выступает:</span>
+        <ul>
+          <li>посредником в значении статьи 866 ГК РК;</li>
+          <li>агентом, брокером, поверенным или комиссионером;</li>
+          <li>гарантом или поручителем по обязательствам Пользователей.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">9.3.</span>Все условия сделки, включая цену, сроки, порядок расчётов, ответственность за неисполнение, согласовываются между Пользователями самостоятельно.</span>
+        <span class="tp-clause"><span class="tp-clause-num">9.4.</span>Исключение составляет услуга Сопровождения сделки, при подключении которой Платформа принимает ограниченные обязательства в пределах, определённых отдельным Договором о сопровождении (см. раздел 10).</span>
+        <span class="tp-clause"><span class="tp-clause-num">9.5.</span>Платформа не несёт ответственности за:</span>
+        <ul>
+          <li>неисполнение или ненадлежащее исполнение обязательств Пользователями;</li>
+          <li>качество товаров, работ, услуг, являющихся предметом сделки;</li>
+          <li>задержки расчётов, валютные риски, действия третьих лиц;</li>
+          <li>разногласия в толковании условий сделки.</li>
+        </ul>
+      </section>
+
+      <!-- ─── 10. NDA NCNDA ─── -->
+      <section id="s10" class="tp-section">
+        <h2><span class="tp-num">Раздел 10</span>NDA / NCNDA / Сопровождение</h2>
+        <span class="tp-clause"><span class="tp-clause-num">10.1.</span>Услуга Сопровождения сделки оказывается на основании отдельного пакета документов из трёх частей:</span>
+
+        <h3>NDA — Соглашение о неразглашении</h3>
+        <p>Стороны взаимно обязуются не раскрывать Конфиденциальную информацию, полученную в ходе переговоров. <strong>Срок действия:</strong> период переговоров + 3 года.</p>
+
+        <h3>NCNDA — Соглашение о ненарушении каналов</h3>
+        <p>Стороны взаимно обязуются не обходить ATAMEKEN Club при заключении сделки с контрагентом, найденным через Платформу. <strong>Срок действия:</strong> 5 лет с даты последнего контакта.</p>
+
+        <h3>Договор о сопровождении</h3>
+        <p>Определяет состав, порядок и стоимость услуг Платформы по сопровождению.</p>
+
+        <span class="tp-clause"><span class="tp-clause-num">10.2.</span>Подписание всего пакета осуществляется в электронной форме согласно разделу 11 Соглашения.</span>
+
+        <div class="tp-note tp-note-danger">
+          <strong>10.3.</strong> <strong>Нарушение NCNDA</strong> (прямой обход Платформы при заключении сделки с контрагентом, найденным через ATAMEKEN Club) влечёт обязательство нарушителя выплатить штраф в размере <strong>5% от суммы соответствующей сделки</strong>, но не менее эквивалента <strong>10 000 (десяти тысяч) долларов США</strong> в тенге.
+        </div>
+
+        <span class="tp-clause"><span class="tp-clause-num">10.4.</span>Размер штрафа подтверждается обеими сторонами при подписании NCNDA и является ликвидированным убытком в значении статьи 351 ГК РК.</span>
+        <span class="tp-clause"><span class="tp-clause-num">10.5.</span>Конфиденциальная информация защищается обеими сторонами разумными техническими и организационными мерами. Передача третьим лицам без письменного согласия второй стороны запрещена, за исключением случаев, предусмотренных законом.</span>
+      </section>
+
+      <!-- ─── 11. ЭП ─── -->
+      <section id="s11" class="tp-section">
+        <h2><span class="tp-num">Раздел 11</span>Электронная подпись</h2>
+        <span class="tp-clause"><span class="tp-clause-num">11.1.</span>Стороны признают юридическую силу документов, подписанных в электронной форме в соответствии с Законом Республики Казахстан <strong>«Об электронном документе и электронной цифровой подписи»</strong> от 7 января 2003 года № 370-II.</span>
+        <span class="tp-clause"><span class="tp-clause-num">11.2.</span>На Платформе используются следующие формы электронной подписи:</span>
+        <h3>11.2.1. Простая электронная подпись (click-wrap)</h3>
+        <p>Отметка в чек-боксе с привязкой к Аккаунту Пользователя, времени, IP-адресу и User-Agent. Применяется для акцепта Соглашения, согласия с условиями сервисов, подтверждения отдельных действий.</p>
+        <h3>11.2.2. Электронная цифровая подпись (ЭЦП)</h3>
+        <p>При необходимости подписания документов, требующих квалифицированной ЭЦП, Платформа поддерживает интеграцию с Национальным удостоверяющим центром РК (Kalkan e-Sign) или эквивалентом.</p>
+        <span class="tp-clause"><span class="tp-clause-num">11.3.</span>Электронные документы, подписанные в соответствии с настоящим разделом, имеют равную юридическую силу с бумажными документами и являются достаточным доказательством в суде.</span>
+        <span class="tp-clause"><span class="tp-clause-num">11.4.</span>Хранение электронных документов и метаданных подписи обеспечивается Оператором в течение не менее 5 лет с момента подписания.</span>
+      </section>
+
+      <!-- ─── 12. ЗАПРЕТЫ ─── -->
+      <section id="s12" class="tp-section">
+        <h2><span class="tp-num">Раздел 12</span>Запрещённые действия</h2>
+        <span class="tp-clause"><span class="tp-clause-num">12.1.</span>Пользователю запрещается:</span>
+        <ol>
+          <li>размещать заведомо ложные, вводящие в заблуждение или непроверенные сведения;</li>
+          <li>использовать Платформу для отмывания доходов, финансирования терроризма, обхода санкций ООН, ЕС, OFAC, иных применимых режимов;</li>
+          <li>размещать Контент, нарушающий права интеллектуальной собственности третьих лиц;</li>
+          <li>размещать материалы, содержащие порнографию, насилие, призывы к экстремизму, дискриминацию;</li>
+          <li>рассылать спам, нежелательные коммерческие предложения через встроенные сервисы Платформы;</li>
+          <li>применять технические средства автоматизированного сбора данных (scraping, parsing) без письменного разрешения Оператора;</li>
+          <li>обходить технические ограничения Платформы (paywall, лимиты, шифрование);</li>
+          <li>получать доступ к Аккаунту иного Пользователя без разрешения;</li>
+          <li>использовать Платформу для распространения вирусов, вредоносного кода;</li>
+          <li>регистрировать множественные Аккаунты с целью обхода ограничений;</li>
+          <li>выдавать себя за другое лицо, использовать чужие данные;</li>
+          <li>нарушать законодательство РК и стран присутствия Партнёров;</li>
+          <li>обходить NCNDA при оказании Сопровождения сделки (см. раздел 10);</li>
+          <li>использовать Платформу для конкурентного анализа с целью создания аналогичного сервиса.</li>
+        </ol>
+        <span class="tp-clause"><span class="tp-clause-num">12.2.</span>Список не является исчерпывающим. Оператор оставляет за собой право квалифицировать иные действия как нарушающие Соглашение.</span>
+      </section>
+
+      <!-- ─── 13. ПДн ─── -->
+      <section id="s13" class="tp-section">
+        <h2><span class="tp-num">Раздел 13</span>Персональные данные и конфиденциальность</h2>
+        <span class="tp-clause"><span class="tp-clause-num">13.1.</span>Регистрируясь, Пользователь даёт согласие на обработку Оператором следующих категорий персональных данных:</span>
+        <ul>
+          <li>ФИО;</li>
+          <li>адрес электронной почты;</li>
+          <li>номер мобильного телефона;</li>
+          <li>БИН/ИИН (при наличии);</li>
+          <li>сведения о компании (наименование, адрес, регистрационные данные);</li>
+          <li>IP-адрес и метаданные сессий;</li>
+          <li>данные банковских операций (только в части, необходимой для проведения платежа).</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">13.2.</span>Обработка персональных данных осуществляется в целях:</span>
+        <ul>
+          <li>выполнения обязательств по настоящему Соглашению;</li>
+          <li>идентификации Пользователя при оказании услуг;</li>
+          <li>направления уведомлений, связанных с использованием Платформы;</li>
+          <li>маркетинговых коммуникаций (только с отдельного согласия Пользователя);</li>
+          <li>выполнения обязанностей, возложенных на Оператора законодательством (KYC, AML).</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">13.3.</span><strong>Сроки хранения:</strong> персональные данные обрабатываются в течение всего срока действия Аккаунта и 5 лет после его закрытия (для целей выполнения требований законодательства о бухгалтерском учёте и архивном деле).</span>
+        <span class="tp-clause"><span class="tp-clause-num">13.4.</span><strong>Третьи лица, которым может передаваться персональная информация:</strong></span>
+        <ul>
+          <li>Аккредитованные Партнёры — для оказания услуг верификации;</li>
+          <li>Платёжные провайдеры (Kaspi.kz и др.) — для проведения платежей;</li>
+          <li>Telegram (мессенджер) — только метаданные обращений в Службу Поддержки;</li>
+          <li>OpenAI (служба автоматического перевода) — только тексты сообщений в чате между Пользователями;</li>
+          <li>Государственные органы — по их законному запросу.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">13.5.</span>Пользователь вправе:</span>
+        <ul>
+          <li>получить копию обрабатываемых данных;</li>
+          <li>потребовать исправления неточных данных;</li>
+          <li>потребовать прекращения обработки и удаления данных (с одновременным удалением Аккаунта);</li>
+          <li>отозвать согласие на маркетинговые коммуникации.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">13.6.</span>Запросы по правам субъекта персональных данных направляются на <code>info@atameken.club</code>. Срок рассмотрения — до 15 рабочих дней.</span>
+        <span class="tp-clause"><span class="tp-clause-num">13.7.</span>Любая информация, размещённая Пользователем в публичной части Платформы (Реестр, профиль), не подпадает под режим коммерческой тайны и не считается конфиденциальной.</span>
+      </section>
+
+      <!-- ─── 14. ИС ─── -->
+      <section id="s14" class="tp-section">
+        <h2><span class="tp-num">Раздел 14</span>Интеллектуальная собственность</h2>
+        <span class="tp-clause"><span class="tp-clause-num">14.1.</span>Все права на Платформу, включая программный код, дизайн, базы данных, торговые знаки, фирменные обозначения, доменное имя <code>atameken.club</code>, принадлежат Оператору или его лицензиарам и охраняются законодательством Республики Казахстан о праве интеллектуальной собственности и международными договорами.</span>
+        <span class="tp-clause"><span class="tp-clause-num">14.2.</span>Использование любых элементов Платформы (копирование, изменение, публикация, распространение, создание производных произведений) допускается исключительно с письменного согласия Оператора, за исключением случаев, прямо разрешённых функционалом Платформы (например, экспорт собственного Контента Пользователя).</span>
+        <span class="tp-clause"><span class="tp-clause-num">14.3.</span>Нарушение прав интеллектуальной собственности Оператора влечёт ответственность в соответствии с применимым правом, включая возмещение убытков и упущенной выгоды.</span>
+      </section>
+
+      <!-- ─── 15. РИСКИ ─── -->
+      <section id="s15" class="tp-section">
+        <h2><span class="tp-num">Раздел 15</span>Риски</h2>
+        <p>Пользователь подтверждает осведомлённость и принимает следующие риски, связанные с использованием Платформы:</p>
+
+        <h3>15.1. Бизнес-риски</h3>
+        <ul>
+          <li>Платформа не гарантирует наличие подходящих контрагентов, инвесторов, покупателей или продавцов;</li>
+          <li>Платформа не гарантирует заключение сделок и их результат;</li>
+          <li>Платформа не гарантирует прибыль или возврат инвестиций.</li>
+        </ul>
+
+        <h3>15.2. Информационные риски</h3>
+        <ul>
+          <li>Сведения, размещаемые Пользователями, могут быть неполными или неточными;</li>
+          <li>Прохождение верификации не исключает риск возникновения сложностей при взаимодействии (см. раздел 4).</li>
+        </ul>
+
+        <h3>15.3. Технические риски</h3>
+        <ul>
+          <li>Возможны временные технические сбои, плановые работы, аварии связи;</li>
+          <li>Возможна утрата отдельных данных вследствие технических причин;</li>
+          <li>Платформа использует сторонние сервисы (хостинг, AI-перевод), за работу которых Оператор не несёт прямой ответственности.</li>
+        </ul>
+
+        <h3>15.4. Юридические риски</h3>
+        <ul>
+          <li>Применимое законодательство может меняться;</li>
+          <li>Возможны валютные ограничения, налоговые обязательства, требования отчётности.</li>
+        </ul>
+
+        <h3>15.5. Риски контрагентов</h3>
+        <ul>
+          <li>Пользователь самостоятельно проводит due diligence контрагента;</li>
+          <li>Прохождение верификации Платформы не заменяет собственную проверку контрагента.</li>
+        </ul>
+
+        <span class="tp-clause"><span class="tp-clause-num">15.6.</span>Принятие условий Соглашения означает осознанное принятие перечисленных рисков.</span>
+      </section>
+
+      <!-- ─── 16. ОГРАНИЧЕНИЕ ОТВЕТСТВЕННОСТИ ─── -->
+      <section id="s16" class="tp-section">
+        <h2><span class="tp-num">Раздел 16</span>Ограничение ответственности</h2>
+        <div class="tp-note tp-note-danger">
+          <strong>16.1.</strong> В максимально допустимой применимым правом степени, <strong>совокупная ответственность Оператора</strong> перед Пользователем за любые претензии, возникшие из или в связи с Соглашением, ограничена суммой, фактически уплаченной этим Пользователем Оператору за платные услуги Платформы в течение последних 12 (двенадцати) месяцев, предшествующих событию, ставшему основанием претензии.
+        </div>
+        <span class="tp-clause"><span class="tp-clause-num">16.2.</span><strong>Оператор ни при каких обстоятельствах не несёт ответственности за:</strong></span>
+        <ul>
+          <li>упущенную выгоду;</li>
+          <li>косвенные, штрафные, побочные убытки;</li>
+          <li>репутационный ущерб;</li>
+          <li>утрату данных, если такая утрата не вызвана грубой неосторожностью Оператора;</li>
+          <li>действия или бездействие Пользователей, Партнёров и иных третьих лиц.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">16.3.</span>Оператор не отвечает за временную недоступность Платформы вследствие:</span>
+        <ul>
+          <li>плановых работ (с предварительным уведомлением);</li>
+          <li>неполадок интернет-провайдеров, хостинг-провайдеров;</li>
+          <li>атак на инфраструктуру (DDoS и др.);</li>
+          <li>форс-мажорных обстоятельств.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">16.4.</span>Указанные ограничения не применяются в случаях:</span>
+        <ul>
+          <li>умысла или грубой неосторожности Оператора;</li>
+          <li>ситуаций, в которых ограничение ответственности прямо запрещено императивными нормами применимого права (например, ответственность перед потребителем).</li>
+        </ul>
+      </section>
+
+      <!-- ─── 17. ВОЗМЕЩЕНИЕ ─── -->
+      <section id="s17" class="tp-section">
+        <h2><span class="tp-num">Раздел 17</span>Возмещение убытков</h2>
+        <span class="tp-clause"><span class="tp-clause-num">17.1.</span>Пользователь обязуется возместить Оператору и его аффилированным лицам, директорам, сотрудникам, агентам <strong>все убытки, расходы и претензии</strong> (включая разумные юридические расходы), возникающие из или связанные с:</span>
+        <ol>
+          <li>нарушением Пользователем условий Соглашения;</li>
+          <li>нарушением Пользователем применимого законодательства;</li>
+          <li>нарушением Пользователем прав третьих лиц (включая права интеллектуальной собственности);</li>
+          <li>размещением недостоверного или вводящего в заблуждение Контента;</li>
+          <li>действиями или бездействием Пользователя в отношениях с другими Пользователями.</li>
+        </ol>
+        <span class="tp-clause"><span class="tp-clause-num">17.2.</span>Оператор уведомляет Пользователя о соответствующей претензии и предоставляет разумную возможность участвовать в её урегулировании.</span>
+      </section>
+
+      <!-- ─── 18. БЛОКИРОВКА ─── -->
+      <section id="s18" class="tp-section">
+        <h2><span class="tp-num">Раздел 18</span>Приостановка и блокировка аккаунта</h2>
+        <span class="tp-clause"><span class="tp-clause-num">18.1.</span>Оператор вправе <strong>временно приостановить</strong> доступ к Аккаунту в случаях:</span>
+        <ul>
+          <li>проведения проверки сведений о возможном нарушении;</li>
+          <li>разногласий с другим Пользователем, требующих выяснения;</li>
+          <li>технических обстоятельств.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">18.2.</span>Оператор вправе <strong>постоянно заблокировать</strong> Аккаунт без предварительного уведомления в случаях:</span>
+        <ul>
+          <li>грубого нарушения Соглашения (раздел 12);</li>
+          <li>нарушения NCNDA или иных подписанных документов;</li>
+          <li>мошеннических действий, попыток обмана Оператора или иных Пользователей;</li>
+          <li>использования Платформы способом, угрожающим её безопасности или доступности;</li>
+          <li>неисполнения обязательств по оплате услуг.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">18.3.</span>При блокировке:</span>
+        <ul>
+          <li>остаток неиспользованных Токенов аннулируется без возврата;</li>
+          <li>размещённый Контент удаляется или скрывается;</li>
+          <li>доступ к личному кабинету прекращается;</li>
+          <li>ранее заключённые с Платформой соглашения (NDA, NCNDA, Договор о сопровождении) сохраняют силу в части обязательств, переживающих расторжение.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">18.4.</span>Пользователь вправе оспорить блокировку, направив мотивированную претензию на <code>info@atameken.club</code> в течение 30 дней. Срок рассмотрения — до 15 рабочих дней.</span>
+      </section>
+
+      <!-- ─── 19. СРОК ─── -->
+      <section id="s19" class="tp-section">
+        <h2><span class="tp-num">Раздел 19</span>Срок действия и расторжение</h2>
+        <span class="tp-clause"><span class="tp-clause-num">19.1.</span>Соглашение действует с момента акцепта и до момента его расторжения.</span>
+        <span class="tp-clause"><span class="tp-clause-num">19.2.</span><strong>Пользователь</strong> вправе расторгнуть Соглашение в любое время путём:</span>
+        <ul>
+          <li>удаления Аккаунта через личный кабинет;</li>
+          <li>направления заявления на <code>info@atameken.club</code>.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">19.3.</span><strong>Оператор</strong> вправе расторгнуть Соглашение:</span>
+        <ul>
+          <li>в одностороннем порядке при грубом нарушении Пользователем условий Соглашения;</li>
+          <li>по соглашению сторон;</li>
+          <li>в порядке, предусмотренном Соглашением и применимым правом.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">19.4.</span><strong>Положения, переживающие расторжение Соглашения:</strong></span>
+        <ul>
+          <li>раздел 8 (Контент пользователей — лицензия в части резервных копий);</li>
+          <li>раздел 10 (NDA, NCNDA);</li>
+          <li>раздел 13 (Персональные данные — в части хранения);</li>
+          <li>раздел 14 (Интеллектуальная собственность);</li>
+          <li>разделы 16, 17 (Ответственность и возмещение);</li>
+          <li>раздел 21 (Разрешение споров).</li>
+        </ul>
+      </section>
+
+      <!-- ─── 20. ИЗМЕНЕНИЯ ─── -->
+      <section id="s20" class="tp-section">
+        <h2><span class="tp-num">Раздел 20</span>Изменения Соглашения</h2>
+        <span class="tp-clause"><span class="tp-clause-num">20.1.</span>Оператор вправе вносить изменения в Соглашение в одностороннем порядке.</span>
+        <span class="tp-clause"><span class="tp-clause-num">20.2.</span><strong>Существенные изменения</strong> (затрагивающие права и обязанности Пользователей, цены, состав услуг) — Оператор уведомляет Пользователей не менее чем за <strong>14 (четырнадцать) календарных дней</strong> до вступления изменений в силу путём:</span>
+        <ul>
+          <li>размещения новой редакции на Сайте;</li>
+          <li>направления уведомления на email Пользователя;</li>
+          <li>размещения уведомления в личном кабинете при следующем входе.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">20.3.</span><strong>Несущественные изменения</strong> (опечатки, уточнения формулировок, не меняющие смысл) вступают в силу немедленно с момента публикации.</span>
+        <span class="tp-clause"><span class="tp-clause-num">20.4.</span>Продолжение использования Платформы после вступления изменений в силу означает согласие Пользователя с новой редакцией.</span>
+        <span class="tp-clause"><span class="tp-clause-num">20.5.</span>Если Пользователь не согласен с изменениями, он вправе расторгнуть Соглашение в порядке раздела 19.</span>
+        <span class="tp-clause"><span class="tp-clause-num">20.6.</span>Каждая редакция Соглашения содержит дату вступления в силу. Архив предыдущих редакций предоставляется по запросу.</span>
+      </section>
+
+      <!-- ─── 21. СПОРЫ ─── -->
+      <section id="s21" class="tp-section">
+        <h2><span class="tp-num">Раздел 21</span>Разрешение споров</h2>
+        <span class="tp-clause"><span class="tp-clause-num">21.1.</span>К отношениям Сторон, возникающим из Соглашения, применяется <strong>право Республики Казахстан</strong> без отсылок к коллизионным нормам.</span>
+        <span class="tp-clause"><span class="tp-clause-num">21.2.</span><strong>Досудебный (претензионный) порядок</strong> обязателен. Срок рассмотрения претензии — <strong>30 (тридцать) календарных дней</strong> с момента получения.</span>
+        <span class="tp-clause"><span class="tp-clause-num">21.3.</span>Претензии направляются:</span>
+        <ul>
+          <li>Оператором — на email Пользователя, указанный при регистрации;</li>
+          <li>Пользователем — на <code>info@atameken.club</code> либо по почтовому адресу Оператора.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">21.4.</span>При недостижении соглашения в досудебном порядке, споры подлежат рассмотрению в:</span>
+        <ul>
+          <li><strong>Специализированных межрайонных экономических судах</strong> г. Алматы — для споров с участием юридических лиц;</li>
+          <li><strong>Районных судах</strong> г. Алматы — для споров с участием физических лиц-непредпринимателей.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">21.5.</span>Стороны вправе по соглашению передать спор на рассмотрение в арбитражные (третейские) суды в соответствии с применимым правом.</span>
+        <span class="tp-clause"><span class="tp-clause-num">21.6.</span>Срок исковой давности по требованиям из Соглашения — 3 года, если иное не предусмотрено законом.</span>
+      </section>
+
+      <!-- ─── 22. УВЕДОМЛЕНИЯ ─── -->
+      <section id="s22" class="tp-section">
+        <h2><span class="tp-num">Раздел 22</span>Уведомления</h2>
+        <span class="tp-clause"><span class="tp-clause-num">22.1.</span>Все уведомления, направляемые в рамках Соглашения, осуществляются:</span>
+        <ul>
+          <li>Оператором Пользователю — на email, указанный в Аккаунте, и/или через личный кабинет;</li>
+          <li>Пользователем Оператору — на <code>info@atameken.club</code>.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">22.2.</span>Уведомление считается полученным:</span>
+        <ul>
+          <li>при отправке по email — через 24 часа с момента отправки;</li>
+          <li>при размещении в личном кабинете — с момента следующего входа Пользователя, но не позднее 7 дней с момента размещения;</li>
+          <li>при отправке заказным письмом — через 5 рабочих дней с даты отправки.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">22.3.</span>Пользователь обязан поддерживать актуальность email-адреса в Аккаунте. Уведомления, направленные на устаревший email, считаются доставленными.</span>
+      </section>
+
+      <!-- ─── 23. УСТУПКА ─── -->
+      <section id="s23" class="tp-section">
+        <h2><span class="tp-num">Раздел 23</span>Уступка и правопреемство</h2>
+        <span class="tp-clause"><span class="tp-clause-num">23.1.</span>Пользователь <strong>не вправе</strong> уступать свои права или передавать обязанности по Соглашению третьим лицам без предварительного письменного согласия Оператора.</span>
+        <span class="tp-clause"><span class="tp-clause-num">23.2.</span><strong>Оператор вправе</strong> уступить свои права и обязанности по Соглашению полностью или частично:</span>
+        <ul>
+          <li>аффилированным лицам;</li>
+          <li>правопреемникам при реорганизации;</li>
+          <li>при продаже бизнеса.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">23.3.</span>Уступка Оператором сопровождается уведомлением Пользователей в порядке раздела 22.</span>
+      </section>
+
+      <!-- ─── 24. ФОРС-МАЖОР ─── -->
+      <section id="s24" class="tp-section">
+        <h2><span class="tp-num">Раздел 24</span>Форс-мажор</h2>
+        <span class="tp-clause"><span class="tp-clause-num">24.1.</span>Стороны освобождаются от ответственности за неисполнение обязательств, если такое неисполнение вызвано обстоятельствами непреодолимой силы, включая:</span>
+        <ul>
+          <li>стихийные бедствия;</li>
+          <li>военные действия, террористические акты;</li>
+          <li>эпидемии, пандемии, карантин;</li>
+          <li>акты государственных органов, делающие исполнение невозможным;</li>
+          <li>сбои в работе магистральных интернет-каналов, систем связи, электроснабжения;</li>
+          <li>кибератаки, повлекшие существенные нарушения работы Платформы.</li>
+        </ul>
+        <span class="tp-clause"><span class="tp-clause-num">24.2.</span>Сторона, столкнувшаяся с форс-мажором, обязана уведомить вторую сторону в течение 7 дней.</span>
+        <span class="tp-clause"><span class="tp-clause-num">24.3.</span>При продолжительности форс-мажора свыше 90 дней любая сторона вправе расторгнуть Соглашение без штрафных санкций.</span>
+      </section>
+
+      <!-- ─── 25. ПРОЧЕЕ ─── -->
+      <section id="s25" class="tp-section">
+        <h2><span class="tp-num">Раздел 25</span>Прочие условия</h2>
+        <span class="tp-clause"><span class="tp-clause-num">25.1.</span><strong>Делимость положений (Severability).</strong> Признание какого-либо положения Соглашения недействительным не влечёт недействительность остальных положений.</span>
+        <span class="tp-clause"><span class="tp-clause-num">25.2.</span><strong>Единый договор (Entire agreement).</strong> Соглашение совместно с Политикой конфиденциальности, Тарифами и приложениями составляет полный договор между Сторонами и заменяет все предшествующие переговоры и договорённости.</span>
+        <span class="tp-clause"><span class="tp-clause-num">25.3.</span><strong>Отказ от прав.</strong> Несвоевременное использование Оператором какого-либо права не означает отказ от него.</span>
+        <span class="tp-clause"><span class="tp-clause-num">25.4.</span><strong>Язык.</strong> Соглашение составлено на русском языке. Переводы на иные языки носят ознакомительный характер. В случае расхождений преимущественную силу имеет русская редакция.</span>
+        <span class="tp-clause"><span class="tp-clause-num">25.5.</span><strong>Заголовки</strong> разделов используются для удобства и не влияют на толкование положений.</span>
+      </section>
+
+      <!-- ─── 26. КОНТАКТЫ ─── -->
+      <section id="s26" class="tp-section">
+        <h2><span class="tp-num">Раздел 26</span>Контактная информация Оператора</h2>
+        <div class="tp-contact">
+          <h3>ТОО «ATAMEKEN Club»</h3>
+          <div class="tp-contact-grid">
+            <b>БИН:</b><span>[указывается при регистрации юридического лица]</span>
+            <b>Юридический адрес:</b><span>Республика Казахстан, г. Алматы</span>
+            <b>Email (общие вопросы):</b><span><a href="mailto:info@atameken.club" style="color:var(--red)">info@atameken.club</a></span>
+            <b>Email (Служба Поддержки):</b><span><a href="mailto:support@atameken.club" style="color:var(--red)">support@atameken.club</a></span>
+            <b>Сайт:</b><span><a href="https://atameken.club" style="color:var(--red)">https://atameken.club</a></span>
+            <b>Телеграм-бот:</b><span>через закреплённый чат «Служба Поддержки» в личном кабинете</span>
+          </div>
+        </div>
+
+        <p style="margin-top:1.75rem;font-size:.8rem;color:var(--ink4);line-height:1.6;font-style:italic">
+          Действующая редакция Соглашения опубликована по адресу <code>https://atameken.club/terms.html</code>. Архивные редакции предоставляются по запросу. Дата последнего обновления настоящей редакции указана в шапке документа.
+        </p>
+      </section>
+    </article>
+  </div>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="f-logo">
+    <div class="f-logo-emb">
+      <img src="/assets/logo.png" alt="ATAMEKEN Club" width="52" height="52" style="display:block;border-radius:50%"/>
+    </div>
+    <div class="f-logo-text">
+      <span class="f-logo-main">Бизнес-сообщество</span>
+      <span class="f-logo-sub-name">«ATAMEKEN Club»</span>
+    </div>
+  </div>
+  <div class="f-mid">
+    <p>© 2026 ТОО «ATAMEKEN Club». Все права защищены.</p>
+    <p>Бизнес-сообщество «ATAMEKEN Club» · Казахстан</p>
+    <p style="margin-top:.4rem"><a href="/terms.html" style="color:#94a3b8;font-size:.78rem">Пользовательское Соглашение</a> · <a href="/legal.html" style="color:#94a3b8;font-size:.78rem">Документы</a></p>
+  </div>
+  <div class="f-right">
+    <a href="mailto:info@atameken.club">info@atameken.club</a>
+    <a href="tel:+77000000000">+7 (700) 000-00-00</a>
+    <a href="#">г. Алматы, Казахстан</a>
+  </div>
+</footer>
+
+<script src="/assets/api.js"></script>
+<script>
+// Auth-aware nav
+(function(){
+  if(localStorage.getItem('ac_access')){
+    document.querySelectorAll('a[href="/login.html"]').forEach(a => {
+      a.href = '/cabinet.html';
+      if(a.textContent.trim() === 'Войти') a.textContent = 'Кабинет';
+    });
+  }
+})();
+
+// TOC scroll-spy: подсветка активной секции в боковом оглавлении
+(function(){
+  const sections = document.querySelectorAll('.tp-section[id]');
+  const tocLinks = document.querySelectorAll('.tp-toc a');
+  if (!sections.length) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        tocLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-100px 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => io.observe(s));
+})();
+
+// Smooth scroll по TOC-ссылкам
+document.querySelectorAll('.tp-toc a').forEach(a => {
+  a.addEventListener('click', (e) => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+      history.replaceState(null, '', a.getAttribute('href'));
+    }
+  });
+});
+</script>
+<script src="/assets/i18n.js"></script>
+</body>
+</html>

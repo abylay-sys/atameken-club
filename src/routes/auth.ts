@@ -5,9 +5,10 @@ import { hashPassword, verifyPassword, sha256, randomToken } from '../lib/hash';
 import { signAccessToken, refreshExpiryDate } from '../lib/jwt';
 import { requireAuth } from '../middleware/auth';
 
-// Текущая версия Пользовательского соглашения. Меняем при правках текста —
+// Текущая версия Пользовательского Соглашения. Меняем при правках текста —
 // пользователи, регистрирующиеся после этой даты, фиксируются с новой версией.
-const TERMS_VERSION = '2026.05.1';
+// Полный текст: /terms.html (26 разделов, под бизнес-модель ATAMEKEN Club).
+const TERMS_VERSION = '2.0';
 
 const registerSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
