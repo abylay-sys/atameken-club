@@ -60,6 +60,49 @@ strong{color:var(--ink);font-weight:600}
 .type-btn.on{color:#fff;background:var(--red);border-color:var(--red);box-shadow:0 4px 14px rgba(200,40,42,.32),0 0 0 2px rgba(200,40,42,.12);transform:translateY(-1px);font-weight:700;position:relative;z-index:2}
 .type-btn.on::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;background:var(--red);border-right:1px solid var(--red);border-bottom:1px solid var(--red);z-index:1}
 .type-btn.on .type-btn-ico{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5);color:#fff}
+
+/* ─── Дорожная Карта в Обзоре ─── */
+.overview-extras{display:flex;flex-direction:column;gap:1.5rem;margin-bottom:1.5rem}
+.roadmap{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.5rem 1.75rem;box-shadow:var(--shadow)}
+.rm-head{margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;flex-wrap:wrap}
+.rm-eyebrow{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:.3rem;display:block}
+.rm-head h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--ink);margin:0;line-height:1.2}
+.rm-head>p{font-size:.82rem;color:var(--ink3);max-width:420px;margin:0;line-height:1.55;flex-shrink:1}
+.rm-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:.85rem}
+@media(max-width:1100px){.rm-steps{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:680px){.rm-steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.rm-steps{grid-template-columns:1fr}}
+.rm-step{position:relative;padding:1.1rem .9rem .85rem;background:#fafafa;border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:.35rem;transition:all .2s}
+.rm-step:hover{border-color:var(--red);background:#fff;transform:translateY(-2px);box-shadow:var(--shadow)}
+.rm-step-num{position:absolute;top:-11px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1;box-shadow:0 2px 6px rgba(200,40,42,.3)}
+.rm-step h4{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:500;color:var(--ink);margin:.5rem 0 0;line-height:1.2}
+.rm-step p{font-size:.74rem;color:var(--ink3);line-height:1.45;margin:0;flex:1}
+.rm-step-cta{margin-top:.45rem;font-size:.72rem;color:var(--red);font-weight:600;letter-spacing:.02em;cursor:pointer;background:none;border:0;text-align:left;padding:0}
+.rm-step-cta:hover{text-decoration:underline}
+
+/* ─── Пакеты услуг в Обзоре ─── */
+.pkgrec{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.5rem 1.75rem;box-shadow:var(--shadow)}
+.pk-head{margin-bottom:1.25rem}
+.pk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+@media(max-width:860px){.pk-grid{grid-template-columns:1fr;gap:.85rem}}
+.pk-card{background:linear-gradient(180deg,#fff 0%,#fafafa 100%);border:1px solid var(--border);border-radius:6px;padding:1.25rem 1.35rem 1.1rem;display:flex;flex-direction:column;gap:.55rem;transition:all .25s;position:relative;overflow:hidden}
+.pk-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),#E63B3D)}
+.pk-card:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.pk-card.tier-prem{background:linear-gradient(180deg,#fffaf0 0%,#fff8e9 100%);border-color:#C5963A}
+.pk-card.tier-prem::before{background:linear-gradient(90deg,#C5963A,#E0B566)}
+.pk-tier{font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-top:.2rem}
+.pk-card.tier-prem .pk-tier{color:#7a5810}
+.pk-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;color:var(--ink);margin:.15rem 0 .25rem;line-height:1.25}
+.pk-desc{font-size:.78rem;color:var(--ink3);line-height:1.45;margin:0}
+.pk-list{margin:.35rem 0 .4rem;padding:0;list-style:none;display:flex;flex-direction:column;gap:.3rem}
+.pk-list li{font-size:.78rem;color:var(--ink2);line-height:1.45;padding-left:.95rem;position:relative}
+.pk-list li::before{content:'✓';position:absolute;left:0;color:var(--red);font-weight:700}
+.pk-price{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--red);font-weight:600;margin-top:auto;padding-top:.5rem;border-top:1px dashed var(--border)}
+.pk-card.tier-prem .pk-price{color:#7a5810}
+.pk-cta{margin-top:.6rem;background:var(--red);color:#fff;border:0;padding:.55rem .95rem;font-size:.75rem;font-weight:600;letter-spacing:.02em;cursor:pointer;border-radius:3px;transition:background .2s;font-family:'Inter',sans-serif}
+.pk-cta:hover{background:var(--red2)}
+.pk-card.tier-prem .pk-cta{background:#C5963A}
+.pk-card.tier-prem .pk-cta:hover{background:#a87d2e}
 .type-btn:not(.on):hover{background:#fff;border-color:var(--red);color:var(--red)}
 .type-btn:not(.on):hover .type-btn-ico{border-color:var(--red);color:var(--red)}
 @media(max-width:980px){.type-bar{grid-template-columns:repeat(2,1fr)}.type-bar-label{margin-top:.35rem}}
@@ -2980,10 +3023,232 @@ function switchType(type, btn){
   btn.classList.add('on');
   showPanel(type, 'dashboard');
   applyRoleVisibility(type);
+  renderPackagesForType(type);
+}
+
+// ═══ Дорожная Карта + Пакеты услуг в Обзоре ═══
+const ROADMAP_SELLER_HTML = `
+<div class="roadmap" data-show-for="seller">
+  <div class="rm-head">
+    <div><span class="rm-eyebrow">Дорожная Карта</span><h3>Пять шагов до первой сделки</h3></div>
+    <p>Каждый шаг открывает следующий уровень доверия в Реестре. Чем больше шевронов — тем выше конверсия в обращения.</p>
+  </div>
+  <div class="rm-steps">
+    <div class="rm-step"><div class="rm-step-num">1</div><h4>Анкета компании</h4><p>Базовая информация о компании, продукте, команде. Бесплатно.</p><button class="rm-step-cta" data-rm-go="profile">Заполнить →</button></div>
+    <div class="rm-step"><div class="rm-step-num">2</div><h4>Верификация</h4><p>Шевроны увеличивают доверие в Реестре в 3–5 раз — выше конверсия в заявки.</p><button class="rm-step-cta" data-rm-go="verification">Услуги верификации →</button></div>
+    <div class="rm-step"><div class="rm-step-num">3</div><h4>Публикация</h4><p>Появится в публичном Реестре. Контакты — только после оплаты покупателем.</p><button class="rm-step-cta" data-rm-go="new-publication">+ Новая публикация →</button></div>
+    <div class="rm-step"><div class="rm-step-num">4</div><h4>Усиление</h4><p>Маркетинг, брендинг, performance — пакеты от Партнёров под вашу категорию ниже ↓</p><button class="rm-step-cta" data-rm-go="packages-scroll">Пакеты ниже ↓</button></div>
+    <div class="rm-step"><div class="rm-step-num">5</div><h4>Сделка</h4><p>Сопровождение под ключ — NDA, NCNDA, переговоры. Комиссия 1.5%.</p><button class="rm-step-cta" data-rm-go="deal-support">Сопровождение →</button></div>
+  </div>
+</div>`;
+
+const ROADMAP_BUYER_HTML = `
+<div class="roadmap" data-show-for="buyer">
+  <div class="rm-head">
+    <div><span class="rm-eyebrow">Дорожная Карта</span><h3>Пять шагов до проверенной сделки</h3></div>
+    <p>От первого открытия карточки до подписи договора — Платформа помогает на каждом этапе.</p>
+  </div>
+  <div class="rm-steps">
+    <div class="rm-step"><div class="rm-step-num">1</div><h4>Анкета покупателя</h4><p>Профиль и интересы. Видят только верифицированные продавцы.</p><button class="rm-step-cta" data-rm-go="profile">Заполнить →</button></div>
+    <div class="rm-step"><div class="rm-step-num">2</div><h4>Кошелёк токенов</h4><p>1 токен = $5 USD = 1 открытие карточки. Пакеты со скидкой до 50%.</p><button class="rm-step-cta" data-rm-go="token-packages">Пакеты токенов →</button></div>
+    <div class="rm-step"><div class="rm-step-num">3</div><h4>Поиск в Реестре</h4><p>Фильтры по типу, региону, отрасли. Поиск по ключевым словам.</p><button class="rm-step-cta" data-rm-go="registry">Открыть Реестр →</button></div>
+    <div class="rm-step"><div class="rm-step-num">4</div><h4>Развёрнутая карточка</h4><p>Контакты, полные показатели, отчёты по всем верификациям.</p><button class="rm-step-cta" data-rm-go="expanded-card">Подробнее →</button></div>
+    <div class="rm-step"><div class="rm-step-num">5</div><h4>Сделка</h4><p>Сопровождение под ключ — NDA, NCNDA, переговоры. Комиссия 1.5%.</p><button class="rm-step-cta" data-rm-go="deal-support">Сопровождение →</button></div>
+  </div>
+</div>`;
+
+// Пакеты услуг по 8 ролям — 3 уровня (Старт / Развитие / Премиум) под каждую категорию активности
+const SERVICE_PACKAGES = {
+  'seeker': [
+    {tier:'Старт', name:'Pre-Seed Старт', services:['Market Entry Audit','Маркетинговое исследование рынка','Сайт / лендинг'], price:'~2,5 млн KZT', desc:'Минимум, чтобы выйти к первым инвесторам с проверенными данными.'},
+    {tier:'Развитие', name:'Series Готовность', services:['Анализ ЦА и сегментация','Брендинговая упаковка','PR и работа с медиа'], price:'~6,8 млн KZT', desc:'Полная упаковка проекта для серьёзных переговоров с VC и БА.'},
+    {tier:'Премиум', name:'Go-to-Market', services:['Performance-маркетинг','SMM-ведение','Growth Audit','Локализация'], price:'от 4 млн KZT/мес', desc:'Активная воронка лидов и пользователей для масштабирования.', isPrem:true},
+  ],
+  'franchiser': [
+    {tier:'Старт', name:'Запуск франшизы', services:['Брендбук и фирменный стиль','Сайт / лендинг','Анализ ЦА и сегментация'], price:'~1,8 млн KZT', desc:'Минимум для привлечения первого франчайзи.'},
+    {tier:'Развитие', name:'Сеть точек', services:['Performance-маркетинг','SMM-ведение','Брендинговая упаковка'], price:'~3 млн KZT/мес', desc:'Привлечение пула франчайзи через рекламу и контент.'},
+    {tier:'Премиум', name:'Международная сеть', services:['Growth Audit','PR и работа с медиа','Маркетинговое исследование рынка','Локализация'], price:'от 5,5 млн KZT', desc:'Масштабирование сети в новые страны с локализацией.', isPrem:true},
+  ],
+  'biz-seller': [
+    {tier:'Старт', name:'Тизер для продажи', services:['Маркетинговое исследование рынка','Аналитика цен и бенчмаркинг','Сайт / лендинг'], price:'~2 млн KZT', desc:'Документы и тизер для адресной рассылки покупателям.'},
+    {tier:'Развитие', name:'Упаковка', services:['Growth Audit','PR и работа с медиа','Брендбук и фирменный стиль'], price:'~3,5 млн KZT', desc:'Усиление позиций бизнеса перед оценкой и продажей.'},
+    {tier:'Премиум', name:'Максимальная оценка', services:['Performance-маркетинг','Брендинговая упаковка','Аналитика цен'], price:'от 4 млн KZT', desc:'Полная упаковка для максимальной оценки на сделке.', isPrem:true},
+  ],
+  'goods-seller': [
+    {tier:'Старт', name:'Онлайн-старт', services:['Выход на маркетплейсы','Аналитика цен и бенчмаркинг','Сайт / лендинг'], price:'~1,5 млн KZT', desc:'Базовый запуск онлайн-продаж на Kaspi и других маркетплейсах.'},
+    {tier:'Развитие', name:'Реклама и контент', services:['Performance-маркетинг','SMM-ведение','Анализ ЦА и сегментация'], price:'~2,5 млн KZT/мес', desc:'Активная реклама, контент и расширение каналов продаж.'},
+    {tier:'Премиум', name:'Экспортные рынки', services:['Экспортный консалтинг','Запуск воронки продаж под ключ','Локализация'], price:'от 5 млн KZT', desc:'Выход на экспортные рынки и автоматизация продаж.', isPrem:true},
+  ],
+  'investor': [
+    {tier:'Старт', name:'Базовый due diligence', services:['Аналитика цен и бенчмаркинг','Market Entry Audit'], price:'~1,6 млн KZT', desc:'Анализ отрасли и ёмкости рынка для инвест-решения.'},
+    {tier:'Развитие', name:'Глубокий анализ', services:['Маркетинговое исследование рынка','Growth Audit','Анализ ЦА и сегментация'], price:'~3,5 млн KZT', desc:'Глубокая верификация перспектив проекта перед сделкой.'},
+    {tier:'Премиум', name:'Поддержка портфеля', services:['Брендинговая упаковка','PR и работа с медиа','Performance-маркетинг'], price:'индивидуально', desc:'Сопровождение портфельной компании после сделки.', isPrem:true},
+  ],
+  'franchisee': [
+    {tier:'Старт', name:'Проверка спроса', services:['Анализ ЦА и сегментация','Аналитика цен и бенчмаркинг'], price:'~1 млн KZT', desc:'Проверка спроса на франшизу в вашем регионе.'},
+    {tier:'Развитие', name:'Готовность к открытию', services:['Market Entry Audit','Сайт / лендинг','Маркетинговое исследование рынка'], price:'~3 млн KZT', desc:'Полная подготовка к открытию точки франшизы.'},
+    {tier:'Премиум', name:'Запуск маркетинга', services:['Performance-маркетинг','SMM-ведение','PR и работа с медиа'], price:'от 1,5 млн KZT/мес', desc:'Полный маркетинг для открытой точки франшизы.', isPrem:true},
+  ],
+  'biz-buyer': [
+    {tier:'Старт', name:'Оценка отрасли', services:['Аналитика цен и бенчмаркинг','Market Entry Audit'], price:'~1,6 млн KZT', desc:'Анализ отрасли приобретаемого бизнеса.'},
+    {tier:'Развитие', name:'Проверка бизнеса', services:['Маркетинговое исследование рынка','Анализ ЦА и сегментация','Growth Audit'], price:'~4 млн KZT', desc:'Глубокая маркетинговая проверка приобретаемого бизнеса.'},
+    {tier:'Премиум', name:'Перезапуск под себя', services:['Брендинговая упаковка','PR и работа с медиа','Performance-маркетинг'], price:'индивидуально', desc:'Ребрендинг и перезапуск приобретённого бизнеса.', isPrem:true},
+  ],
+  'goods-buyer': [
+    {tier:'Старт', name:'Мониторинг цен', services:['Аналитика цен и бенчмаркинг'], price:'~100 тыс KZT/мес', desc:'Регулярный мониторинг закупочных цен на сырьё/товары.'},
+    {tier:'Развитие', name:'Альтернативные рынки', services:['Аналитика цен и бенчмаркинг','Market Entry Audit','Маркетинговое исследование рынка'], price:'~3 млн KZT', desc:'Стратегия диверсификации поставщиков и поиск альтернативных рынков.'},
+    {tier:'Премиум', name:'Закупка + перепродажа', services:['Экспортный консалтинг','Запуск воронки продаж под ключ','Performance-маркетинг'], price:'от 4 млн KZT', desc:'Полный цикл: закупка → переупаковка → продажа.', isPrem:true},
+  ],
+};
+
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function injectOverviewExtras() {
+  const dashboards = ['seeker-dashboard', 'investor-dashboard', 'franchise-dashboard', 'sale-dashboard'];
+  dashboards.forEach(id => {
+    const dash = document.getElementById(id);
+    if (!dash || dash.querySelector('.overview-extras')) return;
+    const banners = dash.querySelectorAll('.info-banner');
+    if (!banners.length) return;
+    const lastBanner = banners[banners.length - 1];
+    const wrap = document.createElement('div');
+    wrap.className = 'overview-extras';
+    wrap.id = 'extras-' + id;
+    wrap.innerHTML = ROADMAP_SELLER_HTML + ROADMAP_BUYER_HTML + '<div class="pk-mount" data-pk-mount></div>';
+    lastBanner.parentNode.insertBefore(wrap, lastBanner.nextSibling);
+  });
+}
+
+function renderPackagesForType(type) {
+  const pkgs = SERVICE_PACKAGES[type] || [];
+  if (!pkgs.length) {
+    document.querySelectorAll('[data-pk-mount]').forEach(el => el.innerHTML = '');
+    return;
+  }
+  const cards = pkgs.map(p => `
+    <div class="pk-card${p.isPrem ? ' tier-prem' : ''}">
+      <div class="pk-tier">${escapeHtml(p.tier)}</div>
+      <h4 class="pk-name">${escapeHtml(p.name)}</h4>
+      <p class="pk-desc">${escapeHtml(p.desc)}</p>
+      <ul class="pk-list">${p.services.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
+      <div class="pk-price">${escapeHtml(p.price)}</div>
+      <button class="pk-cta" data-pk-order="${escapeHtml(p.name)}" data-pk-services='${escapeHtml(JSON.stringify(p.services))}'>Заказать пакет →</button>
+    </div>`).join('');
+  const html = `
+    <div class="pkgrec">
+      <div class="pk-head">
+        <span class="rm-eyebrow">Рекомендованные пакеты</span>
+        <h3>Подобраны под вашу категорию активности</h3>
+      </div>
+      <div class="pk-grid">${cards}</div>
+    </div>`;
+  document.querySelectorAll('[data-pk-mount]').forEach(el => el.innerHTML = html);
+}
+
+// ─── CTA Roadmap + Packages: единый обработчик через делегирование ───
+document.addEventListener('click', (e) => {
+  const rmCta = e.target.closest('[data-rm-go]');
+  if (rmCta) {
+    e.preventDefault();
+    const target = rmCta.dataset.rmGo;
+    if (target === 'profile') {
+      // Скроллим к карточке профиля или показываем соответствующий sidebar-item
+      const profEl = document.querySelector('.sidebar-item[data-id="profile"]') || document.querySelector('a[href*="profile"]');
+      if (profEl && profEl.click) profEl.click();
+      else alert('Раздел Анкета в разработке');
+    } else if (target === 'verification') {
+      // У продавцов — sidebar группы «Услуги верификации». Кликнем по первой verify-* услуге
+      const verifyItem = Array.from(document.querySelectorAll('.sidebar-item')).find(el => /верификация/i.test(el.textContent || ''));
+      if (verifyItem) verifyItem.click();
+      else location.hash = '#activity-verify-company';
+    } else if (target === 'new-publication') {
+      if (typeof showPublication === 'function') showPublication(currentType);
+    } else if (target === 'packages-scroll') {
+      const pk = document.querySelector('.overview-extras .pkgrec');
+      if (pk) pk.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (target === 'deal-support') {
+      location.hash = '#activity-deal-support';
+    } else if (target === 'expanded-card') {
+      location.hash = '#activity-expanded-card';
+    } else if (target === 'token-packages') {
+      location.hash = '#packages';
+    } else if (target === 'registry') {
+      window.location.href = '/projects.html';
+    }
+    return;
+  }
+  const pkCta = e.target.closest('[data-pk-order]');
+  if (pkCta) {
+    e.preventDefault();
+    const name = pkCta.dataset.pkOrder;
+    let services = [];
+    try { services = JSON.parse(pkCta.dataset.pkServices || '[]'); } catch {}
+    openPackageOrderModal(name, services);
+  }
+});
+
+// ─── Модалка заказа пакета — общая на весь кабинет ───
+function openPackageOrderModal(packageName, services) {
+  const existing = document.getElementById('pk-order-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'pk-order-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:1000;background:rgba(15,22,32,.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:1rem';
+  const u = (AC.getUser && AC.getUser()) || {};
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:10px;box-shadow:0 16px 48px rgba(15,22,32,.25);max-width:520px;width:100%;max-height:92vh;overflow-y:auto;padding:1.85rem 2rem;position:relative">
+      <button type="button" id="pk-modal-close" aria-label="Закрыть" style="position:absolute;top:.85rem;right:1rem;background:none;border:0;font-size:1.5rem;line-height:1;color:#94a3b8;cursor:pointer;padding:.25rem .5rem">×</button>
+      <div style="padding-right:2rem;margin-bottom:1rem">
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:.4rem">Заказ пакета</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);font-weight:500;line-height:1.25;margin:0">${escapeHtml(packageName)}</h3>
+      </div>
+      <p style="font-size:.82rem;color:var(--ink3);line-height:1.55;margin:0 0 1rem">В пакет входит: ${services.map(s => `<b style="color:var(--ink2)">${escapeHtml(s)}</b>`).join(', ')}.</p>
+      <form id="pk-order-form" novalidate style="display:flex;flex-direction:column;gap:.95rem">
+        <label style="display:flex;flex-direction:column;gap:.4rem"><span style="font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2)">Имя <span style="color:var(--red)">*</span></span><input type="text" name="name" required maxlength="200" value="${escapeHtml(u.fullName || '')}" placeholder="Как к вам обращаться" style="width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);padding:.72rem .95rem;font-family:'Inter',sans-serif;font-size:.88rem;border-radius:4px;outline:none"/></label>
+        <label style="display:flex;flex-direction:column;gap:.4rem"><span style="font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2)">Контакт <span style="color:var(--red)">*</span></span><input type="text" name="contact" required maxlength="200" value="${escapeHtml(u.email || u.phone || '')}" placeholder="Телефон или e-mail" style="width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);padding:.72rem .95rem;font-family:'Inter',sans-serif;font-size:.88rem;border-radius:4px;outline:none"/></label>
+        <label style="display:flex;flex-direction:column;gap:.4rem"><span style="font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2)">Комментарий</span><textarea name="comment" maxlength="2000" placeholder="Опишите задачу, сроки, ожидаемый бюджет (опционально)" style="width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--ink);padding:.72rem .95rem;font-family:'Inter',sans-serif;font-size:.88rem;border-radius:4px;outline:none;resize:vertical;min-height:88px"></textarea></label>
+        <div id="pk-modal-status" style="font-size:.82rem;line-height:1.5;color:var(--ink3);min-height:1.2em"></div>
+        <button type="submit" style="background:var(--red);color:#fff;border:0;padding:.85rem 1.5rem;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;border-radius:3px;width:100%">Отправить заявку</button>
+        <p style="font-size:.7rem;color:var(--ink4);line-height:1.55;margin:0">Нажимая «Отправить», вы соглашаетесь на обработку контактных данных для связи по этой заявке.</p>
+      </form>
+    </div>`;
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+  const close = () => { modal.remove(); document.body.style.overflow = ''; };
+  modal.querySelector('#pk-modal-close').onclick = close;
+  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+  const onEsc = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onEsc); } };
+  document.addEventListener('keydown', onEsc);
+  modal.querySelector('#pk-order-form').onsubmit = async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const name = (fd.get('name') || '').toString().trim();
+    const contact = (fd.get('contact') || '').toString().trim();
+    const comment = (fd.get('comment') || '').toString().trim();
+    const status = modal.querySelector('#pk-modal-status');
+    if (!name || !contact) { status.textContent = 'Заполните имя и контакт'; status.style.color = '#b91c1c'; return; }
+    e.target.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
+    status.textContent = 'Отправляем…'; status.style.color = '';
+    try {
+      const items = services.map((s, i) => ({ id: 'pkg-' + i + '-' + Math.random().toString(36).slice(2, 7), name: '[' + packageName + '] ' + s }));
+      const res = await fetch('/services/cart-submit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name, contact, comment, items }) });
+      if (!res.ok) { const d = await res.json().catch(() => ({})); throw new Error(d.error || 'Ошибка отправки'); }
+      status.textContent = '✓ Заявка отправлена. Менеджер свяжется в течение рабочего дня.';
+      status.style.color = '#15803d';
+      e.target.reset();
+      setTimeout(close, 2200);
+    } catch (err) {
+      status.textContent = err.message || 'Не удалось отправить';
+      status.style.color = '#b91c1c';
+      e.target.querySelectorAll('input, textarea, button').forEach(el => el.disabled = false);
+    }
+  };
 }
 
 // Init: дефолтный «seeker» — продавец, сразу прячем покупательские блоки
 buildSidebar('seeker');
+injectOverviewExtras();
+renderPackagesForType('seeker');
 applyRoleVisibility('seeker');
 
 // Filter pills (non-functional UI demo)
