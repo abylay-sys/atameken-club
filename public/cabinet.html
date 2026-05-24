@@ -57,8 +57,9 @@ strong{color:var(--ink);font-weight:600}
 .type-btn-ico{width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--ink3);flex-shrink:0;transition:all .2s}
 .type-btn-ico svg{width:13px;height:13px}
 .type-btn-txt{flex:1;min-width:0;display:block}
-.type-btn.on{color:#fff;background:var(--red);border-color:var(--red)}
-.type-btn.on .type-btn-ico{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);color:#fff}
+.type-btn.on{color:#fff;background:var(--red);border-color:var(--red);box-shadow:0 4px 14px rgba(200,40,42,.32),0 0 0 2px rgba(200,40,42,.12);transform:translateY(-1px);font-weight:700;position:relative;z-index:2}
+.type-btn.on::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;background:var(--red);border-right:1px solid var(--red);border-bottom:1px solid var(--red);z-index:1}
+.type-btn.on .type-btn-ico{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5);color:#fff}
 .type-btn:not(.on):hover{background:#fff;border-color:var(--red);color:var(--red)}
 .type-btn:not(.on):hover .type-btn-ico{border-color:var(--red);color:var(--red)}
 @media(max-width:980px){.type-bar{grid-template-columns:repeat(2,1fr)}.type-bar-label{margin-top:.35rem}}
@@ -256,10 +257,6 @@ strong{color:var(--ink);font-weight:600}
     <span class="tn-name"><span class="tn-name-top">Бизнес-сообщество</span><span class="tn-name-bot">«ATAMEKEN Club»</span></span>
   </a>
   <div class="tn-right">
-    <a href="/" class="tn-back">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 12L6 8l4-4"/></svg>
-      На главную
-    </a>
     <a href="#" id="btn-logout" class="tn-back">Выйти</a>
     <div class="tn-user">
       <div class="tn-avatar" id="avatarText">-</div>
@@ -2942,17 +2939,7 @@ function buildSidebar(type){
     sidebar.appendChild(sec);
   });
 
-  // Кнопка-выход «Перейти в Реестр» внизу сайдбара
-  const exitSec = document.createElement('div');
-  exitSec.className = 'sidebar-section';
-  exitSec.style.cssText = 'margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)';
-  const exitLink = document.createElement('a');
-  exitLink.href = '/projects.html';
-  exitLink.className = 'sidebar-item';
-  exitLink.style.cssText = 'text-decoration:none;color:var(--red);font-weight:600';
-  exitLink.innerHTML = (icons.search || '') + 'Перейти в Реестр';
-  exitSec.appendChild(exitLink);
-  sidebar.appendChild(exitSec);
+  // «Перейти в Реестр» убрали — Реестр доступен через cab-front-nav сверху
 }
 
 function showPanel(type, panelId){
