@@ -26,32 +26,53 @@ export default async function publicationsRoutes(app: FastifyInstance) {
   // ── Публичный каталог (для Реестра) ──
   // Возвращает только PUBLISHED. Без авторизации — открытые данные.
   app.get('/', { preHandler: optionalAuth }, async (req) => {
-    const q = req.query as { type?: string; industry?: string; region?: string; limit?: string };
-    const type = q.type && PUBLICATION_TYPES.includes(q.type as any) ? (q.type as any) : undefined;
-    const limit = Math.min(Number(q.limit) || 50, 200);
+    const qp = req.query as { type?: string; industry?: string; region?: string; limit?: string; page?: string; q?: string };
+    const type = qp.type && PUBLICATION_TYPES.includes(qp.type as any) ? (qp.type as any) : undefined;
+    const limit = Math.min(Math.max(Number(qp.limit) || 15, 1), 100);
+    const page = Math.max(Number(qp.page) || 1, 1);
+    const skip = (page - 1) * limit;
 
-    const items = await prisma.publication.findMany({
-      where: {
-        status: 'PUBLISHED',
-        ...(type ? { type } : {}),
-        ...(q.industry ? { industry: { contains: q.industry, mode: 'insensitive' } } : {}),
-        ...(q.region ? { region: { contains: q.region, mode: 'insensitive' } } : {}),
-      },
-      orderBy: { publishedAt: 'desc' },
-      take: limit,
-      // Не светим userId и контактные поля из data на публичной выдаче — это «короткая» карточка
-      select: {
-        id: true,
-        type: true,
-        title: true,
-        industry: true,
-        region: true,
-        shortDesc: true,
-        priceLabel: true,
-        publishedAt: true,
-      },
-    });
-    return { items };
+    // Полнотекстовый поиск по title / shortDesc / industry — ключевые слова из qp.q
+    const searchTerm = (qp.q || '').trim();
+    const searchFilter = searchTerm
+      ? {
+          OR: [
+            { title: { contains: searchTerm, mode: 'insensitive' as const } },
+            { shortDesc: { contains: searchTerm, mode: 'insensitive' as const } },
+            { industry: { contains: searchTerm, mode: 'insensitive' as const } },
+          ],
+        }
+      : {};
+
+    const where = {
+      status: 'PUBLISHED' as const,
+      ...(type ? { type } : {}),
+      ...(qp.industry ? { industry: { contains: qp.industry, mode: 'insensitive' as const } } : {}),
+      ...(qp.region ? { region: { contains: qp.region, mode: 'insensitive' as const } } : {}),
+      ...searchFilter,
+    };
+
+    const [items, total] = await Promise.all([
+      prisma.publication.findMany({
+        where,
+        orderBy: { publishedAt: 'desc' },
+        take: limit,
+        skip,
+        // Не светим userId и контактные поля из data на публичной выдаче — это «короткая» карточка
+        select: {
+          id: true,
+          type: true,
+          title: true,
+          industry: true,
+          region: true,
+          shortDesc: true,
+          priceLabel: true,
+          publishedAt: true,
+        },
+      }),
+      prisma.publication.count({ where }),
+    ]);
+    return { items, total, page, limit, totalPages: Math.max(Math.ceil(total / limit), 1) };
   });
 
   // ── Развёрнутая карточка (платная — пока без gating, заглушка) ──

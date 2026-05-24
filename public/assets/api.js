@@ -97,6 +97,8 @@
       if (opts && opts.industry) q.set('industry', opts.industry);
       if (opts && opts.region) q.set('region', opts.region);
       if (opts && opts.limit) q.set('limit', String(opts.limit));
+      if (opts && opts.page) q.set('page', String(opts.page));
+      if (opts && opts.q) q.set('q', String(opts.q).trim());
       const qs = q.toString();
       return request('GET', '/publications' + (qs ? '?' + qs : ''), null, false);
     },

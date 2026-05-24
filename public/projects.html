@@ -71,6 +71,10 @@
         </div>
       </div>
     </div>
+    <div class="reg-search reveal">
+      <input type="text" id="regSearch" class="reg-search-input" placeholder="Поиск по ключевым словам: «гостиница», «сера», «агропром»..." autocomplete="off"/>
+      <button type="button" class="reg-search-clear" id="regSearchClear" aria-label="Очистить" style="display:none">×</button>
+    </div>
     <div class="cat-tabs reveal" id="catTabs">
       <button class="cat-tab on" data-tab="all">Все</button>
       <button class="cat-tab" data-tab="invest">Инвест-проекты</button>
@@ -296,6 +300,7 @@
       </div>
 
     </div>
+    <div class="reg-pagination reveal" id="regPagination"></div>
     <div class="cat-more reveal">
       <a href="/register.html" class="btn-red">Зарегистрироваться и открыть Реестр</a>
     </div>
@@ -491,8 +496,9 @@ window.renderShevStripHTML = renderShevStripHTML;
 // Звёздочка + «Пожаловаться» инжектятся через setupCardActions() ниже —
 // один источник правды, с реальным API (AC.addFavorite / AC.reportComplaint).
 
-// Catalog tabs
-function applyTabFilter(){
+// Catalog tabs — переключают тип публикации, триггерят перезагрузку из API
+// (для демо-карточек, когда API недоступен, остаётся local-filter fallback в applyDemoFilter)
+function applyDemoFilter(){
   const t = (document.querySelector('.cat-tab.on') || {}).dataset?.tab || 'all';
   document.querySelectorAll('#catGrid .pcard').forEach(c => {
     c.style.display = (t === 'all' || c.dataset.tab === t) ? 'flex' : 'none';
@@ -502,7 +508,14 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
-    applyTabFilter();
+    if (typeof REG_STATE !== 'undefined' && REG_STATE.apiActive) {
+      REG_STATE.type = btn.dataset.tab;
+      REG_STATE.page = 1;
+      loadRegistryPage();
+    } else {
+      // Демо-режим: API не загружен — фильтруем визибилити локально
+      applyDemoFilter();
+    }
   });
 });
 
@@ -512,12 +525,54 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
 (function injectActionStyles(){
   const style = document.createElement('style');
   style.textContent = `
-    .pcard-fav{position:absolute;top:.75rem;right:.75rem;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .2s;font-size:1.1rem;line-height:1;color:#cbd5e1}
+    .pcard-fav{position:absolute;top:.55rem;right:.55rem;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .2s;font-size:.95rem;line-height:1;color:#cbd5e1}
     .pcard-fav:hover{transform:scale(1.08);border-color:#C5963A;color:#C5963A}
     .pcard-fav.on{background:#fffaf0;border-color:#C5963A;color:#C5963A}
-    .pcard-report{display:flex;align-items:center;justify-content:center;gap:.35rem;font-size:.7rem;color:var(--ink4);font-weight:500;letter-spacing:.02em;margin-top:.65rem;padding:.5rem .75rem;cursor:pointer;background:transparent;border:1px dashed var(--border2);border-radius:4px;font-family:'Inter',sans-serif;transition:all .15s;width:100%}
+    .pcard-report{display:flex;align-items:center;justify-content:center;gap:.3rem;font-size:.65rem;color:var(--ink4);font-weight:500;letter-spacing:.02em;margin-top:.5rem;padding:.4rem .55rem;cursor:pointer;background:transparent;border:1px dashed var(--border2);border-radius:4px;font-family:'Inter',sans-serif;transition:all .15s;width:100%}
     .pcard-report:hover{color:var(--red);border-color:var(--red);background:#fffafa}
-    .pcard-report svg{width:12px;height:12px}
+    .pcard-report svg{width:10px;height:10px}
+
+    /* ── Поиск по Реестру ── */
+    .reg-search{position:relative;margin:.85rem 0 1rem;max-width:560px}
+    .reg-search-input{width:100%;padding:.7rem 2.6rem .7rem 2.45rem;font-size:.88rem;border:1.5px solid var(--border);border-radius:4px;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%234A5568' stroke-width='1.7'><circle cx='7' cy='7' r='4.5'/><line x1='10.5' y1='10.5' x2='14' y2='14'/></svg>") no-repeat .8rem center;outline:none;transition:border-color .22s,box-shadow .22s;font-family:'Inter',sans-serif;color:var(--ink)}
+    .reg-search-input::placeholder{color:var(--ink4);font-weight:400}
+    .reg-search-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,40,42,.08)}
+    .reg-search-clear{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:#f1f5f9;border:0;color:var(--ink3);font-size:1.1rem;line-height:1;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:all .15s}
+    .reg-search-clear:hover{background:var(--red);color:#fff}
+
+    /* ── Компактные карточки Реестра (3×5 = 15 на страницу) ── */
+    .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem;align-items:stretch}
+    @media(max-width:880px){.cat-grid{grid-template-columns:repeat(2,1fr);gap:.85rem}}
+    @media(max-width:560px){.cat-grid{grid-template-columns:1fr}}
+    .pcm{background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:all .25s;position:relative}
+    .pcm:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+    .pcm-top{height:4px;background:var(--red);flex-shrink:0}
+    .pcm-top.green{background:#16a34a}.pcm-top.blue{background:#1A6FC4}.pcm-top.amber{background:#C5963A}.pcm-top.purple{background:#7c3aed}
+    .pcm-body{padding:.85rem 1rem .9rem;display:flex;flex-direction:column;gap:.45rem;flex:1}
+    .pcm-type{font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);line-height:1}
+    .pcm-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.25;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
+    .pcm-shev{margin:.05rem 0 .1rem}
+    .pcm-shev .shev-strip{gap:.18rem}
+    .pcm-shev .shev{padding:.18rem .28rem;font-size:.5rem;letter-spacing:.05em}
+    .pcm-meta{display:flex;gap:.4rem;flex-wrap:wrap;font-size:.7rem;color:var(--ink3);margin-top:auto}
+    .pcm-region{display:inline-flex;align-items:center;gap:.2rem;color:var(--ink3)}
+    .pcm-ind{padding:.1rem .42rem;background:#f5f5f5;border-radius:3px;color:var(--ink2);font-size:.65rem}
+    .pcm-foot{display:flex;justify-content:space-between;align-items:center;gap:.55rem;padding-top:.5rem;border-top:1px dashed var(--border)}
+    .pcm-price{font-family:'Cormorant Garamond',serif;font-size:.92rem;color:var(--red);font-weight:600;flex:1;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .pcm-price-l{font-size:.6rem;color:var(--ink4);font-weight:400;font-family:'Inter',sans-serif;letter-spacing:.04em}
+    .pcm-btn{background:var(--red);color:#fff;font-size:.68rem;font-weight:600;padding:.42rem .7rem;border:0;border-radius:3px;text-decoration:none;cursor:pointer;white-space:nowrap;letter-spacing:.04em;text-transform:uppercase;transition:background .15s}
+    .pcm-btn:hover{background:var(--red2)}
+    .pcm-desc{font-size:.72rem;color:var(--ink3);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0}
+
+    /* ── Пагинация ── */
+    .reg-pagination{display:flex;align-items:center;justify-content:center;gap:.4rem;margin:2rem 0 1.25rem;flex-wrap:wrap}
+    .pg-btn{min-width:34px;height:34px;padding:0 .65rem;background:#fff;border:1px solid var(--border);color:var(--ink2);cursor:pointer;font-size:.82rem;font-weight:600;font-family:'Inter',sans-serif;border-radius:3px;transition:all .15s}
+    .pg-btn:hover:not(:disabled){border-color:var(--red);color:var(--red)}
+    .pg-btn.on{background:var(--red);color:#fff;border-color:var(--red)}
+    .pg-btn:disabled{opacity:.4;cursor:default}
+    .pg-info{font-size:.72rem;color:var(--ink4);margin-left:.65rem;font-family:'Inter',sans-serif}
+    .reg-empty{grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--ink4);font-size:.88rem;line-height:1.55}
+    .reg-empty strong{display:block;color:var(--ink2);font-size:.95rem;margin-bottom:.4rem}
   `;
   document.head.appendChild(style);
 })();
@@ -538,39 +593,37 @@ function renderApiCards(items){
   const grid = document.getElementById('catGrid');
   if (!grid) return false;
   if (!items.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--ink4);font-size:.9rem">В Реестре пока нет публикаций.<br/><span style="font-size:.78rem">Зарегистрируйтесь и опубликуйте свою карточку — она появится здесь.</span></div>';
+    const q = (typeof REG_STATE !== 'undefined' && REG_STATE.q) || '';
+    const type = (typeof REG_STATE !== 'undefined' && REG_STATE.type) || 'all';
+    const hasFilter = q || type !== 'all';
+    grid.innerHTML = `<div class="reg-empty"><strong>${hasFilter ? 'Ничего не найдено' : 'В Реестре пока нет публикаций'}</strong>${hasFilter ? 'Попробуйте изменить поисковый запрос или фильтр.' : 'Зарегистрируйтесь и опубликуйте свою карточку — она появится здесь.'}</div>`;
     return true;
   }
   grid.innerHTML = items.map(p => {
     const meta = TYPE_META[p.type] || TYPE_META.INVEST_PROJECT;
-    const region = p.region ? `<div class="pcard-meta-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 3.3 4.5 7.5 4.5 7.5s4.5-4.2 4.5-7.5c0-2.5-2-4.5-4.5-4.5z"/></svg><strong>${escapeHtml(p.region)}</strong></div>` : '';
-    const industry = p.industry ? `<span class="ptag">${escapeHtml(p.industry)}</span>` : '';
-    const price = p.priceLabel ? `<div class="pcard-price">${escapeHtml(p.priceLabel)}</div><div class="pcard-price-l">&nbsp;</div>` : `<div class="pcard-price">—</div>`;
-    // verifications приходит из publication.data.verifications (array of activity ids)
     const verifs = (p && p.data && Array.isArray(p.data.verifications)) ? p.data.verifications : [];
     const isResident = !!(p && p.data && p.data.isResident);
     const shevHtml = (typeof window.renderShevStripHTML === 'function') ? window.renderShevStripHTML(verifs, { club: isResident }) : '';
     return `
-      <div class="pcard locked blurred" data-tab="${meta.tab}" data-pub-id="${escapeHtml(p.id)}" style="position:relative">
-        <div class="pcard-top ${meta.color}"></div>
-        <div class="pcard-body">
-          <div class="pcard-type">${escapeHtml(meta.label)}</div>
-          <div class="pcard-title">${escapeHtml(p.title)}</div>
-          ${shevHtml}
-          <div class="pcard-meta">${region}</div>
-          <div class="pcard-desc">${escapeHtml(p.shortDesc || '')}</div>
-          <div class="pcard-tags">${industry}</div>
-          <div class="pcard-foot"><div>${price}</div><a class="pcard-btn" href="/cabinet.html#publication-${encodeURIComponent(p.id)}">${escapeHtml(meta.btn)}</a></div>
+      <div class="pcm" data-tab="${meta.tab}" data-pub-id="${escapeHtml(p.id)}">
+        <div class="pcm-top ${meta.color}"></div>
+        <div class="pcm-body">
+          <span class="pcm-type">${escapeHtml(meta.label)}</span>
+          <h3 class="pcm-title">${escapeHtml(p.title)}</h3>
+          ${shevHtml ? '<div class="pcm-shev">' + shevHtml + '</div>' : ''}
+          ${p.shortDesc ? '<p class="pcm-desc">' + escapeHtml(p.shortDesc) + '</p>' : ''}
+          <div class="pcm-meta">
+            ${p.region ? '<span class="pcm-region">📍 ' + escapeHtml(p.region) + '</span>' : ''}
+            ${p.industry ? '<span class="pcm-ind">' + escapeHtml(p.industry) + '</span>' : ''}
+          </div>
+          <div class="pcm-foot">
+            <div class="pcm-price">${p.priceLabel ? escapeHtml(p.priceLabel) : '<span class="pcm-price-l">—</span>'}</div>
+            <a class="pcm-btn" href="/cabinet.html#publication-${encodeURIComponent(p.id)}">${escapeHtml(meta.btn)}</a>
+          </div>
         </div>
-        <div class="lock-panel"><div class="lock-icon-box"><svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="12" height="9" rx="1"/><path d="M4 7V5a3 3 0 016 0v2"/></svg></div><p>${escapeHtml(meta.lockMsg)}</p><a href="/register.html">Пройти верификацию</a></div>
       </div>
     `;
   }).join('');
-  // Перепримененяем визибилити-стейт lock-панели по текущему ac_status (после API-рендера)
-  // Состояние хранится в localStorage 'ac_status' (verified/pending/draft); для гостя — оставляем как есть
-  const lockState = localStorage.getItem('ac_status');
-  if (lockState && typeof window.setLockedState === 'function') window.setLockedState(lockState);
-  applyTabFilter();
   return true;
 }
 
@@ -602,7 +655,7 @@ function setupCardActions(){
     } catch (_) {}
   })();
 
-  document.querySelectorAll('#catGrid .pcard').forEach(card => {
+  document.querySelectorAll('#catGrid .pcard, #catGrid .pcm').forEach(card => {
     // Не дублируем кнопки на уже обработанных карточках
     if (card.querySelector('.pcard-fav')) return;
     const pubId = pubIdFor(card);
@@ -628,7 +681,7 @@ function setupCardActions(){
     card.appendChild(star);
 
     // ⚠ «Подать жалобу»
-    const foot = card.querySelector('.pcard-foot');
+    const foot = card.querySelector('.pcard-foot, .pcm-foot');
     if (foot) {
       const report = document.createElement('button');
       report.type = 'button';
@@ -656,21 +709,86 @@ function setupCardActions(){
   });
 }
 
-// Запуск: грузим из API, потом инициализируем интерактив
-(async () => {
+// ═════════ Состояние Реестра — пагинация + поиск + тип-фильтр ═════════
+const REG_STATE = { page: 1, limit: 15, q: '', type: 'all', total: 0, totalPages: 1, apiActive: false };
+const TAB_TO_API_TYPE = { 'all': null, 'invest': 'INVEST_PROJECT', 'franchise': 'FRANCHISE', 'sale': 'BUSINESS_FOR_SALE', 'goods': 'GOODS' };
+let _searchTimer = null;
+
+async function loadRegistryPage() {
+  const opts = { page: REG_STATE.page, limit: REG_STATE.limit };
+  if (REG_STATE.q) opts.q = REG_STATE.q;
+  const apiType = TAB_TO_API_TYPE[REG_STATE.type];
+  if (apiType) opts.type = apiType;
   try {
-    if (typeof AC !== 'undefined' && typeof AC.listPublications === 'function') {
-      const { items } = await AC.listPublications({ limit: 60 });
-      if (items && items.length) {
-        renderApiCards(items);
-      }
-    }
+    const { items, total, page, totalPages } = await AC.listPublications(opts);
+    REG_STATE.apiActive = true;
+    REG_STATE.total = total || 0;
+    REG_STATE.totalPages = totalPages || 1;
+    REG_STATE.page = page || 1;
+    renderApiCards(items || []);
+    renderPagination();
+    setupCardActions();
   } catch (err) {
-    console.warn('Реестр: не удалось загрузить публикации из API, оставляем демо-карточки.', err);
-  } finally {
+    console.warn('Registry: не удалось загрузить публикации из API, оставляем демо-карточки.', err);
+    REG_STATE.apiActive = false;
     setupCardActions();
   }
-})();
+}
+
+function renderPagination() {
+  const mount = document.getElementById('regPagination');
+  if (!mount) return;
+  const { page, totalPages, total } = REG_STATE;
+  if (totalPages <= 1) {
+    mount.innerHTML = total ? `<span class="pg-info">Всего: ${total}</span>` : '';
+    return;
+  }
+  const pages = [];
+  const start = Math.max(1, Math.min(page - 2, totalPages - 4));
+  const end = Math.min(totalPages, start + 4);
+  for (let i = start; i <= end; i++) pages.push(i);
+  mount.innerHTML = `
+    <button type="button" class="pg-btn" data-pg="${Math.max(1, page-1)}"${page===1?' disabled':''}>‹</button>
+    ${pages.map(p => `<button type="button" class="pg-btn${p===page?' on':''}" data-pg="${p}">${p}</button>`).join('')}
+    <button type="button" class="pg-btn" data-pg="${Math.min(totalPages, page+1)}"${page===totalPages?' disabled':''}>›</button>
+    <span class="pg-info">Стр. ${page} из ${totalPages} · всего ${total}</span>
+  `;
+  mount.querySelectorAll('.pg-btn:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', () => {
+      REG_STATE.page = Number(btn.dataset.pg);
+      loadRegistryPage();
+      const tabsEl = document.getElementById('catTabs');
+      if (tabsEl) window.scrollTo({ top: tabsEl.offsetTop - 20, behavior: 'smooth' });
+    });
+  });
+}
+
+// Поиск с debounce 300мс
+const searchInp = document.getElementById('regSearch');
+const searchClear = document.getElementById('regSearchClear');
+if (searchInp) {
+  searchInp.addEventListener('input', (e) => {
+    const v = e.target.value;
+    searchClear.style.display = v ? 'flex' : 'none';
+    clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => {
+      REG_STATE.q = v.trim();
+      REG_STATE.page = 1;
+      loadRegistryPage();
+    }, 300);
+  });
+  searchClear.addEventListener('click', () => {
+    searchInp.value = '';
+    searchClear.style.display = 'none';
+    REG_STATE.q = '';
+    REG_STATE.page = 1;
+    loadRegistryPage();
+    searchInp.focus();
+  });
+}
+
+// Запуск: грузим из API
+loadRegistryPage();
 </script>
 <script src="/assets/i18n.js"></script>
 </body>
