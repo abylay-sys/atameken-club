@@ -2211,6 +2211,7 @@ const PUBLICATION_FORMS = {
     sub: 'Карточка проекта для привлечения инвестора',
     fields: [
       {section:'Параметры проекта'},
+      {name:'photo', label:'Фото проекта', type:'image', full:true, hint:'1 фото (PNG/JPG/WEBP) — отображается в карточке Реестра. Опционально.'},
       {name:'projectName', label:'Название проекта', required:true, full:true, placeholder:'Например, «Агропромышленный хаб Степной»'},
       {name:'industry', label:'Отрасль', placeholder:'Агропром, FoodTech, EdTech...'},
       {name:'stage', label:'Стадия проекта', type:'select', options:['Idea','MVP','Pre-Seed','Seed','Series A','Series B+']},
@@ -2233,6 +2234,7 @@ const PUBLICATION_FORMS = {
     sub: 'Карточка франшизы для привлечения франчайзи',
     fields: [
       {section:'Параметры франшизы'},
+      {name:'photo', label:'Фото бренда / точки', type:'image', full:true, hint:'1 фото (PNG/JPG/WEBP) — отображается в карточке Реестра. Опционально.'},
       {name:'brand', label:'Название бренда', required:true, full:true, placeholder:'Например, «Stepnoy Kitchen»'},
       {name:'industry', label:'Отрасль', placeholder:'HoReCa, Retail, Beauty, Education...'},
       {name:'points', label:'Существующие точки', placeholder:'например, 12 точек, СНГ'},
@@ -2256,6 +2258,7 @@ const PUBLICATION_FORMS = {
     sub: 'Карточка действующего бизнеса на продажу',
     fields: [
       {section:'Параметры бизнеса'},
+      {name:'photo', label:'Фото объекта', type:'image', full:true, hint:'1 фото (PNG/JPG/WEBP) — отображается в карточке Реестра. Опционально.'},
       {name:'businessType', label:'Тип бизнеса', required:true, full:true, placeholder:'Например, «Завод металлообработки»'},
       {name:'industry', label:'Отрасль', placeholder:'Производство, Ритейл, Услуги, IT...'},
       {name:'location', label:'Локация', placeholder:'Алматы, Казахстан'},
@@ -2280,6 +2283,7 @@ const PUBLICATION_FORMS = {
     sub: 'Карточка товара или сырьевой партии',
     fields: [
       {section:'Параметры товара'},
+      {name:'photo', label:'Фото товара', type:'image', full:true, hint:'1 фото (PNG/JPG/WEBP) — отображается в карточке Реестра. Опционально.'},
       {name:'product', label:'Название продукции', required:true, full:true, placeholder:'Например, «Фиброцементные плиты»'},
       {name:'category', label:'Категория', type:'select', options:['Сырьё','Готовая продукция','Полуфабрикаты','Комплектующие']},
       {name:'industry', label:'Отрасль / сфера применения', placeholder:'Стройматериалы, Метизы, Текстиль...'},
@@ -2339,17 +2343,20 @@ function showPublication(sellerType) {
     } else if (f.textarea) {
       input = document.createElement('textarea');
       input.placeholder = f.placeholder || '';
-    } else if (f.type === 'file') {
-      // Кастомный uploader: показывает кнопку «Прикрепить файл», после
-      // успешной загрузки — имя файла + крестик «убрать».
+    } else if (f.type === 'file' || f.type === 'image') {
+      // Кастомный uploader: тип «file» — иконка-файл + имя, тип «image» —
+      // thumbnail-превью. После успешной загрузки — крестик «убрать».
+      const isImage = f.type === 'image';
       input = document.createElement('input'); input.type = 'file';
+      if (isImage) input.accept = 'image/png,image/jpeg,image/webp';
       input.style.display = 'none';
       const uploader = document.createElement('div');
       uploader.className = 'pub-uploader';
+      const initialBtnLabel = isImage ? 'Загрузить фото' : 'Прикрепить файл';
       uploader.innerHTML = `
         <button type="button" class="pub-upload-btn">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M8 1v10M4 5l4-4 4 4M2 13h12"/></svg>
-          Прикрепить файл
+          ${initialBtnLabel}
         </button>
         <div class="pub-upload-info" style="display:none"></div>
       `;
@@ -2359,20 +2366,35 @@ function showPublication(sellerType) {
       input.addEventListener('change', async () => {
         const file = input.files && input.files[0];
         if (!file) return;
+        if (isImage && !/^image\/(png|jpe?g|webp)$/i.test(file.type || '')) {
+          alert('Поддерживаются только PNG / JPG / WEBP');
+          input.value = ''; return;
+        }
         btn.disabled = true;
         btn.innerHTML = '<span class="pub-upload-spin"></span> Загружаем…';
         try {
           const { file: uploaded } = await AC.uploadFile(file);
-          // Сохраняем URL в data-pub-url для последующего чтения при submit
           input.dataset.pubUrl = uploaded.url;
           input.dataset.pubName = uploaded.originalName || file.name;
-          info.innerHTML = `
-            <span class="pub-upload-icon">📄</span>
-            <span class="pub-upload-name">${(uploaded.originalName || file.name).replace(/[<>&]/g, '')}</span>
-            <span class="pub-upload-size">· ${(uploaded.size/1024).toFixed(0)} КБ</span>
-            <button type="button" class="pub-upload-remove" title="Убрать">×</button>
-          `;
-          info.style.display = 'flex';
+          if (isImage) {
+            info.style.cssText = 'display:flex;align-items:center;gap:.7rem;background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:.55rem .75rem';
+            info.innerHTML = `
+              <img src="${uploaded.url}" alt="preview" style="width:56px;height:56px;object-fit:cover;border-radius:4px;flex-shrink:0;border:1px solid var(--border)"/>
+              <span class="pub-upload-name" style="font-weight:500;color:var(--ink2);font-size:.8rem">${(uploaded.originalName || file.name).replace(/[<>&]/g, '')}</span>
+              <span class="pub-upload-size" style="color:var(--ink4);font-size:.72rem">${(uploaded.size/1024).toFixed(0)} КБ</span>
+              <button type="button" class="pub-upload-remove" title="Убрать" style="margin-left:auto;background:none;border:0;color:var(--ink4);font-size:1.25rem;cursor:pointer;line-height:1">×</button>
+            `;
+          } else {
+            info.style.cssText = '';
+            info.innerHTML = `
+              <span class="pub-upload-icon">📄</span>
+              <span class="pub-upload-name">${(uploaded.originalName || file.name).replace(/[<>&]/g, '')}</span>
+              <span class="pub-upload-size">· ${(uploaded.size/1024).toFixed(0)} КБ</span>
+              <button type="button" class="pub-upload-remove" title="Убрать">×</button>
+            `;
+            info.style.display = 'flex';
+          }
+          if (isImage) info.style.display = 'flex';
           btn.style.display = 'none';
           info.querySelector('.pub-upload-remove').addEventListener('click', () => {
             input.value = '';
@@ -2381,11 +2403,11 @@ function showPublication(sellerType) {
             info.style.display = 'none';
             btn.style.display = '';
             btn.disabled = false;
-            btn.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M8 1v10M4 5l4-4 4 4M2 13h12"/></svg> Прикрепить файл';
+            btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M8 1v10M4 5l4-4 4 4M2 13h12"/></svg> ${initialBtnLabel}`;
           });
         } catch (err) {
           btn.disabled = false;
-          btn.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M8 1v10M4 5l4-4 4 4M2 13h12"/></svg> Прикрепить файл';
+          btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M8 1v10M4 5l4-4 4 4M2 13h12"/></svg> ${initialBtnLabel}`;
           alert('Не удалось загрузить файл: ' + (err.message || 'попробуйте ещё раз'));
         }
       });
@@ -2424,8 +2446,8 @@ function showPublication(sellerType) {
       if (f.section) return; // пропускаем псевдо-поля «секция»
       const el = document.getElementById('pub-' + f.name);
       if (!el) return;
-      if (f.type === 'file') {
-        // Если файл был загружен — сохраняем {url,name}, иначе пропускаем
+      if (f.type === 'file' || f.type === 'image') {
+        // Если файл/фото был загружен — сохраняем {url,name}, иначе пропускаем
         if (el.dataset.pubUrl) {
           formData[f.name] = { url: el.dataset.pubUrl, name: el.dataset.pubName || '' };
         }

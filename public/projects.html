@@ -548,6 +548,9 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
     .pcm:hover{border-color:var(--red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
     .pcm-top{height:4px;background:var(--red);flex-shrink:0}
     .pcm-top.green{background:#16a34a}.pcm-top.blue{background:#1A6FC4}.pcm-top.amber{background:#C5963A}.pcm-top.purple{background:#7c3aed}
+    .pcm-photo{height:140px;background:#f1f5f9 center/cover no-repeat;flex-shrink:0;position:relative}
+    .pcm-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(15,22,32,.18) 100%)}
+    .pcm:has(.pcm-photo) .pcm-top{height:0}
     .pcm-body{padding:.85rem 1rem .9rem;display:flex;flex-direction:column;gap:.45rem;flex:1}
     .pcm-type{font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);line-height:1}
     .pcm-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.25;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
@@ -603,10 +606,14 @@ function renderApiCards(items){
     const meta = TYPE_META[p.type] || TYPE_META.INVEST_PROJECT;
     const verifs = (p && p.data && Array.isArray(p.data.verifications)) ? p.data.verifications : [];
     const isResident = !!(p && p.data && p.data.isResident);
+    const photoUrl = (p && p.data && p.data.photo && p.data.photo.url) ? p.data.photo.url : '';
     const shevHtml = (typeof window.renderShevStripHTML === 'function') ? window.renderShevStripHTML(verifs, { club: isResident }) : '';
+    const topVisual = photoUrl
+      ? `<div class="pcm-photo" style="background-image:url('${escapeHtml(photoUrl)}')"></div>`
+      : `<div class="pcm-top ${meta.color}"></div>`;
     return `
       <div class="pcm" data-tab="${meta.tab}" data-pub-id="${escapeHtml(p.id)}">
-        <div class="pcm-top ${meta.color}"></div>
+        ${topVisual}
         <div class="pcm-body">
           <span class="pcm-type">${escapeHtml(meta.label)}</span>
           <h3 class="pcm-title">${escapeHtml(p.title)}</h3>

@@ -52,13 +52,15 @@ export default async function publicationsRoutes(app: FastifyInstance) {
       ...searchFilter,
     };
 
-    const [items, total] = await Promise.all([
+    const [rawItems, total] = await Promise.all([
       prisma.publication.findMany({
         where,
         orderBy: { publishedAt: 'desc' },
         take: limit,
         skip,
-        // Не светим userId и контактные поля из data на публичной выдаче — это «короткая» карточка
+        // Берём всё что нужно для публичной карточки. Из data в публичную
+        // выдачу попадают только безопасные поля: photo, verifications, isResident.
+        // Контакты и закрытые документы НЕ светим — для них есть GET /:id с гейтингом.
         select: {
           id: true,
           type: true,
@@ -68,10 +70,23 @@ export default async function publicationsRoutes(app: FastifyInstance) {
           shortDesc: true,
           priceLabel: true,
           publishedAt: true,
+          data: true,
         },
       }),
       prisma.publication.count({ where }),
     ]);
+    // Фильтруем data — оставляем только публично-безопасные поля
+    const items = rawItems.map((p) => {
+      const d = (p.data as Record<string, unknown> | null) || null;
+      const safeData = d
+        ? {
+            photo: d.photo ?? null,
+            verifications: Array.isArray(d.verifications) ? d.verifications : [],
+            isResident: !!d.isResident,
+          }
+        : null;
+      return { ...p, data: safeData };
+    });
     return { items, total, page, limit, totalPages: Math.max(Math.ceil(total / limit), 1) };
   });
 
