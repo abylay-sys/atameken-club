@@ -38,6 +38,9 @@ model User {
   // Пользовательское соглашение: фиксируем явное согласие при регистрации
   termsAcceptedAt DateTime?
   termsVersion    String?   // напр. "2026.05.1" — позволит позже доуточнять
+  // Восстановление пароля: одноразовый токен + TTL 1 час
+  passwordResetToken     String?   @unique
+  passwordResetExpiresAt DateTime?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 

@@ -33,7 +33,10 @@
           <input type="email" id="email" required autocomplete="email"/>
         </div>
         <div class="field">
-          <label for="password">Пароль</label>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:.5rem">
+            <label for="password">Пароль</label>
+            <a href="/forgot-password.html" style="font-size:.78rem;color:#C8282A;text-decoration:none;font-weight:500">Забыли пароль?</a>
+          </div>
           <input type="password" id="password" required autocomplete="current-password"/>
         </div>
         <button type="submit" class="btn btn-red btn-block mt-1" id="submit-btn">Войти</button>

@@ -79,6 +79,8 @@
       clearSession();
     },
     async me() { return request('GET', '/auth/me', null, true); },
+    async forgotPassword(email) { return request('POST', '/auth/forgot-password', { email }, false); },
+    async resetPassword(token, password) { return request('POST', '/auth/reset-password', { token, password }, false); },
     async getProfile() { return request('GET', '/profile', null, true); },
     async saveProfile(data) { return request('PUT', '/profile', data, true); },
     async submitProfile() { return request('POST', '/profile/submit', null, true); },

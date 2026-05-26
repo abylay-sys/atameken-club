@@ -4,6 +4,8 @@ import { prisma } from '../lib/prisma';
 import { hashPassword, verifyPassword, sha256, randomToken } from '../lib/hash';
 import { signAccessToken, refreshExpiryDate } from '../lib/jwt';
 import { requireAuth } from '../middleware/auth';
+import { env } from '../lib/env';
+import { sendEmail, buildPasswordResetEmail } from '../services/email';
 
 // Текущая версия Пользовательского Соглашения. Меняем при правках текста —
 // пользователи, регистрирующиеся после этой даты, фиксируются с новой версией.
@@ -149,6 +151,74 @@ export default async function authRoutes(app: FastifyInstance) {
       });
     }
     return reply.send({ ok: true });
+  });
+
+  // ─── Восстановление пароля: запрос ссылки ───
+  // Никогда не сообщаем "email не найден" — иначе будет утечка списка
+  // зарегистрированных пользователей. Ответ всегда 200 «если email есть —
+  // отправили письмо».
+  const forgotSchema = z.object({
+    email: z.string().email().toLowerCase().trim(),
+  });
+  app.post('/forgot-password', async (req, reply) => {
+    const parsed = forgotSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return reply.code(400).send({ error: 'Укажите корректный email' });
+    }
+    const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
+    if (user) {
+      const token = randomToken(48);
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 час
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { passwordResetToken: token, passwordResetExpiresAt: expiresAt },
+      });
+      const resetUrl = env.APP_BASE_URL.replace(/\/+$/, '') + '/reset-password.html?token=' + encodeURIComponent(token);
+      const email = buildPasswordResetEmail({ fullName: user.fullName, resetUrl });
+      // fire-and-forget: даже если SMTP/Resend моргнул, не блокируем пользователя
+      sendEmail({ to: user.email, subject: email.subject, html: email.html, text: email.text })
+        .then((result) => {
+          if (!result.delivered) {
+            req.log.warn({ userId: user.id, resetUrl }, 'reset-password email logged (no provider)');
+          }
+        })
+        .catch((err) => req.log.error({ err, userId: user.id }, 'reset-password email failed'));
+    }
+    // Универсальный ответ — независимо от того, существует email или нет
+    return reply.send({ ok: true, message: 'Если такой email зарегистрирован — ссылка для восстановления отправлена. Проверьте почту (включая «Спам»).' });
+  });
+
+  // ─── Восстановление пароля: установка нового ───
+  const resetSchema = z.object({
+    token: z.string().min(10).max(200),
+    password: z.string().min(8).max(128),
+  });
+  app.post('/reset-password', async (req, reply) => {
+    const parsed = resetSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return reply.code(400).send({ error: 'Минимум 8 символов в пароле и валидный токен' });
+    }
+    const user = await prisma.user.findUnique({ where: { passwordResetToken: parsed.data.token } });
+    if (!user || !user.passwordResetExpiresAt || user.passwordResetExpiresAt < new Date()) {
+      return reply.code(400).send({ error: 'Ссылка недействительна или истекла. Запросите новую.' });
+    }
+    const passwordHash = await hashPassword(parsed.data.password);
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: user.id },
+        data: {
+          passwordHash,
+          passwordResetToken: null,
+          passwordResetExpiresAt: null,
+        },
+      }),
+      // Инвалидируем все refresh-токены — все сессии выйдут из системы
+      prisma.refreshToken.updateMany({
+        where: { userId: user.id, revokedAt: null },
+        data: { revokedAt: new Date() },
+      }),
+    ]);
+    return reply.send({ ok: true, message: 'Пароль обновлён. Войдите с новым паролем.' });
   });
 
   app.get('/me', { preHandler: requireAuth }, async (req, reply) => {

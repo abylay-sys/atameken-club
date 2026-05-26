@@ -30,6 +30,14 @@ export const env = {
   TELEGRAM_BOT_TOKEN: optional('TELEGRAM_BOT_TOKEN'),
   TELEGRAM_MODERATOR_CHAT_ID: optional('TELEGRAM_MODERATOR_CHAT_ID'),
 
+  // ── Email-сервис (восстановление пароля + уведомления) ──
+  // Resend (free 100 emails/day). Если ключ не задан — fallback: ссылка
+  // логируется в Render Logs, чтобы можно было руками передать пользователю.
+  RESEND_API_KEY: optional('RESEND_API_KEY'),
+  EMAIL_FROM: optional('EMAIL_FROM', 'ATAMEKEN Club <noreply@atameken.club>'),
+  // Базовый URL приложения для построения ссылок в письмах (reset-password и т.д.)
+  APP_BASE_URL: optional('APP_BASE_URL', 'https://atameken.club'),
+
   GOOGLE_SHEET_ID: optional('GOOGLE_SHEET_ID'),
   GOOGLE_SERVICE_ACCOUNT_BASE64: optional('GOOGLE_SERVICE_ACCOUNT_BASE64'),
 

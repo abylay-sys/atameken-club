@@ -32,6 +32,14 @@ services:
         sync: false
       - key: TELEGRAM_MODERATOR_CHAT_ID
         sync: false
+      # ── Email (Resend) для восстановления пароля + уведомлений ──
+      # Free 100 emails/day. Без ключа — ссылки логируются в Render Logs.
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        value: ATAMEKEN Club <noreply@atameken.club>
+      - key: APP_BASE_URL
+        value: https://atameken.club
       - key: GOOGLE_SHEET_ID
         sync: false
       - key: GOOGLE_SERVICE_ACCOUNT_BASE64
