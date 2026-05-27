@@ -56,7 +56,11 @@
     }
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      const err = new Error(data.error || ('HTTP ' + res.status));
+      // Fastify-стандартные ошибки (rate-limit, schema-validation) кладут
+      // человекочитаемый текст в `message`; кастомные роуты — в `error`.
+      // Берём первое непустое чтобы UX был стабильным.
+      const msg = data.error || data.message || ('HTTP ' + res.status);
+      const err = new Error(msg);
       err.status = res.status;
       err.details = data.details;
       throw err;
