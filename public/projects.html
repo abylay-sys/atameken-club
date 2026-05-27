@@ -606,10 +606,21 @@ function renderApiCards(items){
     const meta = TYPE_META[p.type] || TYPE_META.INVEST_PROJECT;
     const verifs = (p && p.data && Array.isArray(p.data.verifications)) ? p.data.verifications : [];
     const isResident = !!(p && p.data && p.data.isResident);
-    const photoUrl = (p && p.data && p.data.photo && p.data.photo.url) ? p.data.photo.url : '';
+    const rawPhotoUrl = (p && p.data && p.data.photo && p.data.photo.url) ? p.data.photo.url : '';
+    // ─── Безопасный URL для CSS background-image ───
+    // 1. Принимаем только http(s) — отбрасываем javascript:, data:, file: и пр.
+    // 2. encodeURI — спецсимволы (', ", \, \n) в URL-safe форму, не дают вырваться
+    //    из CSS-строки url("...") даже после HTML-decode.
+    // 3. escapeHtml на финальный результат — для безопасности атрибута style.
+    const safePhotoUrl = (() => {
+      const s = String(rawPhotoUrl || '').trim();
+      if (!/^https?:\/\//i.test(s)) return '';
+      try { return encodeURI(s); } catch { return ''; }
+    })();
+    const photoUrl = safePhotoUrl;
     const shevHtml = (typeof window.renderShevStripHTML === 'function') ? window.renderShevStripHTML(verifs, { club: isResident }) : '';
     const topVisual = photoUrl
-      ? `<div class="pcm-photo" style="background-image:url('${escapeHtml(photoUrl)}')"></div>`
+      ? `<div class="pcm-photo" style="background-image:url(&quot;${escapeHtml(photoUrl)}&quot;)"></div>`
       : `<div class="pcm-top ${meta.color}"></div>`;
     return `
       <div class="pcm" data-tab="${meta.tab}" data-pub-id="${escapeHtml(p.id)}">

@@ -144,6 +144,12 @@ model Publication {
   @@index([userId])
   @@index([type, status])
   @@index([publishedAt])
+  // Дополнительные индексы для фильтра по отрасли/региону в Реестре —
+  // ускоряют GET /publications с ?industry=... и ?region=...
+  @@index([industry])
+  @@index([region])
+  // Композитный индекс для самого частого запроса: «PUBLISHED + сортировка»
+  @@index([status, publishedAt])
 }
 
 // «Избранное» — звёздочка в карточке Реестра. Один user может добавить одну
