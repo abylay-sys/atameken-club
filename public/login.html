@@ -54,6 +54,16 @@
 (function () {
   if (AC.getToken()) window.location.href = '/cabinet.html';
 
+  // Префилл email из ?email=... (например, из ссылки «Войти с этим email» на странице регистрации)
+  try {
+    const params = new URLSearchParams(location.search);
+    const prefillEmail = params.get('email');
+    if (prefillEmail) {
+      const emailEl = document.getElementById('email');
+      if (emailEl) { emailEl.value = prefillEmail; document.getElementById('password')?.focus(); }
+    }
+  } catch (_) {}
+
   const alertBox = document.getElementById('alert');
   function showAlert(type, text) {
     alertBox.className = 'alert alert-' + type + ' show';

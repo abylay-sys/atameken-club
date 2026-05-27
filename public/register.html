@@ -138,6 +138,7 @@
       <input type="checkbox" id="terms-checkbox"/>
       <span>Я прочитал(а) и принимаю условия пользовательского соглашения</span>
     </label>
+    <div id="terms-inline-error" class="terms-inline-error" style="display:none"></div>
     <div class="terms-actions">
       <button type="button" class="btn btn-out" id="terms-cancel">Отмена</button>
       <button type="button" class="btn btn-red" id="terms-accept" disabled>Согласен и продолжить</button>
@@ -166,6 +167,9 @@
   .terms-actions .btn-out:hover{border-color:#94a3b8;color:#0f172a}
   .terms-actions .btn-red:disabled{background:#cbd5e1;cursor:not-allowed;box-shadow:none;transform:none}
   .terms-actions .btn-red:disabled:hover{background:#cbd5e1;transform:none;box-shadow:none}
+  .terms-inline-error{background:rgba(200,40,42,.08);border:1px solid rgba(200,40,42,.35);border-left:3px solid #C8282A;color:#7f1d1d;padding:.7rem .95rem;border-radius:4px;margin:0 0 1rem;font-size:.85rem;line-height:1.5}
+  .terms-inline-error strong{color:#C8282A;font-weight:600;display:block;margin-bottom:.15rem}
+  .terms-inline-error a{color:#C8282A;font-weight:600;text-decoration:underline}
   @media(max-width:520px){
     .terms-dialog{padding:1.5rem 1.25rem}
     .terms-actions{flex-direction:column-reverse}
@@ -220,28 +224,54 @@
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('show')) closeModal(); });
 
-  async function submitRegistration() {
-    closeModal();
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = 'Создаём...';
+  const inlineErr = document.getElementById('terms-inline-error');
+  function showInlineErr(html) { inlineErr.innerHTML = html; inlineErr.style.display = 'block'; }
+  function hideInlineErr() { inlineErr.innerHTML = ''; inlineErr.style.display = 'none'; }
 
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  async function submitRegistration() {
+    hideInlineErr();
+    const btn = document.getElementById('submit-btn');
+    const acceptBtn = document.getElementById('terms-accept');
+    acceptBtn.disabled = true;
+    acceptBtn.textContent = 'Создаём...';
+
+    const emailVal = document.getElementById('email').value.trim().toLowerCase();
     const payload = {
-      email: document.getElementById('email').value.trim().toLowerCase(),
+      email: emailVal,
       password: document.getElementById('password').value,
       role: document.getElementById('role-input').value,
       fullName: document.getElementById('fullName').value.trim(),
       phone: document.getElementById('phone').value.trim() || undefined,
-      // Подтверждение Пользовательского соглашения — модалка не закроется без галочки
       acceptedTerms: true,
     };
 
     try {
       await AC.register(payload);
+      closeModal();
       showAlert('success', 'Аккаунт создан. Перенаправляем...');
       setTimeout(() => { window.location.href = '/cabinet.html'; }, 600);
     } catch (err) {
-      showAlert('error', err.message || 'Не удалось зарегистрироваться');
+      acceptBtn.disabled = false;
+      acceptBtn.textContent = 'Согласен и продолжить';
+
+      // 409 — email уже зарегистрирован. Держим модалку открытой,
+      // показываем явное сообщение с подсказкой «Войти с этим email».
+      if (err.status === 409) {
+        showInlineErr(
+          '<strong>Этот email уже зарегистрирован</strong>' +
+          'Похоже, у вас уже есть аккаунт. ' +
+          '<a href="/login.html?email=' + encodeURIComponent(emailVal) + '">Войти с этим email</a> · ' +
+          '<a href="/forgot-password.html">Забыли пароль?</a>'
+        );
+        return;
+      }
+
+      // Любая другая ошибка — закрываем модалку, показываем alert на форме + scroll
+      closeModal();
+      showAlert('error', err.message || 'Не удалось зарегистрироваться. Попробуйте ещё раз.');
+      alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
       btn.disabled = false;
       btn.textContent = 'Создать аккаунт';
     }
