@@ -4,8 +4,30 @@ import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
 import { verifyAccessToken } from '../lib/jwt';
+import { randomToken } from '../lib/hash';
 import { translateToMany, normalizeLang, SUPPORTED_LANGS, type Lang } from '../services/translation';
 import { notifySupportMessage } from '../services/telegram';
+
+// ─── WebSocket auth-tickets ───
+// Раньше: ?token=<JWT> в URL — JWT светится в логах CDN/Render/Nginx.
+// Теперь: одноразовый short-lived ticket выдаётся через POST /chat/ws-ticket,
+// в WS URL идёт только этот ticket. После использования ticket удаляется.
+// TTL 60 секунд — фронт сразу же открывает WS после получения ticket'а.
+type WsTicket = { userId: string; expiresAt: number };
+const wsTickets = new Map<string, WsTicket>();
+// Очищаем просроченные ticket'ы раз в минуту
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, val] of wsTickets) {
+    if (val.expiresAt < now) wsTickets.delete(key);
+  }
+}, 60_000).unref();
+
+// ─── WebSocket heartbeat ───
+// Сервер шлёт ping каждые 30с, если 60с без активности — закрывает socket.
+// Без этого утечка сокетов на flaky-сетях (close-event не приходит).
+const HEARTBEAT_INTERVAL_MS = 30_000;
+const HEARTBEAT_TIMEOUT_MS = 60_000;
 
 const createConvSchema = z.object({
   // Минимум один из: peerUserId или publicationId (которые открывает чат с автором публикации)
@@ -51,10 +73,22 @@ async function ensureParticipant(conversationId: string, userId: string) {
 export default async function chatRoutes(app: FastifyInstance) {
   await app.register(websocket);
 
+  // ── POST /chat/ws-ticket — выдать одноразовый WS-ticket ──
+  // Защищает access-token от попадания в access-логи CDN/Nginx через query.
+  app.post('/ws-ticket', { preHandler: requireAuth }, async (req) => {
+    const ticket = randomToken(32);
+    wsTickets.set(ticket, { userId: req.user!.sub, expiresAt: Date.now() + 60_000 });
+    return { ticket, expiresIn: 60 };
+  });
+
   // ── POST /chat/support — закреплённый чат «Служба Поддержки» ──
   // Сообщения форвардятся в Telegram-группу модераторов через тот же бот,
   // что уведомляет о новых верификациях и заявках на услуги.
-  app.post('/support', { preHandler: requireAuth }, async (req, reply) => {
+  // Жёсткий rate-limit: 5 сообщений в минуту с одного юзера — спам в TG нельзя.
+  app.post('/support', {
+    preHandler: requireAuth,
+    config: { rateLimit: { max: 5, timeWindow: '1 minute' } } as any,
+  }, async (req, reply) => {
     const parsed = supportSchema.safeParse(req.body);
     if (!parsed.success) return reply.code(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
     const user = await prisma.user.findUnique({
@@ -237,19 +271,31 @@ export default async function chatRoutes(app: FastifyInstance) {
   });
 
   // ── WebSocket: real-time push новых сообщений ──
-  // Подключение: GET /chat/ws?token={accessToken}
+  // Подключение: GET /chat/ws?ticket={ticket} (preferred) — ticket получают через
+  // POST /chat/ws-ticket. Старый ?token={JWT} остаётся как fallback на время
+  // миграции фронта, но не рекомендуется (JWT светится в access-логах).
   app.get('/ws', { websocket: true }, (connection: any, req: any) => {
     const url = new URL(req.url || '', 'http://localhost');
+    const ticket = url.searchParams.get('ticket') || '';
     const token = url.searchParams.get('token') || '';
     let sub: string | null = null;
-    try {
-      sub = verifyAccessToken(token).sub;
-    } catch {
+
+    if (ticket) {
+      const entry = wsTickets.get(ticket);
+      if (entry && entry.expiresAt > Date.now()) {
+        sub = entry.userId;
+        wsTickets.delete(ticket); // single-use
+      }
+    } else if (token) {
+      // Backwards compat — старый фронт ещё может слать JWT в query
+      try { sub = verifyAccessToken(token).sub; } catch {}
+    }
+
+    if (!sub) {
       try { connection.socket.send(JSON.stringify({ type: 'error', error: 'unauthorized' })); } catch {}
       connection.socket.close();
       return;
     }
-    if (!sub) return;
 
     // Регистрация в реестре
     if (!wsClients.has(sub)) wsClients.set(sub, new Set());
@@ -257,8 +303,20 @@ export default async function chatRoutes(app: FastifyInstance) {
 
     try { connection.socket.send(JSON.stringify({ type: 'connected', userId: sub })); } catch {}
 
+    // ─── Heartbeat: сервер пингует, клиент молчит >60с → закрываем ───
+    let lastActivity = Date.now();
+    const heartbeat = setInterval(() => {
+      if (Date.now() - lastActivity > HEARTBEAT_TIMEOUT_MS) {
+        try { connection.socket.close(); } catch {}
+        clearInterval(heartbeat);
+        return;
+      }
+      try { connection.socket.send(JSON.stringify({ type: 'ping', ts: Date.now() })); } catch {}
+    }, HEARTBEAT_INTERVAL_MS);
+
     // Поддерживаем входящие команды (отправка сообщения через WS)
     connection.socket.on('message', async (raw: any) => {
+      lastActivity = Date.now(); // любая активность = жив
       try {
         const data = JSON.parse(String(raw));
         if (data.type === 'send') {
@@ -272,8 +330,9 @@ export default async function chatRoutes(app: FastifyInstance) {
           catch { connection.socket.send(JSON.stringify({ type: 'error', error: 'Нет доступа' })); return; }
           const lang = normalizeLang(parsed.data.lang);
           await sendAndBroadcast(parsed.data.conversationId, sub!, parsed.data.text, lang);
-        } else if (data.type === 'ping') {
-          connection.socket.send(JSON.stringify({ type: 'pong', ts: Date.now() }));
+        } else if (data.type === 'ping' || data.type === 'pong') {
+          // Клиент тоже может пинговать; отвечаем pong для совместимости
+          try { connection.socket.send(JSON.stringify({ type: 'pong', ts: Date.now() })); } catch {}
         }
       } catch (e) {
         try { connection.socket.send(JSON.stringify({ type: 'error', error: 'Bad frame' })); } catch {}
@@ -281,6 +340,7 @@ export default async function chatRoutes(app: FastifyInstance) {
     });
 
     connection.socket.on('close', () => {
+      clearInterval(heartbeat);
       const set = wsClients.get(sub!);
       if (set) {
         set.delete(connection.socket);

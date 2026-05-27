@@ -46,6 +46,17 @@ export default async function adminRoutes(app: FastifyInstance) {
     const profile = await prisma.companyProfile.findUnique({ where: { id } });
     if (!profile) return reply.code(404).send({ error: 'Профиль не найден' });
 
+    // ─── State-machine guard ───
+    // Верифицируем только из SUBMITTED или REJECTED (revert). DRAFT не должен
+    // верифицироваться — у него submittedAt:null, юзер не подавал заявку.
+    // Без этого администратор мог случайно «подтвердить» черновик и получить
+    // VERIFIED-профиль без submittedAt, что ломает аудит-цепочку.
+    if (profile.status !== 'SUBMITTED' && profile.status !== 'REJECTED') {
+      return reply.code(409).send({
+        error: `Нельзя верифицировать профиль в статусе ${profile.status}. Юзер должен сначала подать заявку.`,
+      });
+    }
+
     const updated = await prisma.companyProfile.update({
       where: { id },
       data: { status: 'VERIFIED', verifiedAt: new Date(), rejectedReason: null },

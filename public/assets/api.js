@@ -142,11 +142,26 @@
     async setConversationLang(conversationId, lang) { return request('PUT', '/chat/conversations/' + encodeURIComponent(conversationId) + '/lang', { lang }, true); },
     // Закреплённый чат «Служба Поддержки» — форвардит в Telegram-группу модераторов
     async sendSupportMessage(text) { return request('POST', '/chat/support', { text }, true); },
+    // Старый sync-метод оставлен для backward-compat. Использует JWT в query —
+    // светится в access-логах CDN. Новый код должен использовать chatWsUrlAsync.
     chatWsUrl() {
       const token = getToken();
       if (!token) return null;
       const proto = location.protocol === 'https:' ? 'wss' : 'ws';
       return `${proto}://${location.host}/chat/ws?token=${encodeURIComponent(token)}`;
+    },
+    // Новый flow: получаем одноразовый ticket (TTL 60с), используем его в WS-URL.
+    // JWT остаётся в HTTP-header при /ws-ticket вызове, в URL никогда не уходит.
+    async chatWsUrlAsync() {
+      if (!getToken()) return null;
+      try {
+        const { ticket } = await request('POST', '/chat/ws-ticket', null, true);
+        const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+        return `${proto}://${location.host}/chat/ws?ticket=${encodeURIComponent(ticket)}`;
+      } catch (_) {
+        // Fallback на старый метод если ticket-endpoint недоступен
+        return this.chatWsUrl();
+      }
     },
 
     // ── Сделки (Сопровождение) ──

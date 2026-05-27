@@ -1936,9 +1936,10 @@ function renderEmptyChatState(){
 }
 
 // ── WebSocket: получаем push новых сообщений в real-time ──
-function ensureChatSocket() {
+async function ensureChatSocket() {
   if (_msUiState.ws && _msUiState.ws.readyState <= 1) return;
-  const url = AC.chatWsUrl();
+  // Используем ws-ticket flow — JWT не уходит в URL/access-логи
+  const url = await AC.chatWsUrlAsync();
   if (!url) return;
   try {
     const ws = new WebSocket(url);
@@ -2055,6 +2056,12 @@ async function showPackages(){
 // Kaspi Pay — модальное окно с QR-кодом + поллинг статуса
 // ════════════════════════════════════════════════════════════════
 let _kaspiPollTimer = null;
+// ─── Глобальный cleanup на unload: отключаем все интервалы и WS, чтобы они
+// не висели в фоне даже если пользователь закрыл окно/перешёл back-кнопкой. ───
+window.addEventListener('beforeunload', () => {
+  try { if (_kaspiPollTimer) { clearInterval(_kaspiPollTimer); _kaspiPollTimer = null; } } catch (_) {}
+  try { if (_msUiState && _msUiState.ws) { _msUiState.ws.close(); } } catch (_) {}
+});
 function openKaspiPayModal(payment){
   closeKaspiPayModal();
   if (!document.getElementById('kaspi-modal-styles')) {

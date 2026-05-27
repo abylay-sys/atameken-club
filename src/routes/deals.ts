@@ -117,31 +117,38 @@ export default async function dealsRoutes(app: FastifyInstance) {
     const ip = (req.headers['x-forwarded-for'] || req.ip || '').toString().split(',')[0].trim();
     const ua = (req.headers['user-agent'] || '').toString();
 
-    const sig = await prisma.signedDocument.update({
-      where: { dealId_userId_type: { dealId: id, userId: req.user!.sub, type: parsed.data.type } },
-      data: {
-        status: 'SIGNED',
-        signedAt: new Date(),
-        ipAddress: ip,
-        userAgent: ua,
-        templateVer: TEMPLATE_VERSION,
-      },
-    });
-
-    // Если все 3 документа подписаны — двигаем статус сделки на DOCS_SIGNED
-    const all = await prisma.signedDocument.findMany({
-      where: { dealId: id, userId: req.user!.sub, type: { in: ['NDA', 'NCNDA', 'COMMISSION'] } },
-    });
-    const allSigned = all.length === 3 && all.every((s) => s.status === 'SIGNED');
-    let updatedStatus: DealStatus = deal.status;
-    if (allSigned && deal.status === 'DOCS_PENDING') {
-      const updated = await prisma.deal.update({
-        where: { id },
-        data: { status: 'DOCS_SIGNED' },
+    // ─── Атомарная подпись + проверка all-signed + state-update в одной транзакции ───
+    // Раньше: update sig → findMany → update deal — три раздельных запроса.
+    // Параллельный sign второго документа мог проскочить между findMany и update,
+    // в итоге `deal.status='DOCS_SIGNED'` ставился дважды или не ставился вовсе.
+    const result = await prisma.$transaction(async (tx) => {
+      const sig = await tx.signedDocument.update({
+        where: { dealId_userId_type: { dealId: id, userId: req.user!.sub, type: parsed.data.type } },
+        data: {
+          status: 'SIGNED',
+          signedAt: new Date(),
+          ipAddress: ip,
+          userAgent: ua,
+          templateVer: TEMPLATE_VERSION,
+        },
       });
-      updatedStatus = updated.status;
-    }
-    return { signature: sig, dealStatus: updatedStatus, allSigned };
+      const all = await tx.signedDocument.findMany({
+        where: { dealId: id, userId: req.user!.sub, type: { in: ['NDA', 'NCNDA', 'COMMISSION'] } },
+      });
+      const allSigned = all.length === 3 && all.every((s) => s.status === 'SIGNED');
+      let updatedStatus: DealStatus = deal.status;
+      if (allSigned && deal.status === 'DOCS_PENDING') {
+        // updateMany с precondition status='DOCS_PENDING' — если другой запрос
+        // уже перевёл в DOCS_SIGNED, count===0 и мы не дублируем
+        const upd = await tx.deal.updateMany({
+          where: { id, status: 'DOCS_PENDING' },
+          data: { status: 'DOCS_SIGNED' },
+        });
+        if (upd.count > 0) updatedStatus = 'DOCS_SIGNED';
+      }
+      return { sig, allSigned, updatedStatus };
+    });
+    return { signature: result.sig, dealStatus: result.updatedStatus, allSigned: result.allSigned };
   });
 
   // ── Отменить сделку (черновик пока ничего не подписано или нужна другая логика) ──
