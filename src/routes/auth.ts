@@ -37,6 +37,34 @@ function issueTokensFor(user: { id: string; email: string; role: string }) {
   return { accessToken, refreshToken };
 }
 
+// ─── httpOnly refresh-cookie helpers ───
+// Refresh-token живёт в httpOnly Secure cookie вместо localStorage. XSS
+// (даже самый изобретательный) не может его прочитать. Cookie ограничена
+// path=/auth → не уходит на /publications, /chat и др. эндпоинты — мини-
+// мизируем шанс случайной утечки. SameSite=Lax — достаточно для same-origin
+// (фронт + бэк на одном Render-сервисе), и не блокирует navigation-redirect
+// через email-ссылки. В prod добавляем Secure (HTTPS-only).
+const REFRESH_COOKIE = 'ac_refresh';
+function setRefreshCookie(reply: any, refreshToken: string) {
+  reply.setCookie(REFRESH_COOKIE, refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/auth',
+    maxAge: 30 * 24 * 60 * 60, // 30 дней
+  });
+}
+function clearRefreshCookie(reply: any) {
+  reply.clearCookie(REFRESH_COOKIE, { path: '/auth' });
+}
+function readRefreshFromReq(req: any): string | null {
+  // 1) cookie (новый flow), 2) body.refreshToken (backwards compat для старых клиентов)
+  const fromCookie = req.cookies?.[REFRESH_COOKIE];
+  if (fromCookie) return fromCookie;
+  const body = (req.body ?? {}) as { refreshToken?: string };
+  return body.refreshToken || null;
+}
+
 export default async function authRoutes(app: FastifyInstance) {
   // ─── Жёсткие лимиты на чувствительные auth-эндпоинты ───
   // 5 запросов в минуту с одного IP. Атаки brute-force / credential stuffing
@@ -75,10 +103,13 @@ export default async function authRoutes(app: FastifyInstance) {
         expiresAt: refreshExpiryDate(),
       },
     });
+    setRefreshCookie(reply, refreshToken);
 
     return reply.code(201).send({
       user: { id: user.id, email: user.email, role: user.role, fullName: user.fullName },
       accessToken,
+      // refreshToken остаётся в body для backwards-compat со старыми клиентами,
+      // но новый фронт его игнорирует — использует cookie.
       refreshToken,
     });
   });
@@ -107,20 +138,22 @@ export default async function authRoutes(app: FastifyInstance) {
         expiresAt: refreshExpiryDate(),
       },
     });
+    setRefreshCookie(reply, refreshToken);
 
     return reply.send({
       user: { id: user.id, email: user.email, role: user.role, fullName: user.fullName },
       accessToken,
-      refreshToken,
+      refreshToken, // backwards-compat
     });
   });
 
   app.post('/refresh', async (req, reply) => {
-    const parsed = refreshSchema.safeParse(req.body);
-    if (!parsed.success) {
-      return reply.code(400).send({ error: 'Invalid payload' });
+    // Читаем токен: сначала из httpOnly cookie (новый flow), затем из body (старый)
+    const incomingToken = readRefreshFromReq(req);
+    if (!incomingToken) {
+      return reply.code(401).send({ error: 'Refresh token не передан' });
     }
-    const tokenHash = sha256(parsed.data.refreshToken);
+    const tokenHash = sha256(incomingToken);
 
     const stored = await prisma.refreshToken.findUnique({
       where: { tokenHash },
@@ -147,17 +180,21 @@ export default async function authRoutes(app: FastifyInstance) {
       }),
     ]);
 
+    // Ставим новый refresh-token в cookie (rotation)
+    setRefreshCookie(reply, refreshToken);
     return reply.send({ accessToken, refreshToken });
   });
 
   app.post('/logout', { preHandler: requireAuth }, async (req, reply) => {
-    const body = (req.body ?? {}) as { refreshToken?: string };
-    if (body.refreshToken) {
+    // Достаём refresh-token из cookie (новый flow) или body (старый)
+    const incoming = readRefreshFromReq(req);
+    if (incoming) {
       await prisma.refreshToken.updateMany({
-        where: { tokenHash: sha256(body.refreshToken), userId: req.user!.sub },
+        where: { tokenHash: sha256(incoming), userId: req.user!.sub },
         data: { revokedAt: new Date() },
       });
     }
+    clearRefreshCookie(reply);
     return reply.send({ ok: true });
   });
 

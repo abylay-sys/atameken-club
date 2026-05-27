@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
+import cookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
 import path from 'node:path';
 import { env } from './lib/env';
@@ -28,6 +29,13 @@ async function buildApp() {
           : undefined,
     },
     trustProxy: true,
+  });
+
+  // ─── Cookie support для httpOnly refresh-token ───
+  // Refresh-token хранится в httpOnly cookie (не виден JS, не уязвим к XSS).
+  // Access-token остаётся в localStorage т.к. в Bearer-header нужен из JS.
+  await app.register(cookie, {
+    secret: env.JWT_REFRESH_SECRET, // используем для подписи signed-cookies (необязательно)
   });
 
   await app.register(cors, {

@@ -1,20 +1,30 @@
-/* Shared auth + API helper. Works against same-origin backend. */
+/* Shared auth + API helper. Works against same-origin backend.
+ *
+ * ─── Auth-tokens storage strategy ───
+ * Access-token: localStorage (нужен в JS для Bearer-header). XSS-уязвим, но
+ *   время жизни ~15 минут — окно атаки маленькое.
+ * Refresh-token: httpOnly Secure cookie (path=/auth). Backend ставит/чистит,
+ *   JS не видит — XSS не сможет вытащить. credentials:'include' на каждом fetch'е,
+ *   чтобы браузер слал cookie на /auth/refresh и /auth/logout автоматически.
+ * Legacy: старые версии фронта писали refreshToken в localStorage('ac_refresh').
+ *   Здесь мы НЕ читаем его на новых запросах (cookie source-of-truth), но
+ *   очищаем при clearSession чтобы не висел призраком.
+ */
 (function () {
   const API = ''; // same origin
   const TOKEN_KEY = 'ac_access';
-  const REFRESH_KEY = 'ac_refresh';
+  const LEGACY_REFRESH_KEY = 'ac_refresh'; // legacy: только для cleanup, не используется
   const USER_KEY = 'ac_user';
 
   function getToken() { return localStorage.getItem(TOKEN_KEY); }
-  function getRefresh() { return localStorage.getItem(REFRESH_KEY); }
   function saveSession(data) {
     if (data.accessToken) localStorage.setItem(TOKEN_KEY, data.accessToken);
-    if (data.refreshToken) localStorage.setItem(REFRESH_KEY, data.refreshToken);
+    // refreshToken НЕ сохраняем — он живёт в httpOnly cookie (backend setRefreshCookie)
     if (data.user) localStorage.setItem(USER_KEY, JSON.stringify(data.user));
   }
   function clearSession() {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(REFRESH_KEY);
+    localStorage.removeItem(LEGACY_REFRESH_KEY); // зачищаем призрак из старых версий
     localStorage.removeItem(USER_KEY);
   }
   function getUser() {
@@ -32,9 +42,12 @@
       method,
       headers,
       body: body ? JSON.stringify(body) : undefined,
+      // credentials:include — отправляем httpOnly cookie ac_refresh на /auth/* эндпоинты
+      credentials: 'include',
     });
     let res = await doFetch();
-    if (res.status === 401 && authed && getRefresh()) {
+    if (res.status === 401 && authed) {
+      // Пытаемся обновить access-token через refresh-cookie (без body)
       const ok = await tryRefresh();
       if (ok) {
         headers.Authorization = 'Bearer ' + getToken();
@@ -53,7 +66,8 @@
 
   async function tryRefresh() {
     try {
-      const data = await request('POST', '/auth/refresh', { refreshToken: getRefresh() }, false);
+      // Refresh-token читается из httpOnly cookie (server-side). Body не нужен.
+      const data = await request('POST', '/auth/refresh', null, false);
       saveSession(data);
       return true;
     } catch {
@@ -74,7 +88,8 @@
       return data;
     },
     async logout() {
-      try { await request('POST', '/auth/logout', { refreshToken: getRefresh() }, true); }
+      // Сервер сам очистит cookie через clearCookie + ревокнёт refresh в БД
+      try { await request('POST', '/auth/logout', {}, true); }
       catch (_) { /* ignore */ }
       clearSession();
     },

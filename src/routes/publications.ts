@@ -6,6 +6,92 @@ import { requireAuth, optionalAuth } from '../middleware/auth';
 // 4 типа публикации соответствуют 4 категориям «условных продавцов»
 const PUBLICATION_TYPES = ['INVEST_PROJECT', 'FRANCHISE', 'BUSINESS_FOR_SALE', 'GOODS'] as const;
 
+// ─── Sub-schemas для data — валидируем по типу публикации ───
+// Раньше: `data: z.record(z.unknown())` — принимали любой JSON. Атакующий мог
+// прислать 50MB строку или с произвольной структурой. Теперь каждое поле
+// ограничено по длине, URL'ы проверяются на http(s), unknown ключи DROP'аются
+// через `.strip()` (default zod behavior).
+//
+// fileRef — для bizplan/finmodel/standards/finReports/productionDocs/photo
+const fileRef = z.object({
+  url: z.string().url().max(2000),
+  name: z.string().max(300).optional(),
+});
+
+// Общие поля для всех 4 типов
+const commonShape = {
+  photo: fileRef.optional().nullable(),
+  verifications: z.array(z.string().max(64)).max(20).optional(),
+  isResident: z.boolean().optional(),
+  contactName: z.string().max(200).optional(),
+  contactInfo: z.string().max(500).optional(),
+  description: z.string().max(5000).optional(),
+};
+
+const investData = z.object({
+  ...commonShape,
+  projectName: z.string().max(300).optional(),
+  industry: z.string().max(200).optional(),
+  stage: z.string().max(100).optional(),
+  amount: z.string().max(200).optional(),
+  payback: z.string().max(200).optional(),
+  equity: z.string().max(200).optional(),
+  location: z.string().max(200).optional(),
+  bizplan: fileRef.optional().nullable(),
+  finmodel: fileRef.optional().nullable(),
+});
+
+const franchiseData = z.object({
+  ...commonShape,
+  brand: z.string().max(300).optional(),
+  industry: z.string().max(200).optional(),
+  points: z.string().max(300).optional(),
+  paushal: z.string().max(200).optional(),
+  royalty: z.string().max(200).optional(),
+  marketing: z.string().max(200).optional(),
+  payback: z.string().max(200).optional(),
+  geography: z.string().max(300).optional(),
+  support: z.string().max(3000).optional(),
+  standards: fileRef.optional().nullable(),
+});
+
+const bizSaleData = z.object({
+  ...commonShape,
+  businessType: z.string().max(300).optional(),
+  industry: z.string().max(200).optional(),
+  location: z.string().max(200).optional(),
+  founded: z.string().max(20).optional(),
+  employees: z.string().max(50).optional(),
+  revenue: z.string().max(200).optional(),
+  ebitda: z.string().max(200).optional(),
+  price: z.string().max(200).optional(),
+  reason: z.string().max(500).optional(),
+  whatIncluded: z.string().max(3000).optional(),
+  finReports: fileRef.optional().nullable(),
+});
+
+const goodsData = z.object({
+  ...commonShape,
+  product: z.string().max(300).optional(),
+  category: z.string().max(100).optional(),
+  industry: z.string().max(200).optional(),
+  volume: z.string().max(200).optional(),
+  minBatch: z.string().max(200).optional(),
+  price: z.string().max(200).optional(),
+  incoterms: z.string().max(200).optional(),
+  payment: z.string().max(500).optional(),
+  certificates: z.string().max(500).optional(),
+  composition: z.string().max(3000).optional(),
+  productionDocs: fileRef.optional().nullable(),
+});
+
+const dataSchemaByType: Record<typeof PUBLICATION_TYPES[number], z.ZodTypeAny> = {
+  INVEST_PROJECT: investData,
+  FRANCHISE: franchiseData,
+  BUSINESS_FOR_SALE: bizSaleData,
+  GOODS: goodsData,
+};
+
 const createSchema = z.object({
   type: z.enum(PUBLICATION_TYPES),
   // Денормализованные поля для каталога
@@ -14,7 +100,7 @@ const createSchema = z.object({
   region: z.string().max(120).optional().nullable(),
   shortDesc: z.string().max(2000).optional().nullable(),
   priceLabel: z.string().max(120).optional().nullable(),
-  // Весь набор полей формы (4 типа разные) — храним как JSON
+  // Сначала принимаем data как unknown record, потом сужаем по type
   data: z.record(z.unknown()),
 });
 
@@ -166,6 +252,18 @@ export default async function publicationsRoutes(app: FastifyInstance) {
     }
     const { type, title, industry, region, shortDesc, priceLabel, data } = parsed.data;
 
+    // ─── Вторая фаза: валидация data по конкретному типу публикации ───
+    // Каждый тип имеет свой набор полей (см. dataSchemaByType вверху файла).
+    // `.parse()` бросит ZodError если структура не совпадает.
+    const dataValidator = dataSchemaByType[type];
+    const dataParsed = dataValidator.safeParse(data);
+    if (!dataParsed.success) {
+      return reply.code(400).send({
+        error: 'Некорректные данные публикации',
+        details: dataParsed.error.flatten(),
+      });
+    }
+
     const pub = await prisma.publication.create({
       data: {
         userId: req.user!.sub,
@@ -175,7 +273,7 @@ export default async function publicationsRoutes(app: FastifyInstance) {
         region: region || null,
         shortDesc: shortDesc || null,
         priceLabel: priceLabel || null,
-        data: data as any,
+        data: dataParsed.data as any,
         status: 'PUBLISHED',
         publishedAt: new Date(),
       },
@@ -197,6 +295,25 @@ export default async function publicationsRoutes(app: FastifyInstance) {
       return reply.code(403).send({ error: 'Нет доступа к этой публикации' });
     }
 
+    // Если в update пришло поле `data` — валидируем по существующему типу публикации
+    // (тип не меняется при update; если меняется через `type` поле — тоже учитываем).
+    let validatedData: unknown = undefined;
+    if (parsed.data.data !== undefined) {
+      const effectiveType = parsed.data.type || existing.type;
+      const dataValidator = dataSchemaByType[effectiveType as typeof PUBLICATION_TYPES[number]];
+      if (!dataValidator) {
+        return reply.code(400).send({ error: 'Неизвестный тип публикации' });
+      }
+      const dataParsed = dataValidator.safeParse(parsed.data.data);
+      if (!dataParsed.success) {
+        return reply.code(400).send({
+          error: 'Некорректные данные публикации',
+          details: dataParsed.error.flatten(),
+        });
+      }
+      validatedData = dataParsed.data;
+    }
+
     const pub = await prisma.publication.update({
       where: { id },
       data: {
@@ -205,7 +322,7 @@ export default async function publicationsRoutes(app: FastifyInstance) {
         ...(parsed.data.region !== undefined ? { region: parsed.data.region } : {}),
         ...(parsed.data.shortDesc !== undefined ? { shortDesc: parsed.data.shortDesc } : {}),
         ...(parsed.data.priceLabel !== undefined ? { priceLabel: parsed.data.priceLabel } : {}),
-        ...(parsed.data.data !== undefined ? { data: parsed.data.data as any } : {}),
+        ...(validatedData !== undefined ? { data: validatedData as any } : {}),
         ...(parsed.data.status ? { status: parsed.data.status } : {}),
       },
     });
