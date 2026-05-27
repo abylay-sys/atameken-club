@@ -60,7 +60,15 @@ async function buildApp() {
     skipOnError: false,
     keyGenerator: (req) => (req.headers['cf-connecting-ip'] as string) || (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.ip,
     allowList: (req) => req.url === '/health',
-    errorResponseBuilder: () => ({ error: 'Слишком много запросов. Попробуйте через минуту.' }),
+    // Возвращаем Error — rate-limit v9 throw'ит его, что попадает в setErrorHandler.
+    // Если возвращать plain object, status в проде превращается в 500
+    // (видимо из-за hook-порядка @ Render). Error-форма даёт стабильный 429.
+    errorResponseBuilder: () => {
+      const err: any = new Error('Слишком много запросов. Попробуйте через минуту.');
+      err.statusCode = 429;
+      err.code = 'FST_ERR_RATE_LIMIT';
+      return err;
+    },
   });
 
   app.get('/health', async () => ({ ok: true, ts: Date.now() }));
