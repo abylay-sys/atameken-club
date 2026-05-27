@@ -1537,9 +1537,18 @@ function openSignModal(dealId){
         return;
       }
     }
-    body.innerHTML = cache[doc.type];
-    // Сбрасываем скролл к началу
-    body.scrollTop = 0;
+    // ─── Defense-in-depth: рендерим юридический HTML в sandboxed iframe ───
+    // Даже если в шаблоне как-то остался unescaped user-input — `sandbox=""`
+    // полностью отключает JS, формы, top-navigation. Стили базовые (шрифт + paddings)
+    // инжектим внутрь iframe-srcdoc, чтобы документ выглядел как раньше.
+    const docCss = `body{font-family:'Inter',sans-serif;color:#1f2937;line-height:1.65;font-size:.88rem;margin:0;padding:1.5rem 1.75rem}h2,h3{font-family:'Cormorant Garamond',Georgia,serif;color:#0f172a;margin:1.25rem 0 .55rem;line-height:1.25}h2{font-size:1.3rem;font-weight:500}h3{font-size:1rem;font-weight:600}p{margin:.4rem 0}.doc-meta{background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:.8rem 1rem;margin-bottom:1.25rem;display:flex;flex-direction:column;gap:.3rem}.doc-meta-row{display:flex;justify-content:space-between;gap:.85rem;font-size:.78rem}.doc-meta-row span{color:#64748b}.doc-meta-row strong{color:#0f172a;font-weight:600;text-align:right}`;
+    const safeSrcDoc = `<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"/><base target="_blank"/><style>${docCss}</style></head><body>${cache[doc.type]}</body></html>`;
+    body.innerHTML = '';
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('sandbox', ''); // максимальная изоляция: ни JS, ни форм, ни popups
+    iframe.style.cssText = 'width:100%;height:100%;border:0;background:#fff;border-radius:6px;display:block';
+    iframe.srcdoc = safeSrcDoc;
+    body.appendChild(iframe);
     // Обновляем кнопку
     updateSignBtn();
   }
