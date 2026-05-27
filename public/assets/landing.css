@@ -31,7 +31,7 @@
   --hero:clamp(2.6rem,5.5vw,4.2rem);
 }
 html{scroll-behavior:smooth}
-body{background:var(--white);color:var(--ink);font-family:'Inter',sans-serif;font-size:var(--t3);font-weight:400;line-height:1.65;overflow-x:hidden}
+body{background:var(--white);color:var(--ink);font-family:'Inter',sans-serif;font-size:var(--t3);font-weight:400;line-height:1.65;overflow-x:hidden;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 
 h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.2}
 p{font-size:var(--t3);line-height:1.75;color:var(--ink3)}
@@ -499,7 +499,10 @@ nav.scrolled{box-shadow:var(--shadow)}
 .cta-btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;position:relative}
 
 /* ─── FOOTER ─── */
-footer{background:var(--ink2);padding:2rem max(3rem,calc((100vw - 1140px) / 2));display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;border-top:3px solid var(--red);text-align:center}
+/* margin-top:auto работает вместе с body{display:flex;flex-direction:column}
+   и min-height:100vh — на коротких страницах (legal, partners, pricing)
+   футер приклеивается к низу окна, а не висит посередине. */
+footer{background:var(--ink2);padding:2rem max(3rem,calc((100vw - 1140px) / 2));display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;border-top:3px solid var(--red);text-align:center;margin-top:auto}
 .f-logo{display:flex;align-items:center;gap:.75rem;justify-content:center}
 .f-logo-emb{width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:50%}
 .f-logo-text{font-family:'Cormorant Garamond',serif;color:#fff;letter-spacing:.02em;text-align:left}
