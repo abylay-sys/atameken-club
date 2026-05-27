@@ -38,7 +38,15 @@ function issueTokensFor(user: { id: string; email: string; role: string }) {
 }
 
 export default async function authRoutes(app: FastifyInstance) {
-  app.post('/register', async (req, reply) => {
+  // ─── Жёсткие лимиты на чувствительные auth-эндпоинты ───
+  // 5 запросов в минуту с одного IP. Атаки brute-force / credential stuffing
+  // / email enumeration становятся практически нереализуемыми.
+  // Глобальный лимит 100/мин (server.ts) — это для остальных API.
+  const authLimit: any = {
+    rateLimit: { max: 5, timeWindow: '1 minute' },
+  };
+
+  app.post('/register', { config: authLimit }, async (req, reply) => {
     const parsed = registerSchema.safeParse(req.body);
     if (!parsed.success) {
       return reply.code(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -75,7 +83,7 @@ export default async function authRoutes(app: FastifyInstance) {
     });
   });
 
-  app.post('/login', async (req, reply) => {
+  app.post('/login', { config: authLimit }, async (req, reply) => {
     const parsed = loginSchema.safeParse(req.body);
     if (!parsed.success) {
       return reply.code(400).send({ error: 'Invalid payload' });
@@ -160,18 +168,21 @@ export default async function authRoutes(app: FastifyInstance) {
   const forgotSchema = z.object({
     email: z.string().email().toLowerCase().trim(),
   });
-  app.post('/forgot-password', async (req, reply) => {
+  app.post('/forgot-password', { config: authLimit }, async (req, reply) => {
     const parsed = forgotSchema.safeParse(req.body);
     if (!parsed.success) {
       return reply.code(400).send({ error: 'Укажите корректный email' });
     }
     const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
     if (user) {
+      // В URL юзеру идёт raw-токен, в БД сохраняем только sha256(token) — даже
+      // если у атакующего будет read-доступ к БД, токены непригодны для подмены пароля.
       const token = randomToken(48);
+      const tokenHash = sha256(token);
       const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 час
       await prisma.user.update({
         where: { id: user.id },
-        data: { passwordResetToken: token, passwordResetExpiresAt: expiresAt },
+        data: { passwordResetToken: tokenHash, passwordResetExpiresAt: expiresAt },
       });
       const resetUrl = env.APP_BASE_URL.replace(/\/+$/, '') + '/reset-password.html?token=' + encodeURIComponent(token);
       const email = buildPasswordResetEmail({ fullName: user.fullName, resetUrl });
@@ -193,12 +204,14 @@ export default async function authRoutes(app: FastifyInstance) {
     token: z.string().min(10).max(200),
     password: z.string().min(8).max(128),
   });
-  app.post('/reset-password', async (req, reply) => {
+  app.post('/reset-password', { config: authLimit }, async (req, reply) => {
     const parsed = resetSchema.safeParse(req.body);
     if (!parsed.success) {
       return reply.code(400).send({ error: 'Минимум 8 символов в пароле и валидный токен' });
     }
-    const user = await prisma.user.findUnique({ where: { passwordResetToken: parsed.data.token } });
+    // Юзер вводит raw-токен из URL, в БД лежит sha256(token) — сравниваем хеши
+    const tokenHash = sha256(parsed.data.token);
+    const user = await prisma.user.findUnique({ where: { passwordResetToken: tokenHash } });
     if (!user || !user.passwordResetExpiresAt || user.passwordResetExpiresAt < new Date()) {
       return reply.code(400).send({ error: 'Ссылка недействительна или истекла. Запросите новую.' });
     }

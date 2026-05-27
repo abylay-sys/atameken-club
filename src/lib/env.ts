@@ -12,6 +12,17 @@ function optional(name: string, fallback = ''): string {
   return process.env[name] ?? fallback;
 }
 
+// ─── Прод-проверки: гарантируют, что критичные переменные настроены ───
+function assertProdSafety(nodeEnv: string, corsOrigin: string[], jwtAccess: string, jwtRefresh: string) {
+  if (nodeEnv !== 'production') return;
+  if (corsOrigin.includes('*')) {
+    throw new Error('[env] CORS_ORIGIN cannot include "*" in production. Set explicit origins.');
+  }
+  if (jwtAccess.length < 32 || jwtRefresh.length < 32) {
+    throw new Error('[env] JWT_ACCESS_SECRET and JWT_REFRESH_SECRET must be ≥32 chars in production.');
+  }
+}
+
 export const env = {
   PORT: Number(process.env.PORT ?? 3000),
   NODE_ENV: optional('NODE_ENV', 'development'),
@@ -92,3 +103,6 @@ export const env = {
   KASPI_API_TOKEN: optional('KASPI_API_TOKEN'),
   KASPI_PAY_BASE_URL: optional('KASPI_PAY_BASE_URL', 'https://kaspi.kz/pay'),
 };
+
+// Бросаем сразу при boot — не даём подняться с небезопасной конфигурацией в prod
+assertProdSafety(env.NODE_ENV, env.CORS_ORIGIN, env.JWT_ACCESS_SECRET, env.JWT_REFRESH_SECRET);

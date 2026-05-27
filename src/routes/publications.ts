@@ -99,8 +99,39 @@ export default async function publicationsRoutes(app: FastifyInstance) {
     if (!pub || pub.status !== 'PUBLISHED') {
       return reply.code(404).send({ error: 'Публикация не найдена' });
     }
-    // TODO: gate full data behind «Развёрнутая карточка» purchase
+    // ─── Gate приватных данных за платный доступ ───
+    // Полный data (контакты, бизнес-план URL, финмодель URL) виден только:
+    //   1. автору публикации (isOwner)
+    //   2. купившему «Развёрнутую карточку» через токены (PurchasedCard)
+    //   3. админу-модератору (req.user.email в ADMIN_EMAILS)
+    // Гостям и обычным юзерам без покупки — только публичные поля + photo + shevrons.
     const isOwner = req.user?.sub === pub.userId;
+    let hasFullAccess = isOwner;
+    if (!hasFullAccess && req.user?.sub) {
+      const purchased = await prisma.purchasedCard.findUnique({
+        where: { userId_publicationId: { userId: req.user.sub, publicationId: pub.id } },
+        select: { id: true },
+      });
+      if (purchased) hasFullAccess = true;
+    }
+    // Админ-модераторы (читают список заявок) тоже видят полный data
+    if (!hasFullAccess && req.user?.email) {
+      const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      if (adminEmails.includes(req.user.email.toLowerCase())) hasFullAccess = true;
+    }
+
+    const rawData = (pub.data as Record<string, unknown> | null) || null;
+    let publicData: Record<string, unknown> | null = null;
+    if (hasFullAccess) {
+      publicData = rawData;
+    } else if (rawData) {
+      // Публичная версия — только фото, шевроны, статус резидента + safe-метаданные
+      publicData = {
+        photo: rawData.photo ?? null,
+        verifications: Array.isArray(rawData.verifications) ? rawData.verifications : [],
+        isResident: !!rawData.isResident,
+      };
+    }
     return {
       publication: {
         id: pub.id,
@@ -111,8 +142,9 @@ export default async function publicationsRoutes(app: FastifyInstance) {
         shortDesc: pub.shortDesc,
         priceLabel: pub.priceLabel,
         publishedAt: pub.publishedAt,
-        data: isOwner ? pub.data : pub.data, // пока без gating
+        data: publicData,
         isOwner,
+        hasFullAccess,
       },
     };
   });

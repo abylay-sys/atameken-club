@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
 import { env } from '../lib/env';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, createHmac, timingSafeEqual } from 'node:crypto';
 
 // Пакеты токенов с фиксированными скидками.
 // Если в дальнейшем подключим оплату через Kaspi/Stripe — стоимость считается
@@ -87,26 +87,46 @@ export default async function walletRoutes(app: FastifyInstance) {
     if (wallet.balance < 1) {
       return reply.code(402).send({ error: 'Недостаточно токенов', balance: wallet.balance });
     }
-    const newBalance = wallet.balance - 1;
-    await prisma.$transaction([
-      prisma.tokenWallet.update({
-        where: { id: wallet.id },
-        data: { balance: newBalance, totalSpent: { increment: 1 } },
-      }),
-      prisma.tokenTransaction.create({
-        data: {
-          walletId: wallet.id,
-          type: 'SPEND_CARD',
-          amount: -1,
-          balanceAfter: newBalance,
-          meta: { publicationId } as any,
-        },
-      }),
-      prisma.purchasedCard.create({
-        data: { userId: req.user!.sub, publicationId, tokensSpent: 1 },
-      }),
-    ]);
-    return reply.code(201).send({ ok: true, newBalance });
+    // ─── Атомарное списание: единственный надёжный способ при concurrent-запросах ───
+    // Раньше: читали balance, считали newBalance = balance-1, потом WRITE.
+    // 2 одновременных запроса → оба читают balance=1, оба пишут balance=0,
+    // оба получают доступ за 1 токен (race condition).
+    //
+    // Теперь: updateMany с precondition `balance ≥ 1` + decrement в одной
+    // SQL-операции. count===0 значит «не хватило токенов» (другой запрос
+    // нас опередил, или баланс уже 0). Внутри транзакции вместе с записью
+    // PurchasedCard и TokenTransaction — либо всё, либо ничего.
+    try {
+      const newBalance = await prisma.$transaction(async (tx) => {
+        const upd = await tx.tokenWallet.updateMany({
+          where: { id: wallet.id, balance: { gte: 1 } },
+          data: { balance: { decrement: 1 }, totalSpent: { increment: 1 } },
+        });
+        if (upd.count === 0) {
+          throw new Error('INSUFFICIENT_BALANCE');
+        }
+        // Читаем актуальный баланс ПОСЛЕ decrement
+        const after = await tx.tokenWallet.findUnique({ where: { id: wallet.id }, select: { balance: true } });
+        const balanceAfter = after?.balance ?? 0;
+        await tx.tokenTransaction.create({
+          data: { walletId: wallet.id, type: 'SPEND_CARD', amount: -1, balanceAfter, meta: { publicationId } as any },
+        });
+        await tx.purchasedCard.create({
+          data: { userId: req.user!.sub, publicationId, tokensSpent: 1 },
+        });
+        return balanceAfter;
+      });
+      return reply.code(201).send({ ok: true, newBalance });
+    } catch (err: any) {
+      if (err?.message === 'INSUFFICIENT_BALANCE') {
+        return reply.code(402).send({ error: 'Недостаточно токенов' });
+      }
+      // P2002 — кто-то параллельно купил карточку (idempotent)
+      if (err?.code === 'P2002') {
+        return reply.send({ ok: true, alreadyPurchased: true });
+      }
+      throw err;
+    }
   });
 
   // ── Список купленных карточек ──
@@ -139,7 +159,8 @@ export default async function walletRoutes(app: FastifyInstance) {
     const pkg = PACKAGES[parsed.data.packageSize];
     const priceKzt = Math.round(pkg.priceUsd * env.KZT_PER_USD);
     // Короткий референс, который пользователь увидит в чеке Kaspi
-    const ref = 'AC-' + randomBytes(3).toString('hex').toUpperCase();
+    // 8 bytes = 16 hex chars = 2^64 пространство — практически без коллизий
+    const ref = 'AC-' + randomBytes(8).toString('hex').toUpperCase();
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 минут на оплату
 
     const pending = await prisma.pendingPayment.create({
@@ -220,7 +241,28 @@ export default async function walletRoutes(app: FastifyInstance) {
   // мерчанта потребуется проверка подписи (HMAC) — заранее закладываем
   // X-Kaspi-Signature header.
   app.post('/payment/kaspi-webhook', async (req, reply) => {
-    // TODO: HMAC verification по env.KASPI_API_TOKEN
+    // ─── HMAC-проверка подписи ───
+    // Без подписи любой может POST'ом на webhook отметить чужой платёж как
+    // SUCCESS и получить токены. Если KASPI_API_TOKEN не задан → webhook
+    // полностью отключён (mock-режим работает только через /mock-complete).
+    if (!env.KASPI_API_TOKEN) {
+      return reply.code(503).send({ error: 'Webhook не сконфигурирован: задайте KASPI_API_TOKEN' });
+    }
+    const sigHeader = (req.headers['x-kaspi-signature'] || req.headers['x-signature']) as string | undefined;
+    if (!sigHeader || typeof sigHeader !== 'string') {
+      return reply.code(401).send({ error: 'Missing signature header' });
+    }
+    const rawBody = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    const expected = createHmac('sha256', env.KASPI_API_TOKEN).update(rawBody).digest('hex');
+    // timingSafeEqual чтобы не утечь длиной/префиксом через timing attack
+    let valid = false;
+    try {
+      const sigBuf = Buffer.from(sigHeader.replace(/^sha256=/i, ''), 'hex');
+      const expBuf = Buffer.from(expected, 'hex');
+      valid = sigBuf.length === expBuf.length && timingSafeEqual(sigBuf, expBuf);
+    } catch { valid = false; }
+    if (!valid) return reply.code(401).send({ error: 'Invalid signature' });
+
     const body = req.body as { reference?: string; status?: string; orderId?: string; txId?: string };
     if (!body.reference) return reply.code(400).send({ error: 'reference required' });
 

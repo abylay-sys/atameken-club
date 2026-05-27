@@ -103,6 +103,17 @@
     return String(s ?? '').replace(/[&<>"']/g, (c) =>
       ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
   }
+  // Защита от href="javascript:..." и data:... — пускаем только http(s) и mailto/tel.
+  // Атакующий не может зарегистрировать сайт типа `javascript:fetch('/admin/...')` и
+  // получить XSS, когда модератор кликнет.
+  function safeUrl(url) {
+    if (!url) return '';
+    const trimmed = String(url).trim();
+    if (/^(https?:|mailto:|tel:)/i.test(trimmed)) return trimmed;
+    // Без схемы — добавим https://
+    if (/^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}/i.test(trimmed)) return 'https://' + trimmed;
+    return ''; // отбраковываем — пустая ссылка вместо опасной
+  }
 
   let currentStatus = 'SUBMITTED';
 
@@ -150,7 +161,7 @@
                 <div><div class="k">Год основания</div><div class="v">${esc(p.foundedYear) || '—'}</div></div>
                 <div><div class="k">Выручка</div><div class="v">${esc(p.revenue) || '—'}</div></div>
                 <div><div class="k">Сотрудников</div><div class="v">${esc(p.employees) || '—'}</div></div>
-                <div><div class="k">Сайт</div><div class="v">${p.website ? `<a href="${esc(p.website)}" target="_blank" style="color:var(--red)">${esc(p.website)}</a>` : '—'}</div></div>
+                <div><div class="k">Сайт</div><div class="v">${(() => { const safe = safeUrl(p.website); return safe ? `<a href="${esc(safe)}" target="_blank" rel="noopener noreferrer" style="color:var(--red)">${esc(p.website)}</a>` : (p.website ? esc(p.website) : '—'); })()}</div></div>
                 <div><div class="k">Потребность в инвестициях</div><div class="v">${esc(p.investmentNeed) || '—'}</div></div>
                 <div><div class="k">Цель инвестиций</div><div class="v">${esc(p.investmentGoal) || '—'}</div></div>
                 <div><div class="k">Контакт</div><div class="v">${esc(p.contactPhone || p.user.phone || '—')}</div></div>

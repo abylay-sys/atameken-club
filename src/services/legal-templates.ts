@@ -14,19 +14,29 @@ export type Context = {
   splitWithCounter: boolean;
 };
 
+// ─── XSS-защита: все user-controlled поля в шаблонах должны escape'иться. ───
+// Без этого имя пользователя вида `<img src=x onerror=fetch(...)>` исполнится
+// в браузере другого пользователя при просмотре документа сделки.
+function esc(s: string | number | undefined | null): string {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c] as string));
+}
+
 function fmtPct(p: Context) {
   if (p.splitWithCounter) return `${(p.commissionPct / 2).toFixed(2).replace('.', ',')}% (50%/50% с контрагентом)`;
   return `${p.commissionPct.toFixed(2).replace('.', ',')}%`;
 }
 
-function commonHeader(title: string, p: Context) {
+function commonHeader(_title: string, p: Context) {
   return `
     <div class="doc-meta">
-      <div class="doc-meta-row"><span>Номер сделки:</span><strong>${p.dealId}</strong></div>
-      <div class="doc-meta-row"><span>Дата:</span><strong>${p.date}</strong></div>
-      <div class="doc-meta-row"><span>Сторона:</span><strong>${p.fullName} (${p.email})</strong></div>
-      ${p.publicationTitle ? `<div class="doc-meta-row"><span>Объект:</span><strong>${p.publicationTitle}</strong></div>` : ''}
-      <div class="doc-meta-row"><span>Версия шаблона:</span><strong>${TEMPLATE_VERSION}</strong></div>
+      <div class="doc-meta-row"><span>Номер сделки:</span><strong>${esc(p.dealId)}</strong></div>
+      <div class="doc-meta-row"><span>Дата:</span><strong>${esc(p.date)}</strong></div>
+      <div class="doc-meta-row"><span>Сторона:</span><strong>${esc(p.fullName)} (${esc(p.email)})</strong></div>
+      ${p.publicationTitle ? `<div class="doc-meta-row"><span>Объект:</span><strong>${esc(p.publicationTitle)}</strong></div>` : ''}
+      <div class="doc-meta-row"><span>Версия шаблона:</span><strong>${esc(TEMPLATE_VERSION)}</strong></div>
     </div>
   `;
 }
