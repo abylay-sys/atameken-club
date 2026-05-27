@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/assets/style.css"/>
+<!-- Cloudflare Turnstile — анти-бот защита. onload-параметр вызывает onTurnstileLoad
+     ниже, который ждёт siteKey от /auth/captcha-config и потом render'ит виджет. -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
 </head>
 <body>
 <div class="auth-wrap">
@@ -62,6 +65,10 @@
             <div class="field-hint">Не менее 8 символов.</div>
           </div>
         </div>
+
+        <!-- Cloudflare Turnstile widget mounts here. Виджет рендерится из onTurnstileLoad
+             после загрузки api.js + fetch /auth/captcha-config. -->
+        <div id="turnstile-mount" style="margin:.85rem 0 .25rem;display:flex;justify-content:center;min-height:65px"></div>
 
         <button type="submit" class="btn btn-red btn-block mt-1" id="submit-btn">Создать аккаунт</button>
       </form>
@@ -199,6 +206,25 @@
   // already logged in → go to cabinet
   if (AC.getToken()) window.location.href = '/cabinet.html';
 
+  // ── Turnstile (анти-бот) ──
+  // Site Key подгружаем с бэка (/auth/captcha-config), чтобы можно было сменить
+  // через env-переменную без правки HTML. Токен попадает в captchaToken через callback.
+  var turnstileToken = null;
+  var turnstileWidgetId = null;
+  // Глобальный callback — turnstile/v0/api.js вызывает его после загрузки.
+  window.onTurnstileLoad = function () {
+    fetch('/auth/captcha-config').then(function (r) { return r.json(); }).then(function (cfg) {
+      if (!cfg || !cfg.siteKey || !window.turnstile) return;
+      turnstileWidgetId = window.turnstile.render('#turnstile-mount', {
+        sitekey: cfg.siteKey,
+        callback: function (token) { turnstileToken = token; },
+        'expired-callback': function () { turnstileToken = null; },
+        'error-callback': function () { turnstileToken = null; },
+        theme: 'light',
+      });
+    }).catch(function () { /* dev fallback: если /auth/captcha-config недоступен — виджет не появится, бэк примет любой токен */ });
+  };
+
   // ── Terms modal ──
   const modal = document.getElementById('terms-modal');
   const checkbox = document.getElementById('terms-checkbox');
@@ -245,7 +271,18 @@
       fullName: document.getElementById('fullName').value.trim(),
       phone: document.getElementById('phone').value.trim() || undefined,
       acceptedTerms: true,
+      // Если виджет не загрузился (dev/блокировка) — отправляем 'dev-bypass';
+      // в dev-режиме бэк с пустым TURNSTILE_SECRET_KEY всё равно пропустит.
+      captchaToken: turnstileToken || 'dev-bypass',
     };
+
+    // Если виджет загружен, но токен ещё не получен — блокируем сабмит.
+    if (turnstileWidgetId !== null && !turnstileToken) {
+      acceptBtn.disabled = false;
+      acceptBtn.textContent = 'Согласен и продолжить';
+      showInlineErr('<strong>Подтвердите, что вы не робот</strong>Подождите пока загрузится проверка и повторите.');
+      return;
+    }
 
     try {
       await AC.register(payload);

@@ -92,6 +92,15 @@ export const env = {
   // Префикс-папка внутри bucket'а (опционально). Например, 'uploads' → файлы пишутся как uploads/<filename>.
   S3_PREFIX: optional('S3_PREFIX', 'uploads'),
 
+  // ── Cloudflare Turnstile (анти-бот защита на регистрации) ──
+  // Site Key — публичный, фронт получает его через GET /auth/captcha-config.
+  // Secret Key — серверный, используется в /register для проверки токена через siteverify.
+  // По умолчанию заданы официальные test-keys Cloudflare (всегда пропускают) — dev работает
+  // out-of-box. В проде ОБЯЗАТЕЛЬНО переопределить через env var (см. dash.cloudflare.com).
+  // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+  TURNSTILE_SITE_KEY: optional('TURNSTILE_SITE_KEY', '1x00000000000000000000AA'),
+  TURNSTILE_SECRET_KEY: optional('TURNSTILE_SECRET_KEY', '1x0000000000000000000000000000000AA'),
+
   // ── Kaspi Pay ──
   // Курс USD→KZT для биллинга пакетов токенов. Можно поменять без передеплоя
   // через переменную окружения KZT_PER_USD.

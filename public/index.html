@@ -76,55 +76,9 @@
         <a href="cabinet.html" class="btn-out" style="border-color:var(--blue);color:var(--blue)">Личный кабинет</a>
       </div>
     </div>
-    <div class="hero-right">
-      <div class="hero-card-stack">
-        <div class="hc hc-1">
-          <div class="hc-tag gold">Инвест-проект</div>
-          <div class="hc-title">Агропромышленный хаб «Степной»</div>
-          <div class="hc-chevrons">
-            <span class="hc-shield hc-shield-green" title="Верификация анкеты">
-              <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="currentColor" stroke="rgba(0,0,0,.08)" stroke-width="1"/><polyline points="9 16.5 14 21 23 12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <span class="hc-shield hc-shield-blue" title="Верификация бизнес-плана">
-              <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="currentColor" stroke="rgba(0,0,0,.08)" stroke-width="1"/><polyline points="9 16.5 14 21 23 12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <span class="hc-shield hc-shield-amber" title="Верификация Фин.модели">
-              <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="currentColor" stroke="rgba(0,0,0,.08)" stroke-width="1"/><polyline points="9 16.5 14 21 23 12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <span class="hc-shield hc-shield-emerald" title="Верификация договоров">
-              <svg viewBox="0 0 32 32"><path d="M16 2 L28 6 L28 16 Q28 25 16 30 Q4 25 4 16 L4 6 Z" fill="currentColor" stroke="rgba(0,0,0,.1)" stroke-width="1"/><polyline points="10 16 14.5 20 22 12.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <span class="hc-shield hc-shield-navy" title="Финаудит компании">
-              <svg viewBox="0 0 32 32"><path d="M16 2 L28 6 L28 16 Q28 25 16 30 Q4 25 4 16 L4 6 Z" fill="currentColor" stroke="rgba(0,0,0,.1)" stroke-width="1"/><polyline points="10 16 14.5 20 22 12.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <span class="hc-shield hc-shield-club">
-              <svg viewBox="0 0 32 32">
-                <path d="M16 2 L28 6 L28 16 Q28 25 16 30 Q4 25 4 16 L4 6 Z" fill="#1A3A6B" stroke="#C5963A" stroke-width="1.4"/>
-                <!-- laurel left -->
-                <path d="M9 13 Q6 16 8 21 Q11 22 13 19" fill="none" stroke="#C5963A" stroke-width="1.4" stroke-linecap="round"/>
-                <!-- laurel right -->
-                <path d="M23 13 Q26 16 24 21 Q21 22 19 19" fill="none" stroke="#C5963A" stroke-width="1.4" stroke-linecap="round"/>
-                <!-- star -->
-                <polygon points="16 9 17.6 13 21.5 13 18.5 15.5 19.6 19.5 16 17.3 12.4 19.5 13.5 15.5 10.5 13 14.4 13" fill="#C5963A"/>
-              </svg>
-              <span class="hc-shield-tip">Является Резидентом Бизнес-сообщества «ATAMEKEN&nbsp;Club»</span>
-            </span>
-          </div>
-          <div class="hc-price">от 150 млн KZT <span>мин. чек</span></div>
-        </div>
-        <div class="hc hc-2">
-          <div class="hc-tag blue">Услуга</div>
-          <div class="hc-title">Визовая поддержка для иностранных компаний</div>
-          <div class="hc-meta"><span class="hc-chip b">КЗ + ОАЭ</span></div>
-        </div>
-        <div class="hc hc-3">
-          <div class="hc-tag red">Мероприятие</div>
-          <div class="hc-title">Eurasia деловой ужин для инвесторов - Дубай</div>
-          <div class="hc-meta"><span class="hc-chip b">22 Окт 2025</span><span class="hc-chip r">Закрытое</span></div>
-          <div class="hc-lock"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="6" width="10" height="8" rx="1"/><path d="M3.5 6V4a2.5 2.5 0 015 0v2"/></svg> Только для участников платформы</div>
-        </div>
-      </div>
-    </div>
+    <!-- hero-right cards (Инвест-проект / Услуга / Мероприятие) убраны
+         по запросу: вместо иллюстраций hero-left теперь идёт на всю ширину
+         (см. .hero-inner{grid-template-columns:1fr} в landing.css). -->
   </div>
 </section>
 
@@ -732,5 +686,6 @@ cartApplyAuth();
 </script>
 
 <script src="/assets/i18n.js"></script>
+<script src="/assets/nav-active.js"></script>
 </body>
 </html>

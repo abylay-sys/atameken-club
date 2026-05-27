@@ -20,7 +20,29 @@ const registerSchema = z.object({
   phone: z.string().max(32).optional(),
   // Click-wrap: фронт обязан передать true после галочки в модалке.
   acceptedTerms: z.literal(true, { errorMap: () => ({ message: 'Необходимо принять Пользовательское соглашение' }) }),
+  // Cloudflare Turnstile token — фронт получает от виджета, мы валидируем через siteverify.
+  captchaToken: z.string().min(1, 'Подтвердите, что вы не робот').max(2048),
 });
+
+// ─── Cloudflare Turnstile siteverify ───
+// Возвращает true если токен валиден (или защита отключена через пустой secret).
+async function verifyTurnstile(token: string, ip?: string): Promise<boolean> {
+  if (!env.TURNSTILE_SECRET_KEY) return true; // защита отключена (dev без env)
+  try {
+    const body = new URLSearchParams();
+    body.set('secret', env.TURNSTILE_SECRET_KEY);
+    body.set('response', token);
+    if (ip) body.set('remoteip', ip);
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body,
+    });
+    const data = await res.json() as { success?: boolean };
+    return data.success === true;
+  } catch {
+    return false; // сетевая ошибка → блокируем (fail-closed)
+  }
+}
 
 const loginSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
@@ -74,12 +96,24 @@ export default async function authRoutes(app: FastifyInstance) {
     rateLimit: { max: 5, timeWindow: '1 minute' },
   };
 
+  // Публичный endpoint: возвращает Site Key чтобы фронт мог менять виджет
+  // через env-переменную без правки HTML.
+  app.get('/captcha-config', async () => {
+    return { siteKey: env.TURNSTILE_SITE_KEY };
+  });
+
   app.post('/register', { config: authLimit }, async (req, reply) => {
     const parsed = registerSchema.safeParse(req.body);
     if (!parsed.success) {
       return reply.code(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
     }
-    const { email, password, role, fullName, phone } = parsed.data;
+    const { email, password, role, fullName, phone, captchaToken } = parsed.data;
+
+    // Проверка анти-бот защиты ДО запроса в БД — отсекаем ботов сразу.
+    const captchaOk = await verifyTurnstile(captchaToken, req.ip);
+    if (!captchaOk) {
+      return reply.code(400).send({ error: 'Проверка анти-бот защиты не пройдена. Обновите страницу и попробуйте снова.' });
+    }
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
