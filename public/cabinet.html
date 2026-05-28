@@ -310,6 +310,7 @@ strong{color:var(--ink);font-weight:600}
 
 <!-- ВКЛАДКИ ПЕРЕДНЕГО БЛОКА — продублированы внутри Кабинета для удобной навигации -->
 <nav class="cab-front-nav" aria-label="Передний блок">
+  <a href="/index.html" class="cab-front-link">Главная</a>
   <a href="/projects.html" class="cab-front-link">Реестр</a>
   <a href="/events.html" class="cab-front-link">Календарь</a>
   <a href="/pricing.html" class="cab-front-link">Тарифы</a>
@@ -656,6 +657,16 @@ strong{color:var(--ink);font-weight:600}
             <div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Загружаем ваши объявления…</div>
           </div>
         </div>
+        <!-- Избранное для покупателей-франчайзи (заполняется renderFavs) -->
+        <div class="card" data-show-for="buyer">
+          <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+            <h3>Избранное</h3>
+            <a class="btn-o btn-sm" href="/projects.html">Открыть Реестр</a>
+          </div>
+          <div class="card-body" id="franchiseFavs" style="min-height:120px">
+            <div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Загружаем избранное…</div>
+          </div>
+        </div>
       </div>
 
       <div class="panel" id="franchise-profile">
@@ -718,6 +729,16 @@ strong{color:var(--ink);font-weight:600}
           </div>
           <div class="card-body" id="saleMyPubs" style="min-height:120px">
             <div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Загружаем ваши объявления…</div>
+          </div>
+        </div>
+        <!-- Избранное для биз-байеров и гудс-байеров (заполняется renderFavs) -->
+        <div class="card" data-show-for="buyer">
+          <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+            <h3>Избранное</h3>
+            <a class="btn-o btn-sm" href="/projects.html">Открыть Реестр</a>
+          </div>
+          <div class="card-body" id="saleFavs" style="min-height:120px">
+            <div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Загружаем избранное…</div>
           </div>
         </div>
       </div>
@@ -969,6 +990,70 @@ strong{color:var(--ink);font-weight:600}
 
   </main>
 </div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     Quick-edit модалка для «Мои объявления» (5 базовых полей)
+     ════════════════════════════════════════════════════════════════ -->
+<div id="pub-edit-modal" class="pub-edit-overlay" aria-hidden="true">
+  <div class="pub-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="pub-edit-title-h">
+    <button type="button" class="pub-edit-close" id="pub-edit-close" aria-label="Закрыть">×</button>
+    <h3 id="pub-edit-title-h">Редактировать объявление</h3>
+    <p class="pub-edit-sub">Изменения сразу видны в&nbsp;Реестре. Полное редактирование развёрнутой анкеты — в&nbsp;будущем обновлении.</p>
+    <form id="pub-edit-form">
+      <input type="hidden" id="pub-edit-id"/>
+      <label class="pub-edit-field"><span>Заголовок</span>
+        <input type="text" id="pub-edit-title" required maxlength="200"/>
+      </label>
+      <div class="pub-edit-grid">
+        <label class="pub-edit-field"><span>Отрасль</span>
+          <input type="text" id="pub-edit-industry" maxlength="80" placeholder="HoReCa, IT, …"/>
+        </label>
+        <label class="pub-edit-field"><span>Регион</span>
+          <input type="text" id="pub-edit-region" maxlength="80" placeholder="Алматы"/>
+        </label>
+      </div>
+      <label class="pub-edit-field"><span>Краткое описание</span>
+        <textarea id="pub-edit-desc" rows="3" maxlength="500"></textarea>
+      </label>
+      <label class="pub-edit-field"><span>Цена / лейбл</span>
+        <input type="text" id="pub-edit-price" maxlength="80" placeholder="от 35 млн KZT"/>
+      </label>
+      <div class="pub-edit-foot">
+        <button type="button" class="btn-o" id="pub-edit-cancel">Отмена</button>
+        <button type="submit" class="btn-r">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+<style>
+  .pub-edit-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;padding:1.25rem}
+  .pub-edit-overlay.show{display:flex}
+  .pub-edit-dialog{background:#fff;border-radius:8px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;padding:1.85rem 1.85rem 1.4rem;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.25);font-family:'Inter',sans-serif}
+  .pub-edit-close{position:absolute;top:.7rem;right:1rem;background:none;border:0;font-size:1.7rem;line-height:1;color:#94a3b8;cursor:pointer;padding:.25rem .5rem;transition:color .2s}
+  .pub-edit-close:hover{color:#0f172a}
+  .pub-edit-dialog h3{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:#0f172a;margin:0 0 .35rem;line-height:1.2}
+  .pub-edit-sub{font-size:.78rem;color:#64748b;line-height:1.5;margin:0 0 1.2rem}
+  .pub-edit-field{display:block;margin-bottom:.95rem;font-size:.78rem;color:#334155}
+  .pub-edit-field span{display:block;font-weight:500;margin-bottom:.3rem;color:#475569}
+  .pub-edit-field input,.pub-edit-field textarea{width:100%;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:4px;font-family:inherit;font-size:.85rem;color:#0f172a;background:#fff;transition:border-color .15s,box-shadow .15s;box-sizing:border-box}
+  .pub-edit-field input:focus,.pub-edit-field textarea:focus{outline:none;border-color:#C8282A;box-shadow:0 0 0 3px rgba(200,40,42,.12)}
+  .pub-edit-field textarea{resize:vertical;min-height:70px}
+  .pub-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:0}
+  .pub-edit-grid .pub-edit-field{margin-bottom:.95rem}
+  .pub-edit-foot{display:flex;gap:.7rem;justify-content:flex-end;margin-top:.4rem}
+  .pub-edit-foot .btn-o,.pub-edit-foot .btn-r{padding:.55rem 1.2rem;font-size:.82rem;font-weight:500;border-radius:4px;cursor:pointer;font-family:inherit;border:1.5px solid transparent;transition:all .15s}
+  .pub-edit-foot .btn-o{background:#fff;border-color:#cbd5e1;color:#475569}
+  .pub-edit-foot .btn-o:hover{border-color:#94a3b8;color:#0f172a}
+  .pub-edit-foot .btn-r{background:#C8282A;color:#fff;border-color:#C8282A}
+  .pub-edit-foot .btn-r:hover{background:#a61f21;border-color:#a61f21}
+  .pub-edit-foot .btn-r:disabled{background:#cbd5e1;border-color:#cbd5e1;cursor:not-allowed}
+  @media(max-width:520px){
+    .pub-edit-dialog{padding:1.4rem 1.15rem 1.15rem}
+    .pub-edit-grid{grid-template-columns:1fr}
+    .pub-edit-foot{flex-direction:column-reverse}
+    .pub-edit-foot .btn-o,.pub-edit-foot .btn-r{width:100%}
+  }
+</style>
 
 <!-- ════════════════════════════════════════════════════════════════
      Стили для развёрнутой карточки (общие для всех 4 шаблонов)
@@ -3439,6 +3524,13 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
     BUSINESS_FOR_SALE: 'Готовый бизнес',
     GOODS: 'Товары / сырьё',
   };
+  // Кэш — нужен openPubEdit чтобы достать существующие значения публикации по id.
+  let myPubsCache = [];
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
   function renderMyPubs(items, containerId) {
     const el = document.getElementById(containerId);
     if (!el) return;
@@ -3447,33 +3539,111 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
       return;
     }
     const rows = items.map((p) => `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border)">
-        <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
           <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);font-weight:500;line-height:1.3">${escapeHtml(p.title)}</div>
           <div style="font-size:.72rem;color:var(--ink4);margin-top:.2rem">${TYPE_LABEL[p.type] || p.type} · ${escapeHtml(p.industry || '—')} · ${escapeHtml(p.region || '—')}</div>
         </div>
         <div style="font-family:'Cormorant Garamond',serif;color:var(--red);font-weight:600;font-size:1rem;white-space:nowrap">${escapeHtml(p.priceLabel || '')}</div>
         <span class="status-pill ${p.status === 'PUBLISHED' ? 'sp-green' : 'sp-gray'}" style="font-size:.6rem;padding:.2rem .55rem;border-radius:3px">${p.status === 'PUBLISHED' ? 'Опубликовано' : p.status}</span>
+        <div style="display:flex;gap:.4rem">
+          <button class="btn-o btn-sm" style="font-size:.7rem;padding:.4rem .7rem" data-pub-edit="${p.id}" title="Редактировать">✎ Редактировать</button>
+          <button class="btn-o btn-sm" style="font-size:.7rem;padding:.4rem .7rem;color:var(--red);border-color:var(--red)" data-pub-delete="${p.id}" title="Удалить">🗑 Удалить</button>
+        </div>
       </div>
     `).join('');
     el.innerHTML = rows;
-  }
-  function escapeHtml(s) {
-    return String(s || '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-  try {
-    const { items } = await AC.myPublications();
-    // Все контейнеры — сразу заполняем все 3 (seeker/franchise/sale), показывается всегда тот, на чьём dashboard юзер)
-    renderMyPubs(items, 'seekerMyPubs');
-    renderMyPubs(items, 'franchiseMyPubs');
-    renderMyPubs(items, 'saleMyPubs');
-  } catch (err) {
-    console.warn('Failed to load my publications:', err);
-    ['seekerMyPubs','franchiseMyPubs','saleMyPubs'].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить объявления.</div>';
+    // Edit-handler — открывает quick-edit модалку с данными из кэша
+    el.querySelectorAll('[data-pub-edit]').forEach((btn) => {
+      btn.addEventListener('click', () => openPubEdit(btn.getAttribute('data-pub-edit')));
+    });
+    // Delete-handler — confirm + DELETE /publications/:id + refresh
+    el.querySelectorAll('[data-pub-delete]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-pub-delete');
+        if (!confirm('Удалить это объявление? Действие необратимо.')) return;
+        btn.disabled = true;
+        try {
+          await AC.deletePublication(id);
+          await loadAndRenderMyPubs();
+        } catch (e) {
+          alert('Не удалось удалить: ' + (e.message || 'ошибка'));
+          btn.disabled = false;
+        }
+      });
     });
   }
+
+  // Quick-edit: правит 5 ключевых полей (title/industry/region/shortDesc/priceLabel).
+  // Type-specific data-поля редактируются через полный flow (пока не реализован).
+  function openPubEdit(pubId) {
+    const pub = myPubsCache.find((p) => p.id === pubId);
+    if (!pub) return;
+    document.getElementById('pub-edit-id').value = pub.id;
+    document.getElementById('pub-edit-title').value = pub.title || '';
+    document.getElementById('pub-edit-industry').value = pub.industry || '';
+    document.getElementById('pub-edit-region').value = pub.region || '';
+    document.getElementById('pub-edit-desc').value = pub.shortDesc || '';
+    document.getElementById('pub-edit-price').value = pub.priceLabel || '';
+    document.getElementById('pub-edit-modal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePubEdit() {
+    document.getElementById('pub-edit-modal').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  // Bind модал-хендлеры один раз (форма + кнопки закрытия)
+  (function bindPubEditModal() {
+    const modal = document.getElementById('pub-edit-modal');
+    if (!modal) return;
+    document.getElementById('pub-edit-cancel').addEventListener('click', closePubEdit);
+    document.getElementById('pub-edit-close').addEventListener('click', closePubEdit);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closePubEdit(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('show')) closePubEdit(); });
+    document.getElementById('pub-edit-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('pub-edit-id').value;
+      const payload = {
+        title: document.getElementById('pub-edit-title').value.trim(),
+        industry: document.getElementById('pub-edit-industry').value.trim() || null,
+        region: document.getElementById('pub-edit-region').value.trim() || null,
+        shortDesc: document.getElementById('pub-edit-desc').value.trim() || null,
+        priceLabel: document.getElementById('pub-edit-price').value.trim() || null,
+      };
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      const oldText = submitBtn.textContent;
+      submitBtn.textContent = 'Сохраняем…';
+      try {
+        await AC.updatePublication(id, payload);
+        closePubEdit();
+        await loadAndRenderMyPubs();
+      } catch (err) {
+        alert('Не удалось сохранить: ' + (err.message || 'ошибка'));
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = oldText;
+      }
+    });
+  })();
+
+  async function loadAndRenderMyPubs() {
+    try {
+      const { items } = await AC.myPublications();
+      myPubsCache = items;
+      // Все контейнеры — сразу заполняем (seeker/franchise/sale), отображается тот, на чьём dashboard юзер.
+      renderMyPubs(items, 'seekerMyPubs');
+      renderMyPubs(items, 'franchiseMyPubs');
+      renderMyPubs(items, 'saleMyPubs');
+    } catch (err) {
+      console.warn('Failed to load my publications:', err);
+      ['seekerMyPubs','franchiseMyPubs','saleMyPubs'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить объявления.</div>';
+      });
+    }
+  }
+  await loadAndRenderMyPubs();
 
   // ── Избранное (для покупателей) — investor-dashboard #investorFavs ──
   function renderFavs(items, containerId) {
@@ -3510,11 +3680,17 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   }
   try {
     const { items } = await AC.myFavorites();
+    // 3 buyer-dashboards: investor / franchise / sale. Все заполняем, applyRoleVisibility
+    // показывает блок только в правильной панели через data-show-for="buyer".
     renderFavs(items, 'investorFavs');
+    renderFavs(items, 'franchiseFavs');
+    renderFavs(items, 'saleFavs');
   } catch (err) {
     console.warn('Failed to load favorites:', err);
-    const el = document.getElementById('investorFavs');
-    if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить избранное.</div>';
+    ['investorFavs','franchiseFavs','saleFavs'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить избранное.</div>';
+    });
   }
 
   // ── Загрузка баланса кошелька (отображается на всех dashboard'ах) ──
