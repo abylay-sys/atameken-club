@@ -3685,13 +3685,18 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   async function loadAndRenderMyPubs() {
     try {
       const { items } = await AC.myPublications();
+      // ─── TEMP DEBUG ───
+      // Если «Мои объявления» пустые при наличии публикаций в Реестре,
+      // ниже в консоли видно: какой userId сейчас активен и какие пабы вернул бэк.
+      console.log('[MyPubs] user:', AC.getUser() && { id: AC.getUser().id, email: AC.getUser().email, role: AC.getUser().role });
+      console.log('[MyPubs] items count:', items.length, 'items:', items);
       myPubsCache = items;
       // Все контейнеры — сразу заполняем (seeker/franchise/sale), отображается тот, на чьём dashboard юзер.
       renderMyPubs(items, 'seekerMyPubs');
       renderMyPubs(items, 'franchiseMyPubs');
       renderMyPubs(items, 'saleMyPubs');
     } catch (err) {
-      console.warn('Failed to load my publications:', err);
+      console.warn('[MyPubs] Failed to load my publications:', err);
       ['seekerMyPubs','franchiseMyPubs','saleMyPubs'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить объявления.</div>';
