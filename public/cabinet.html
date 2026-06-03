@@ -422,6 +422,16 @@ strong{color:var(--ink);font-weight:600}
             <div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Загружаем ваши объявления…</div>
           </div>
         </div>
+        <!-- Избранное — доступно всем ролям (даже продавцы хотят закладывать интересные карточки) -->
+        <div class="card">
+          <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+            <h3>Избранное</h3>
+            <a class="btn-o btn-sm" href="/projects.html">Открыть Реестр</a>
+          </div>
+          <div class="card-body" id="seekerFavs" style="min-height:120px">
+            <div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Загружаем избранное…</div>
+          </div>
+        </div>
       </div>
 
       <!-- Services Panel -->
@@ -657,8 +667,8 @@ strong{color:var(--ink);font-weight:600}
             <div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Загружаем ваши объявления…</div>
           </div>
         </div>
-        <!-- Избранное для покупателей-франчайзи (заполняется renderFavs) -->
-        <div class="card" data-show-for="buyer">
+        <!-- Избранное — доступно всем ролям (data-show-for убран, было только buyer) -->
+        <div class="card">
           <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
             <h3>Избранное</h3>
             <a class="btn-o btn-sm" href="/projects.html">Открыть Реестр</a>
@@ -731,8 +741,8 @@ strong{color:var(--ink);font-weight:600}
             <div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Загружаем ваши объявления…</div>
           </div>
         </div>
-        <!-- Избранное для биз-байеров и гудс-байеров (заполняется renderFavs) -->
-        <div class="card" data-show-for="buyer">
+        <!-- Избранное — доступно всем ролям (data-show-for убран, было только buyer) -->
+        <div class="card">
           <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
             <h3>Избранное</h3>
             <a class="btn-o btn-sm" href="/projects.html">Открыть Реестр</a>
@@ -3687,14 +3697,15 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   }
   try {
     const { items } = await AC.myFavorites();
-    // 3 buyer-dashboards: investor / franchise / sale. Все заполняем, applyRoleVisibility
-    // показывает блок только в правильной панели через data-show-for="buyer".
+    // 4 dashboard'а (seeker/investor/franchise/sale) × оба типа (продавец/покупатель).
+    // Заполняем все контейнеры — отображается тот, на чьём dashboard'е юзер.
+    renderFavs(items, 'seekerFavs');
     renderFavs(items, 'investorFavs');
     renderFavs(items, 'franchiseFavs');
     renderFavs(items, 'saleFavs');
   } catch (err) {
     console.warn('Failed to load favorites:', err);
-    ['investorFavs','franchiseFavs','saleFavs'].forEach((id) => {
+    ['seekerFavs','investorFavs','franchiseFavs','saleFavs'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить избранное.</div>';
     });
