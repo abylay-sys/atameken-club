@@ -29,25 +29,53 @@ a{color:inherit;text-decoration:none}
 strong{color:var(--ink);font-weight:600}
 
 /* TOP NAV */
-.top-nav{background:#fff;border-bottom:1px solid var(--border);padding:.7rem 1.75rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,22,32,.06)}
-.tn-logo{display:flex;align-items:center;gap:.6rem}
+.top-nav{background:#fff;border-bottom:1px solid var(--border);padding:.7rem 1.75rem;display:flex;align-items:center;gap:1.5rem;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,22,32,.06)}
+.tn-logo{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+/* Ссылки переднего блока (Главная, Реестр, …) — в одной полосе с логотипом и правым блоком */
+.tn-links{display:flex;list-style:none;align-items:center;gap:1.4rem;flex:1;justify-content:center;margin:0;padding:0;flex-wrap:wrap}
+.tn-links a{font-size:.82rem;font-weight:500;letter-spacing:.04em;color:var(--ink3);white-space:nowrap;transition:color .2s;position:relative;padding:.2rem 0}
+.tn-links a:hover{color:var(--red)}
+.tn-links a[aria-current="page"]{color:var(--red);font-weight:600}
+.tn-links a[aria-current="page"]::after{content:'';position:absolute;left:0;right:0;bottom:-.4rem;height:2px;background:var(--red);border-radius:1px}
 .tn-emb{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tn-emb svg{width:14px;height:14px;color:#fff}
 .tn-name{font-family:'Cormorant Garamond',serif;display:flex;flex-direction:column;line-height:1.05;white-space:nowrap;color:var(--ink)}
 .tn-name-top{font-size:.92rem;font-weight:500;letter-spacing:.02em}
 .tn-name-bot{font-size:1.08rem;font-weight:600;letter-spacing:.04em;margin-top:.05rem}
-.tn-right{display:flex;align-items:center;gap:.85rem}
+.tn-right{display:flex;align-items:center;gap:.85rem;flex-shrink:0}
 .tn-user{display:flex;align-items:center;gap:.55rem;font-size:var(--t2);color:var(--ink3)}
-.tn-avatar{width:30px;height:30px;border-radius:50%;background:var(--red-dim2);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--red)}
+.tn-user-name{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tn-avatar{width:30px;height:30px;border-radius:50%;background:var(--red-dim2);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--red);flex-shrink:0}
 .tn-back{font-size:var(--t2);font-weight:500;color:var(--ink3);display:flex;align-items:center;gap:.35rem;transition:color .2s}
 .tn-back:hover{color:var(--red)}
 .tn-back svg{width:13px;height:13px}
+/* Language dropdown — копия из landing.css чтобы внешний вид совпадал */
+.lang-dd{position:relative;font-family:'Inter',sans-serif}
+.lang-dd-toggle{display:flex;align-items:center;gap:.35rem;padding:.35rem .55rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);background:#fff;border:1px solid var(--border);border-radius:3px;cursor:pointer;font-family:inherit;transition:all .2s;min-width:54px;justify-content:center}
+.lang-dd-toggle:hover{border-color:var(--red);color:var(--red)}
+.lang-dd-chev{width:9px;height:9px;transition:transform .25s}
+.lang-dd.open .lang-dd-chev{transform:rotate(180deg)}
+.lang-switch{position:absolute;top:calc(100% + 4px);right:0;display:none;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:3px;box-shadow:0 6px 20px rgba(0,0,0,.08);overflow:hidden;z-index:1000;min-width:84px}
+.lang-dd.open .lang-switch{display:flex}
+.lang-btn{padding:.55rem .85rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);background:#fff;border:none;cursor:pointer;font-family:inherit;transition:all .15s;text-align:left}
+.lang-btn:hover{background:var(--bg);color:var(--red)}
+.lang-btn.active{background:var(--red);color:#fff}
+.lang-btn.active:hover{background:var(--red);color:#fff}
+.lang-btn+.lang-btn{border-top:1px solid var(--border)}
+@media(max-width:1024px){
+  .tn-links{gap:.85rem}
+  .tn-links a{font-size:.74rem}
+  .tn-user-name{display:none}
+}
+@media(max-width:900px){
+  .top-nav{padding:.6rem 1rem;gap:.5rem}
+  .tn-links{display:none}
+  .tn-name-top{display:none}
+  .tn-name-bot{font-size:.95rem}
+}
 
 /* ВКЛАДКИ ПЕРЕДНЕГО БЛОКА — strip между top-nav и Чердаком */
-.cab-front-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.15rem;padding:.5rem 1.5rem;overflow-x:auto;scrollbar-width:thin}
-.cab-front-link{font-size:.78rem;font-weight:500;color:var(--ink3);padding:.45rem .85rem;border-radius:4px;white-space:nowrap;transition:all .18s;flex-shrink:0}
-.cab-front-link:hover{background:var(--bg);color:var(--red)}
-@media(max-width:720px){.cab-front-nav{padding:.4rem .85rem;gap:0}.cab-front-link{font-size:.72rem;padding:.4rem .65rem}}
+/* .cab-front-nav убран — ссылки переехали в .top-nav (.tn-links) как на лендинге */
 
 /* «ЧЕРДАК» — 8 категорий (как «8 типов активностей» на главной) */
 .type-bar{background:#fff;border-bottom:1px solid var(--border);padding:.85rem 1.5rem .9rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem .55rem;box-shadow:0 1px 0 var(--border)}
@@ -291,33 +319,44 @@ strong{color:var(--ink);font-weight:600}
 </head>
 <body>
 
-<!-- TOP NAV -->
-<div class="top-nav">
+<!-- TOP NAV — единая полоса как на лендингах: логотип | ссылки | RU·аватар·Выйти -->
+<div class="top-nav" id="nav">
   <a href="index.html" class="tn-logo">
     <div class="tn-emb">
       <img src="/assets/logo.png" alt="ATAMEKEN Club" width="34" height="34" style="display:block;border-radius:50%"/>
     </div>
     <span class="tn-name"><span class="tn-name-top">Бизнес-сообщество</span><span class="tn-name-bot">«ATAMEKEN Club»</span></span>
   </a>
+  <ul class="tn-links nav-links" aria-label="Передний блок">
+    <li><a href="/index.html">Главная</a></li>
+    <li><a href="/projects.html">Реестр</a></li>
+    <li><a href="/events.html">Календарь</a></li>
+    <li><a href="/pricing.html">Тарифы</a></li>
+    <li><a href="/services.html">Дополнительные услуги</a></li>
+    <li><a href="/partners.html">Партнёры</a></li>
+    <li><a href="/residents.html">Резиденты</a></li>
+  </ul>
   <div class="tn-right">
-    <a href="#" id="btn-logout" class="tn-back">Выйти</a>
+    <!-- Language dropdown (i18n.js его инициализирует) -->
+    <div class="lang-dd" id="langDD">
+      <button class="lang-dd-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-dd-current">RU</span>
+        <svg class="lang-dd-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 5 6 8 9 5"/></svg>
+      </button>
+      <div class="lang-switch">
+        <button class="lang-btn active">RU</button>
+        <button class="lang-btn">KZ</button>
+        <button class="lang-btn">EN</button>
+        <button class="lang-btn">中文</button>
+      </div>
+    </div>
     <div class="tn-user">
       <div class="tn-avatar" id="avatarText">-</div>
-      <span id="userNameDisplay">Загрузка…</span>
+      <span id="userNameDisplay" class="tn-user-name">Загрузка…</span>
     </div>
+    <a href="#" id="btn-logout" class="tn-back">Выйти</a>
   </div>
 </div>
-
-<!-- ВКЛАДКИ ПЕРЕДНЕГО БЛОКА — продублированы внутри Кабинета для удобной навигации -->
-<nav class="cab-front-nav" aria-label="Передний блок">
-  <a href="/index.html" class="cab-front-link">Главная</a>
-  <a href="/projects.html" class="cab-front-link">Реестр</a>
-  <a href="/events.html" class="cab-front-link">Календарь</a>
-  <a href="/pricing.html" class="cab-front-link">Тарифы</a>
-  <a href="/services.html" class="cab-front-link">Дополнительные услуги</a>
-  <a href="/partners.html" class="cab-front-link">Партнёры</a>
-  <a href="/residents.html" class="cab-front-link">Резиденты</a>
-</nav>
 
 <!-- TYPE SWITCHER — «Чердак» Личного Кабинета: 8 категорий (4 продавца сверху, 4 покупателя снизу) -->
 <div class="type-bar" aria-label="8 категорий">
@@ -3400,6 +3439,8 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
 
 <!-- ═══ Backend integration ═══ -->
 <script src="/assets/api.js"></script>
+<!-- i18n: подключает language-dropdown в шапке (RU / KZ / EN / 中文) -->
+<script src="/assets/i18n.js"></script>
 <script>
 (async function () {
   // Если зашли по ссылке "Подробнее" с тарифной страницы — показываем детали услуги.
