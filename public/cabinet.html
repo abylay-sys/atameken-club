@@ -2591,8 +2591,12 @@ function showPublication(sellerType) {
         data: formData,
       });
       alert('Готово! Карточка опубликована в Реестре.\n\nID: ' + publication.id);
-      // Возвращаемся в Обзор
+      // Возвращаемся в Обзор и сразу обновляем «Мои объявления»
+      // (loadAndRenderMyPubs экспонируется на window в IIFE ниже).
       returnToCabinet();
+      if (typeof window.loadAndRenderMyPubs === 'function') {
+        window.loadAndRenderMyPubs();
+      }
     } catch (err) {
       console.error('Publication failed:', err);
       alert('Не удалось опубликовать: ' + (err.message || 'попробуйте ещё раз'));
@@ -3643,6 +3647,9 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
       });
     }
   }
+  // Экспонируем на window чтобы вызывать из showPublication-submit (создание новой
+  // публикации) и обновлять «Мои объявления» без полной перезагрузки страницы.
+  window.loadAndRenderMyPubs = loadAndRenderMyPubs;
   await loadAndRenderMyPubs();
 
   // ── Избранное (для покупателей) — investor-dashboard #investorFavs ──
