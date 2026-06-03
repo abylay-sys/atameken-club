@@ -3512,31 +3512,38 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
     banner.style.display = ''; // reset, может быть скрыт из SUBMITTED state
     banner.classList.remove('warning', 'success', 'info');
 
+    // ─── stat-status / stat-fill — legacy-элементы из старого dashboard, после
+    // refactor'a top-nav были удалены из HTML. Делаем null-safe set, чтобы
+    // updateStatusBanner не падал с TypeError и не блокировал loadAndRenderMyPubs. ───
+    const statEl = $('stat-status');
+    const fillEl = $('stat-fill');
+    const setStat = (v) => { if (statEl) statEl.textContent = v; };
+
     if (!profile || profile.status === 'DRAFT') {
       banner.classList.add('warning');
       title.textContent = 'Профиль не верифицирован';
       desc.textContent = 'Заполните анкету и отправьте её на проверку';
       actions.innerHTML = '<a class="btn-r btn-sm" href="/verify.html">Перейти к анкете</a>';
-      $('stat-status').textContent = 'Черновик';
+      setStat('Черновик');
     } else if (profile.status === 'SUBMITTED') {
       // Заявка отправлена — баннер скрываем, ответственность за публикацию на Пользователе (см. Пользовательское соглашение)
       banner.style.display = 'none';
-      $('stat-status').textContent = 'Опубликовано';
+      setStat('Опубликовано');
     } else if (profile.status === 'VERIFIED') {
       banner.classList.add('success');
       title.textContent = 'Профиль верифицирован';
       desc.textContent = 'Ваша карточка опубликована в каталоге ATAMEKEN Club.';
       actions.innerHTML = '';
-      $('stat-status').textContent = 'Верифицирован';
+      setStat('Верифицирован');
     } else if (profile.status === 'REJECTED') {
       banner.classList.add('warning');
       title.textContent = 'Заявка отклонена';
       desc.textContent = profile.rejectedReason || 'Свяжитесь с оператором для уточнения.';
       actions.innerHTML = '<a class="btn-r btn-sm" href="/verify.html">Исправить и отправить</a>';
-      $('stat-status').textContent = 'Отклонён';
+      setStat('Отклонён');
     }
 
-    $('stat-fill').textContent = computeFill(profile) + '%';
+    if (fillEl) fillEl.textContent = computeFill(profile) + '%';
   }
 
   // Header user info
