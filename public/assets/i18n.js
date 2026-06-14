@@ -684,6 +684,31 @@
     'Свяжитесь с оператором для уточнения и отправьте заявку повторно.': { kk: 'Нақтылау үшін оператормен хабарласып, өтінімді қайталап жіберіңіз.', en: 'Contact the operator for clarification and resubmit.', zh: '请联系运营方了解详情并重新提交申请。' },
   };
 
+  // ─── HTML-блоки: элементы с инлайн-разметкой (<em>, <br>) ────────────────────
+  // Текстовый walker бьёт такой элемент на куски по тегам и переводит только
+  // фрагменты из D — но при смене языка меняется порядок слов (особенно в zh),
+  // и фрагментный перевод ломается. Поэтому такие элементы помечаем
+  //   data-i18n-html="<key>" data-i18n-skip
+  // и переводим целиком, подставляя готовый innerHTML по ключу из HTML_D.
+  const HTML_D = {
+    'hero-title': {
+      ru: 'Бизнес-сообщество «ATAMEKEN&nbsp;Club» — <em>универсальная площадка</em> для предпринимателей со всего мира! Надёжный, безопасный и эффективный инструмент международного сотрудничества.',
+      kk: '«ATAMEKEN&nbsp;Club» бизнес-қауымдастығы — бүкіл әлем кәсіпкерлеріне арналған <em>әмбебап алаң</em>! Халықаралық ынтымақтастықтың сенімді, қауіпсіз және тиімді құралы.',
+      en: 'The «ATAMEKEN&nbsp;Club» business community — a <em>universal platform</em> for entrepreneurs from around the world! A reliable, safe and effective tool for international cooperation.',
+      zh: '«ATAMEKEN&nbsp;Club» 商业社区——面向全球创业者的<em>综合平台</em>！国际合作中可靠、安全、高效的工具。',
+    },
+  };
+
+  function applyHtmlBlocks(lang) {
+    document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-html');
+      const entry = HTML_D[key];
+      if (!entry) return;
+      const html = entry[lang] || entry.ru;
+      if (html != null && el.innerHTML !== html) el.innerHTML = html;
+    });
+  }
+
   // ─── Helpers ────────────────────────────────────────────────────────────────
   const LANGS = ['ru', 'kk', 'en', 'zh'];
   const BTN_LABELS = { ru: 'RU', kk: 'KZ', en: 'EN', zh: '中文' };
@@ -768,6 +793,7 @@
   function applyLang(lang) {
     if (!LANGS.includes(lang)) lang = 'ru';
     walkAndTranslate(lang);
+    applyHtmlBlocks(lang);
     setActiveButton(lang);
     try { localStorage.setItem('ac_lang', lang); } catch (_) {}
   }
