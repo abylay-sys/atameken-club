@@ -304,8 +304,8 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   function showPop(target, list, dateStr){
     const p = ensurePop();
     const dt = parseYMD(dateStr);
-    const dateLabel = dt.getDate()+' '+MONTHS[dt.getMonth()].toLowerCase()+' '+dt.getFullYear();
-    let html = '<div class="cal-pop-date">'+dateLabel+'</div>';
+    // Месяц в отдельном <span> — чтобы i18n перевёл его как отдельную ноду
+    let html = '<div class="cal-pop-date">'+dt.getDate()+' <span>'+MONTHS[dt.getMonth()].toLowerCase()+'</span> '+dt.getFullYear()+'</div>';
     list.forEach(ev=>{
       const past = isPast(ev.date);
       const statusCls = past ? 'past' : (ev.status==='open'?'open':'closed');
@@ -405,7 +405,9 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   }
 
   function renderSide(){
-    sideMonthTitle.textContent = 'Мероприятия в '+MONTHS[viewMonth].toLowerCase();
+    // Месяц — отдельной текст-нодой (<span>), чтобы i18n перевёл и подпись, и месяц.
+    // Иначе «Мероприятия в май» — одна нода, которой нет в словаре.
+    sideMonthTitle.innerHTML = 'Мероприятия в <span>'+MONTHS[viewMonth].toLowerCase()+'</span>';
     const monthEvts = events
       .filter(e=>{const d=parseYMD(e.date);return d.getFullYear()===viewYear && d.getMonth()===viewMonth;})
       .sort((a,b)=>a.date.localeCompare(b.date));
