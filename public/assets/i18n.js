@@ -909,6 +909,7 @@
   // ─── Helpers ────────────────────────────────────────────────────────────────
   const LANGS = ['ru', 'kk', 'en', 'zh'];
   const BTN_LABELS = { ru: 'RU', kk: 'KZ', en: 'EN', zh: '中文' };
+  let currentLang = 'ru'; // текущий язык — нужен MutationObserver'у для динам. контента
 
   // Cache of original Russian text per text node, keyed by a WeakMap.
   // We rebuild on lang change instead of caching to keep things simple.
@@ -944,9 +945,26 @@
     return lead + t + tail;
   }
 
-  function walkAndTranslate(lang) {
+  const ATTRS = ['placeholder', 'title', 'aria-label', 'alt'];
+  function translateAttrs(el, lang) {
+    if (!el || el.nodeType !== 1 || !el.hasAttribute) return;
+    ATTRS.forEach((a) => {
+      if (!el.hasAttribute(a)) return;
+      try {
+        const cacheKey = 'i18nOrig' + a.replace(/(^|-)([a-z])/g, (_, _d, c) => c.toUpperCase());
+        if (!el.dataset[cacheKey]) el.dataset[cacheKey] = el.getAttribute(a);
+        el.setAttribute(a, translateText(el.dataset[cacheKey], lang));
+      } catch (_) { /* ignore */ }
+    });
+  }
+
+  // Переводит поддерево (root по умолчанию — document.body). Вызывается и при
+  // первичном проходе, и из MutationObserver для динамически добавленных узлов.
+  function walkAndTranslate(lang, root) {
+    const scope = root || document.body;
+    if (!scope || scope.nodeType !== 1) return;
     // 1) Text nodes
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
       acceptNode(n) {
         const p = n.parentNode;
         if (!p) return NodeFilter.FILTER_REJECT;
@@ -962,18 +980,45 @@
       const next = translateText(original, lang);
       if (node.nodeValue !== next) node.nodeValue = next;
     }
-    // 2) Attributes: placeholder, title, aria-label, alt
-    const ATTRS = ['placeholder', 'title', 'aria-label', 'alt'];
-    document.querySelectorAll('[placeholder],[title],[aria-label],[alt]').forEach((el) => {
-      ATTRS.forEach((a) => {
-        if (!el.hasAttribute(a)) return;
-        try {
-          const cacheKey = 'i18nOrig' + a.replace(/(^|-)([a-z])/g, (_, _d, c) => c.toUpperCase());
-          if (!el.dataset[cacheKey]) el.dataset[cacheKey] = el.getAttribute(a);
-          el.setAttribute(a, translateText(el.dataset[cacheKey], lang));
-        } catch (_) { /* ignore */ }
-      });
+    // 2) Attributes: placeholder, title, aria-label, alt — сам scope + потомки
+    if (scope.matches && scope.matches('[placeholder],[title],[aria-label],[alt]')) translateAttrs(scope, lang);
+    if (scope.querySelectorAll) scope.querySelectorAll('[placeholder],[title],[aria-label],[alt]').forEach((el) => translateAttrs(el, lang));
+  }
+
+  // Перевод одного добавленного узла (текст-нода или элемент) — для observer.
+  function translateAdded(n, lang) {
+    if (lang === 'ru' || !n) return;
+    if (n.nodeType === 3) {
+      const p = n.parentNode;
+      if (!p) return;
+      const tag = p.nodeName;
+      if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA') return;
+      if (p.closest && p.closest('[data-i18n-skip]')) return;
+      const original = getOriginal(n, n.nodeValue);
+      const next = translateText(original, lang);
+      if (n.nodeValue !== next) n.nodeValue = next;
+    } else if (n.nodeType === 1) {
+      if (n.closest && n.closest('[data-i18n-skip]')) return;
+      walkAndTranslate(lang, n);
+    }
+  }
+
+  // MutationObserver: cabinet.html / services.html рендерят контент через JS
+  // ПОСЛЕ первичного прохода i18n. Наблюдаем за body и переводим новые узлы
+  // в текущем языке. characterData-изменения (наши nodeValue) не наблюдаем —
+  // петли нет. Работает только когда выбран не русский.
+  let _obs = null;
+  function startObserver() {
+    if (_obs || typeof MutationObserver === 'undefined' || !document.body) return;
+    _obs = new MutationObserver((muts) => {
+      if (currentLang === 'ru') return;
+      for (const m of muts) {
+        if (m.addedNodes && m.addedNodes.length) {
+          m.addedNodes.forEach((n) => translateAdded(n, currentLang));
+        }
+      }
     });
+    _obs.observe(document.body, { childList: true, subtree: true });
   }
 
   // Buttons are always in fixed order: RU, KZ, EN, 中文
@@ -996,6 +1041,7 @@
 
   function applyLang(lang) {
     if (!LANGS.includes(lang)) lang = 'ru';
+    currentLang = lang;
     walkAndTranslate(lang);
     applyHtmlBlocks(lang);
     setActiveButton(lang);
@@ -1050,6 +1096,9 @@
     let saved = 'ru';
     try { saved = localStorage.getItem('ac_lang') || 'ru'; } catch (_) {}
     if (saved !== 'ru') applyLang(saved); else setActiveButton('ru');
+    // Наблюдатель за динамическим контентом (кабинет, услуги). Активен всегда,
+    // но переводит только когда выбран не русский (см. currentLang в callback).
+    startObserver();
   }
 
   if (document.readyState === 'loading') {
