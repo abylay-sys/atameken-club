@@ -338,7 +338,9 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
     const startWeekday = (first.getDay() + 6) % 7; // Mon=0
     const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
     const prevMonthDays = new Date(viewYear, viewMonth, 0).getDate();
-    calTitle.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+    // Месяц — отдельной нодой (<span>), чтобы i18n перевёл его («Май 2026» одной
+    // нодой не матчился). Заглавный месяц уже есть в словаре.
+    calTitle.innerHTML = '<span>' + MONTHS[viewMonth] + '</span> ' + viewYear;
 
     let html = '';
     const totalCells = Math.ceil((startWeekday + daysInMonth) / 7) * 7;
