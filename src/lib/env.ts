@@ -53,8 +53,20 @@ export const env = {
   GOOGLE_SERVICE_ACCOUNT_BASE64: optional('GOOGLE_SERVICE_ACCOUNT_BASE64'),
 
   // ── AI-переводчик (Сообщения) ──
-  // OpenAI API key для авто-перевода сообщений между языками собеседников.
-  // Если не задан — переводы не выполняются (показывается оригинальный текст).
+  // Провайдер авто-перевода чата. Пусто = авто-выбор: есть OLLAMA_URL → ollama,
+  // иначе есть OPENAI_API_KEY → openai, иначе перевод отключён.
+  // Явные значения: 'ollama' | 'openai' | 'off'.
+  TRANSLATE_PROVIDER: optional('TRANSLATE_PROVIDER'),
+
+  // Локальный / self-hosted Ollama (0 оплаты за токены). Endpoint вида
+  // http://<host>:11434 — сервер должен быть доступен бэкенду по сети.
+  // Модель: qwen2.5:7b (хороший многоязычный, вкл. казахский). Для слабого
+  // железа — qwen2.5:3b / gemma2:2b (быстрее, качество ниже).
+  OLLAMA_URL: optional('OLLAMA_URL'),
+  OLLAMA_MODEL: optional('OLLAMA_MODEL', 'qwen2.5:7b'),
+
+  // OpenAI API key (fallback-провайдер, платно за токены — но копейки).
+  // Если не задан и Ollama нет — переводы не выполняются (показывается оригинал).
   OPENAI_API_KEY: optional('OPENAI_API_KEY'),
   OPENAI_MODEL: optional('OPENAI_MODEL', 'gpt-4o-mini'),
 

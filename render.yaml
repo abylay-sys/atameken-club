@@ -44,6 +44,19 @@ services:
         sync: false
       - key: GOOGLE_SERVICE_ACCOUNT_BASE64
         sync: false
+      # ── AI-переводчик чата ──
+      # TRANSLATE_PROVIDER: пусто=авто | ollama | openai | off
+      # Для локального Ollama задать OLLAMA_URL (напр. https://ollama.example.com)
+      - key: TRANSLATE_PROVIDER
+        sync: false
+      - key: OLLAMA_URL
+        sync: false
+      - key: OLLAMA_MODEL
+        value: qwen2.5:7b
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
       # ── S3-совместимое хранилище для файлов публикаций ──
       # Рекомендуется Cloudflare R2 (10GB бесплатно + 0 egress).
       # Если эти переменные не заданы — fallback на /tmp/ (файлы стираются при деплое!).
