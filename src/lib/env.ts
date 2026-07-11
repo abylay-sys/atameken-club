@@ -53,20 +53,29 @@ export const env = {
   GOOGLE_SERVICE_ACCOUNT_BASE64: optional('GOOGLE_SERVICE_ACCOUNT_BASE64'),
 
   // ── AI-переводчик (Сообщения) ──
-  // Провайдер авто-перевода чата. Пусто = авто-выбор: есть OLLAMA_URL → ollama,
-  // иначе есть OPENAI_API_KEY → openai, иначе перевод отключён.
-  // Явные значения: 'ollama' | 'openai' | 'off'.
+  // Провайдер авто-перевода чата. Пусто = авто-выбор по конфигу:
+  //   OLLAMA_URL → ollama; GEMINI_API_KEY → gemini; GROQ_API_KEY → groq;
+  //   OPENAI_API_KEY → openai; иначе → off (показываем оригинал).
+  // Явные значения: 'ollama' | 'gemini' | 'groq' | 'openai' | 'off'.
   TRANSLATE_PROVIDER: optional('TRANSLATE_PROVIDER'),
 
-  // Локальный / self-hosted Ollama (0 оплаты за токены). Endpoint вида
-  // http://<host>:11434 — сервер должен быть доступен бэкенду по сети.
-  // Модель: qwen2.5:7b (хороший многоязычный, вкл. казахский). Для слабого
-  // железа — qwen2.5:3b / gemma2:2b (быстрее, качество ниже).
+  // ── Бесплатные хостинговые провайдеры (ключ без карты, ничего не докупать) ──
+  // Groq (console.groq.com): быстро, НЕ обучается на данных. Модель по умолчанию —
+  // llama-3.3-70b-versatile.
+  GROQ_API_KEY: optional('GROQ_API_KEY'),
+  GROQ_MODEL: optional('GROQ_MODEL', 'llama-3.3-70b-versatile'),
+  // Google Gemini (aistudio.google.com): лучший казахский. На free-tier Google
+  // может использовать данные для обучения — учитывать для приватности.
+  GEMINI_API_KEY: optional('GEMINI_API_KEY'),
+  GEMINI_MODEL: optional('GEMINI_MODEL', 'gemini-2.0-flash'),
+
+  // ── Локальный / self-hosted Ollama (0 за токены, но нужна своя машина) ──
+  // Endpoint вида http://<host>:11434, доступный бэкенду. Модель qwen2.5:7b
+  // (многоязычный, вкл. казахский); для слабого железа — qwen2.5:3b / gemma2:2b.
   OLLAMA_URL: optional('OLLAMA_URL'),
   OLLAMA_MODEL: optional('OLLAMA_MODEL', 'qwen2.5:7b'),
 
-  // OpenAI API key (fallback-провайдер, платно за токены — но копейки).
-  // Если не задан и Ollama нет — переводы не выполняются (показывается оригинал).
+  // ── OpenAI (платный fallback — копейки за токены) ──
   OPENAI_API_KEY: optional('OPENAI_API_KEY'),
   OPENAI_MODEL: optional('OPENAI_MODEL', 'gpt-4o-mini'),
 

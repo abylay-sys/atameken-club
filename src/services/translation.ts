@@ -26,16 +26,24 @@ export function normalizeLang(s: string | null | undefined): Lang {
 }
 
 // ─── Выбор провайдера перевода ───────────────────────────────────────────────
-// 'ollama' — локальный/self-hosted Ollama (0 оплаты за токены, вариант Бауыржана)
-// 'openai' — OpenAI API (платно за токены, но копейки)
-// 'off'    — перевод отключён (показываем оригинал всем)
-// Если TRANSLATE_PROVIDER не задан — определяем автоматически по конфигу:
-//   есть OLLAMA_URL → ollama;  иначе есть OPENAI_API_KEY → openai;  иначе off.
-type Provider = 'ollama' | 'openai' | 'off';
+// Бесплатные варианты (ничего не докупать):
+//   'groq'   — Groq free-tier (console.groq.com), быстро, НЕ обучается на данных
+//   'gemini' — Google AI Studio free-tier (aistudio.google.com), лучший казахский
+//   'ollama' — локальный/self-hosted (0 за токены, но нужна своя машина)
+// Платный fallback:
+//   'openai' — OpenAI API (копейки за токены)
+//   'off'    — перевод отключён (показываем оригинал всем)
+//
+// Если TRANSLATE_PROVIDER не задан — авто по конфигу:
+//   OLLAMA_URL → ollama;  GEMINI_API_KEY → gemini;  GROQ_API_KEY → groq;
+//   OPENAI_API_KEY → openai;  иначе → off.
+type Provider = 'ollama' | 'gemini' | 'groq' | 'openai' | 'off';
 function resolveProvider(): Provider {
   const p = (env.TRANSLATE_PROVIDER || '').trim().toLowerCase();
-  if (p === 'ollama' || p === 'openai' || p === 'off') return p;
+  if (['ollama', 'gemini', 'groq', 'openai', 'off'].includes(p)) return p as Provider;
   if (env.OLLAMA_URL) return 'ollama';
+  if (env.GEMINI_API_KEY) return 'gemini';
+  if (env.GROQ_API_KEY) return 'groq';
   if (env.OPENAI_API_KEY) return 'openai';
   return 'off';
 }
@@ -62,7 +70,7 @@ export async function translateToMany(
 ): Promise<Record<string, string>> {
   const provider = resolveProvider();
   if (provider === 'off') return {};
-  const translate = provider === 'ollama' ? ollamaTranslate : openaiTranslate;
+  const translate = PROVIDERS[provider];
 
   const out: Record<string, string> = {};
   await Promise.all(
@@ -80,20 +88,72 @@ export async function translateToMany(
   return out;
 }
 
-// Убираем частые «обёртки» локальных моделей, если модель всё же добавила префикс.
+type TranslateFn = (text: string, src: Lang, dst: Lang) => Promise<string | null>;
+const PROVIDERS: Record<Exclude<Provider, 'off'>, TranslateFn> = {
+  ollama: ollamaTranslate,
+  gemini: geminiTranslate,
+  groq: (t, s, d) => openaiCompatTranslate('https://api.groq.com/openai/v1/chat/completions', env.GROQ_API_KEY, env.GROQ_MODEL, t, s, d),
+  openai: (t, s, d) => openaiCompatTranslate('https://api.openai.com/v1/chat/completions', env.OPENAI_API_KEY, env.OPENAI_MODEL, t, s, d),
+};
+
+// Убираем частые «обёртки» моделей, если модель всё же добавила кавычки/префикс.
 function cleanOutput(s: string): string {
   let t = s.trim();
-  // срезаем окружающие кавычки
   if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith('«') && t.endsWith('»'))) {
     t = t.slice(1, -1).trim();
   }
   return t;
 }
 
-// ─── Провайдер 1: локальный Ollama (POST {OLLAMA_URL}/api/chat) ───────────────
-// Модель задаётся через OLLAMA_MODEL (по умолчанию qwen2.5:7b — хороший
-// многоязычный вариант, включая казахский). Таймаут 20с: подвисший локальный
-// сервер не должен блокировать доставку сообщения.
+// ─── Groq / OpenAI (OpenAI-совместимый Chat Completions API) ─────────────────
+async function openaiCompatTranslate(url: string, apiKey: string, model: string, text: string, srcLang: Lang, dstLang: Lang): Promise<string | null> {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + apiKey },
+    signal: AbortSignal.timeout(20000),
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: 'system', content: systemPrompt(srcLang, dstLang) },
+        { role: 'user', content: text },
+      ],
+      temperature: 0.2,
+      max_tokens: Math.min(1500, Math.max(200, Math.ceil(text.length * 2))),
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`${res.status}: ${body.slice(0, 200)}`);
+  }
+  const data = await res.json() as { choices?: Array<{ message?: { content?: string } }> };
+  const t = data.choices?.[0]?.message?.content;
+  return t ? cleanOutput(t) : null;
+}
+
+// ─── Google Gemini (AI Studio free-tier) ─────────────────────────────────────
+async function geminiTranslate(text: string, srcLang: Lang, dstLang: Lang): Promise<string | null> {
+  const model = env.GEMINI_MODEL;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY)}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(20000),
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: systemPrompt(srcLang, dstLang) }] },
+      contents: [{ role: 'user', parts: [{ text }] }],
+      generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`Gemini ${res.status}: ${body.slice(0, 200)}`);
+  }
+  const data = await res.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
+  const t = data.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('').trim();
+  return t ? cleanOutput(t) : null;
+}
+
+// ─── Локальный Ollama (POST {OLLAMA_URL}/api/chat) ───────────────────────────
 async function ollamaTranslate(text: string, srcLang: Lang, dstLang: Lang): Promise<string | null> {
   const base = env.OLLAMA_URL.replace(/\/+$/, '');
   const res = await fetch(base + '/api/chat', {
@@ -116,33 +176,5 @@ async function ollamaTranslate(text: string, srcLang: Lang, dstLang: Lang): Prom
   }
   const data = await res.json() as { message?: { content?: string } };
   const t = data.message?.content;
-  return t ? cleanOutput(t) : null;
-}
-
-// ─── Провайдер 2: OpenAI (fallback, платно) ──────────────────────────────────
-async function openaiTranslate(text: string, srcLang: Lang, dstLang: Lang): Promise<string | null> {
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + env.OPENAI_API_KEY,
-    },
-    signal: AbortSignal.timeout(20000),
-    body: JSON.stringify({
-      model: env.OPENAI_MODEL,
-      messages: [
-        { role: 'system', content: systemPrompt(srcLang, dstLang) },
-        { role: 'user', content: text },
-      ],
-      temperature: 0.2,
-      max_tokens: Math.min(1500, Math.max(200, Math.ceil(text.length * 2))),
-    }),
-  });
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`OpenAI ${res.status}: ${body.slice(0, 200)}`);
-  }
-  const data = await res.json() as { choices?: Array<{ message?: { content?: string } }> };
-  const t = data.choices?.[0]?.message?.content;
   return t ? cleanOutput(t) : null;
 }

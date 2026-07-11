@@ -45,14 +45,26 @@ services:
       - key: GOOGLE_SERVICE_ACCOUNT_BASE64
         sync: false
       # ── AI-переводчик чата ──
-      # TRANSLATE_PROVIDER: пусто=авто | ollama | openai | off
-      # Для локального Ollama задать OLLAMA_URL (напр. https://ollama.example.com)
+      # TRANSLATE_PROVIDER: пусто=авто | groq | gemini | ollama | openai | off
+      # Бесплатно (ничего не докупать): задать GROQ_API_KEY ИЛИ GEMINI_API_KEY.
       - key: TRANSLATE_PROVIDER
         sync: false
+      # Groq — бесплатный free-tier, ключ без карты (console.groq.com)
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      # Google Gemini — бесплатный free-tier (aistudio.google.com)
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.0-flash
+      # Локальный Ollama (нужна своя всегда-включённая машина)
       - key: OLLAMA_URL
         sync: false
       - key: OLLAMA_MODEL
         value: qwen2.5:7b
+      # OpenAI (платный fallback)
       - key: OPENAI_API_KEY
         sync: false
       - key: OPENAI_MODEL
