@@ -3574,9 +3574,7 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   }
 
   // Header user info
-  console.log('[CAB-INIT] 1. before user setup');
   const user = AC.getUser();
-  console.log('[CAB-INIT] 2. user =', user);
   if (user) {
     const name = user.fullName || user.email;
     $('userNameDisplay').textContent = name;
@@ -3587,12 +3585,10 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
 
     const type = ROLE_TO_TYPE[user.role] || 'seeker';
     const btn = document.querySelector('.type-btn[data-type="' + type + '"]');
-    console.log('[CAB-INIT] 3. resolved type =', type, 'btn?', !!btn);
     if (btn && type !== 'seeker') switchType(type, btn);
     // Применяем role-based показ/скрытие (кошелёк, баннеры, «Мои объявления»)
     if (typeof applyRoleVisibility === 'function') applyRoleVisibility(type);
   }
-  console.log('[CAB-INIT] 4. after user setup');
 
   $('btn-logout').addEventListener('click', async (e) => {
     e.preventDefault();
@@ -3601,7 +3597,6 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   });
 
   // Load profile (для статус-баннера и статистики)
-  console.log('[CAB-INIT] 5. before getProfile');
   let profile = null;
   try {
     const res = await AC.getProfile();
@@ -3609,9 +3604,7 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   } catch (err) {
     console.warn('[CAB-INIT] getProfile failed:', err);
   }
-  console.log('[CAB-INIT] 6. after getProfile, profile=', profile);
   updateStatusBanner(profile);
-  console.log('[CAB-INIT] 7. after updateStatusBanner');
 
   // ── Загрузка собственных публикаций для блоков «Мои объявления» на dashboards ──
   const TYPE_LABEL = {
@@ -3689,7 +3682,6 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
     document.body.style.overflow = '';
   }
   // Bind модал-хендлеры один раз (форма + кнопки закрытия)
-  console.log('[CAB-INIT] 8. before bindPubEditModal');
   (function bindPubEditModal() {
     const modal = document.getElementById('pub-edit-modal');
     if (!modal) { console.warn('[CAB-INIT] pub-edit-modal missing'); return; }
@@ -3727,11 +3719,6 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   async function loadAndRenderMyPubs() {
     try {
       const { items } = await AC.myPublications();
-      // ─── TEMP DEBUG ───
-      // Если «Мои объявления» пустые при наличии публикаций в Реестре,
-      // ниже в консоли видно: какой userId сейчас активен и какие пабы вернул бэк.
-      console.log('[MyPubs] user:', AC.getUser() && { id: AC.getUser().id, email: AC.getUser().email, role: AC.getUser().role });
-      console.log('[MyPubs] items count:', items.length, 'items:', items);
       myPubsCache = items;
       // Все контейнеры — сразу заполняем (seeker/franchise/sale), отображается тот, на чьём dashboard юзер.
       renderMyPubs(items, 'seekerMyPubs');
@@ -3748,9 +3735,7 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
   // Экспонируем на window чтобы вызывать из showPublication-submit (создание новой
   // публикации) и обновлять «Мои объявления» без полной перезагрузки страницы.
   window.loadAndRenderMyPubs = loadAndRenderMyPubs;
-  console.log('[CAB-INIT] 9. about to await loadAndRenderMyPubs');
   await loadAndRenderMyPubs();
-  console.log('[CAB-INIT] 10. after loadAndRenderMyPubs');
 
   // ── Избранное (для покупателей) — investor-dashboard #investorFavs ──
   function renderFavs(items, containerId) {
