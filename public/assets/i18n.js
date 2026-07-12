@@ -1700,6 +1700,9 @@
     applyHtmlBlocks(lang);
     setActiveButton(lang);
     try { localStorage.setItem('ac_lang', lang); } catch (_) {}
+    // Событие для страниц, которые сами рендерят динамический контент
+    // (Реестр, детальная карточка) — они пере-запросят его на новом языке.
+    try { window.dispatchEvent(new CustomEvent('ac-lang-change', { detail: lang })); } catch (_) {}
   }
 
   function wireUp() {

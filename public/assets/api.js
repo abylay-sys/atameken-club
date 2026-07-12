@@ -112,6 +112,9 @@
     async adminReject(id, reason) { return request('POST', '/admin/profiles/' + id + '/reject', { reason }, true); },
 
     // ── Публикации в Реестре ──
+    // curLang() — текущий язык из i18n (localStorage ac_lang). Бэкенд по ?lang=
+    // отдаёт переведённый контент объявления (поле `t`) для не-русского.
+    curLang() { try { return localStorage.getItem('ac_lang') || 'ru'; } catch (_) { return 'ru'; } },
     async listPublications(opts) {
       const q = new URLSearchParams();
       if (opts && opts.type) q.set('type', opts.type);
@@ -120,10 +123,15 @@
       if (opts && opts.limit) q.set('limit', String(opts.limit));
       if (opts && opts.page) q.set('page', String(opts.page));
       if (opts && opts.q) q.set('q', String(opts.q).trim());
+      const lang = this.curLang(); if (lang && lang !== 'ru') q.set('lang', lang);
       const qs = q.toString();
       return request('GET', '/publications' + (qs ? '?' + qs : ''), null, false);
     },
-    async getPublication(id) { return request('GET', '/publications/' + id, null, false); },
+    async getPublication(id) {
+      const lang = this.curLang();
+      const qs = (lang && lang !== 'ru') ? ('?lang=' + encodeURIComponent(lang)) : '';
+      return request('GET', '/publications/' + id + qs, null, false);
+    },
     async myPublications() { return request('GET', '/publications/mine', null, true); },
     async createPublication(payload) { return request('POST', '/publications', payload, true); },
     async updatePublication(id, payload) { return request('PUT', '/publications/' + id, payload, true); },

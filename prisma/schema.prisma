@@ -131,6 +131,12 @@ model Publication {
   // Полный набор полей формы (4 типа разные) — храним как JSON
   data        Json
 
+  // Кэш авто-переводов пользовательского контента объявления.
+  // Формат: { "<lang>": { "src": "<hash>", "fields": { title, shortDesc, ... } } }
+  // Заполняется при создании/обновлении (fire-and-forget через Groq/AI) и
+  // лениво при чтении с ?lang=. src-хеш инвалидирует кэш при правке контента.
+  translations Json?
+
   publishedAt DateTime?         @default(now())
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt

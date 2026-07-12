@@ -2854,6 +2854,7 @@ const TEMPLATE_BY_TYPE = {
 };
 
 async function showPublicationDetail(id){
+  window.__pubDetailId = id; // для пере-рендера при смене языка
   document.querySelectorAll('[id^="type-"]').forEach(d => d.style.display = 'none');
   document.getElementById('type-publication-detail').style.display = 'block';
   document.getElementById('pubDtTitle').textContent = 'Загружаем карточку…';
@@ -2864,6 +2865,11 @@ async function showPublicationDetail(id){
   try {
     const { publication } = await AC.getPublication(id);
     const p = publication;
+    // Авто-перевод контента: бэкенд отдаёт p.t (переведённые поля) при ?lang≠ru.
+    // Подмешиваем в top-level и в data, чтобы шаблоны рендерили на языке просмотра.
+    const tf = p.t || {};
+    ['title','shortDesc','industry','region','priceLabel'].forEach(k => { if (tf[k]) p[k] = tf[k]; });
+    if (p.data) ['description','support','reason','whatIncluded','composition','certificates'].forEach(k => { if (tf[k]) p.data[k] = tf[k]; });
     const meta = PUB_TYPE_META[p.type] || PUB_TYPE_META.INVEST_PROJECT;
     const renderer = TEMPLATE_BY_TYPE[p.type] || renderInvestProject;
     const d = p.data || {};
@@ -3005,6 +3011,15 @@ async function showPublicationDetail(id){
   }
 }
 window.showPublicationDetail = showPublicationDetail;
+
+// Смена языка → если открыта детальная карточка, пере-запрашиваем её
+// (контент придёт переведённым: getPublication шлёт ?lang=).
+window.addEventListener('ac-lang-change', () => {
+  const dt = document.getElementById('type-publication-detail');
+  if (dt && dt.style.display === 'block' && window.__pubDetailId) {
+    showPublicationDetail(window.__pubDetailId);
+  }
+});
 </script>
 
 <script>

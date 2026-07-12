@@ -1,7 +1,62 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
+import { createHash } from 'node:crypto';
 import { prisma } from '../lib/prisma';
 import { requireAuth, optionalAuth } from '../middleware/auth';
+import { translateFields, normalizeLang, translationEnabled, type Lang } from '../services/translation';
+
+// ─── Авто-перевод пользовательского контента объявлений ──────────────────────
+// Языки, на которые прогреваем перевод при публикации. UI переключается на
+// RU/KK/EN/ZH — переводим на 3 нерусских.
+const AUTO_LANGS: Lang[] = ['kk', 'en', 'zh'];
+// Текстовые поля из data, которые имеет смысл переводить (длинные описания).
+const DATA_TEXT_KEYS = ['description', 'support', 'reason', 'whatIncluded', 'composition', 'certificates'];
+type TransBlob = Record<string, { src: string; fields: Record<string, string> }>;
+
+// Собирает переводимые строковые поля объявления (top-level + текст из data).
+function pubFields(p: { title: string; shortDesc: string | null; industry: string | null; region: string | null; priceLabel: string | null; data: any }): Record<string, string> {
+  const f: Record<string, string> = {};
+  const put = (k: string, v: unknown) => { if (typeof v === 'string' && v.trim()) f[k] = v; };
+  put('title', p.title); put('shortDesc', p.shortDesc); put('industry', p.industry);
+  put('region', p.region); put('priceLabel', p.priceLabel);
+  const d = (p.data as Record<string, unknown>) || {};
+  for (const k of DATA_TEXT_KEYS) put(k, d[k]);
+  return f;
+}
+function fieldsHash(f: Record<string, string>): string {
+  return createHash('sha256').update(JSON.stringify(f)).digest('hex').slice(0, 16);
+}
+
+// Возвращает переведённые поля для lang: из кэша (translations JSON) или
+// переводит через AI и кэширует. null — если провайдер off / lang=ru / нет полей.
+async function ensureTranslation(pubId: string, lang: Lang, fields: Record<string, string>, blob: TransBlob | null): Promise<Record<string, string> | null> {
+  if (lang === 'ru' || !translationEnabled()) return null;
+  if (!Object.keys(fields).length) return null;
+  const hash = fieldsHash(fields);
+  const cached = blob?.[lang];
+  if (cached && cached.src === hash) return cached.fields; // кэш свежий
+  const translated = await translateFields(fields, lang);
+  if (!Object.keys(translated).length) return null;
+  // read-modify-write: подмешиваем перевод в translations, не затирая другие языки
+  const fresh = await prisma.publication.findUnique({ where: { id: pubId }, select: { translations: true } });
+  const cur = ((fresh?.translations as TransBlob | null) || {}) as TransBlob;
+  cur[lang] = { src: hash, fields: translated };
+  await prisma.publication.update({ where: { id: pubId }, data: { translations: cur as any } }).catch(() => {});
+  return translated;
+}
+
+// Фоновый прогрев всех AUTO_LANGS (fire-and-forget при создании/обновлении).
+function warmTranslations(pub: { id: string; title: string; shortDesc: string | null; industry: string | null; region: string | null; priceLabel: string | null; data: any; translations?: any }): void {
+  if (!translationEnabled()) return;
+  const fields = pubFields(pub);
+  if (!Object.keys(fields).length) return;
+  const blob = (pub.translations as TransBlob | null) || null;
+  (async () => {
+    for (const lang of AUTO_LANGS) {
+      try { await ensureTranslation(pub.id, lang, fields, blob); } catch (_) { /* пропускаем язык */ }
+    }
+  })().catch(() => {});
+}
 
 // 4 типа публикации соответствуют 4 категориям «условных продавцов»
 const PUBLICATION_TYPES = ['INVEST_PROJECT', 'FRANCHISE', 'BUSINESS_FOR_SALE', 'GOODS'] as const;
@@ -157,23 +212,30 @@ export default async function publicationsRoutes(app: FastifyInstance) {
           priceLabel: true,
           publishedAt: true,
           data: true,
+          translations: true,
         },
       }),
       prisma.publication.count({ where }),
     ]);
-    // Фильтруем data — оставляем только публично-безопасные поля
-    const items = rawItems.map((p) => {
+
+    // Целевой язык каталога (?lang=). Для не-ru переводим карточки (кэш в БД).
+    const lang = normalizeLang((req.query as any).lang);
+    const doTranslate = lang !== 'ru' && translationEnabled();
+
+    const items = await Promise.all(rawItems.map(async (p) => {
       const d = (p.data as Record<string, unknown> | null) || null;
       const safeData = d
-        ? {
-            photo: d.photo ?? null,
-            verifications: Array.isArray(d.verifications) ? d.verifications : [],
-            isResident: !!d.isResident,
-          }
+        ? { photo: d.photo ?? null, verifications: Array.isArray(d.verifications) ? d.verifications : [], isResident: !!d.isResident }
         : null;
-      return { ...p, data: safeData };
-    });
-    return { items, total, page, limit, totalPages: Math.max(Math.ceil(total / limit), 1) };
+      const { translations, ...rest } = p as any;
+      let t: Record<string, string> | null = null;
+      if (doTranslate) {
+        try { t = await ensureTranslation(p.id, lang, pubFields(p), (translations as TransBlob | null) || null); }
+        catch (_) { t = null; } // при сбое показываем оригинал
+      }
+      return { ...rest, data: safeData, ...(t ? { t } : {}) };
+    }));
+    return { items, total, page, limit, totalPages: Math.max(Math.ceil(total / limit), 1), lang };
   });
 
   // ── Развёрнутая карточка (платная — пока без gating, заглушка) ──
@@ -218,6 +280,15 @@ export default async function publicationsRoutes(app: FastifyInstance) {
         isResident: !!rawData.isResident,
       };
     }
+    // Перевод контента карточки на язык просмотра (?lang=). Синхронно для
+    // одной карточки — быстро; результат кэшируется в БД.
+    const lang = normalizeLang((req.query as any).lang);
+    let t: Record<string, string> | null = null;
+    if (lang !== 'ru' && translationEnabled()) {
+      try { t = await ensureTranslation(pub.id, lang, pubFields(pub), (pub.translations as TransBlob | null) || null); }
+      catch (_) { t = null; }
+    }
+
     return {
       publication: {
         id: pub.id,
@@ -231,6 +302,7 @@ export default async function publicationsRoutes(app: FastifyInstance) {
         data: publicData,
         isOwner,
         hasFullAccess,
+        ...(t ? { t } : {}),
       },
     };
   });
@@ -279,6 +351,7 @@ export default async function publicationsRoutes(app: FastifyInstance) {
       },
     });
 
+    warmTranslations(pub); // fire-and-forget: переводим контент на kk/en/zh
     return reply.code(201).send({ publication: pub });
   });
 
@@ -326,6 +399,8 @@ export default async function publicationsRoutes(app: FastifyInstance) {
         ...(parsed.data.status ? { status: parsed.data.status } : {}),
       },
     });
+    // Контент мог измениться — warmTranslations перегреет кэш (инвалидация по hash полей).
+    warmTranslations(pub);
     return { publication: pub };
   });
 

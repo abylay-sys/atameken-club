@@ -604,6 +604,13 @@ function renderApiCards(items){
   }
   grid.innerHTML = items.map(p => {
     const meta = TYPE_META[p.type] || TYPE_META.INVEST_PROJECT;
+    // Авто-перевод контента: бэкенд отдаёт p.t (переведённые поля) при ?lang≠ru.
+    const tf = (p && p.t) || {};
+    const title = tf.title || p.title;
+    const shortDesc = tf.shortDesc || p.shortDesc;
+    const region = tf.region || p.region;
+    const industry = tf.industry || p.industry;
+    const priceLabel = tf.priceLabel || p.priceLabel;
     const verifs = (p && p.data && Array.isArray(p.data.verifications)) ? p.data.verifications : [];
     const isResident = !!(p && p.data && p.data.isResident);
     const rawPhotoUrl = (p && p.data && p.data.photo && p.data.photo.url) ? p.data.photo.url : '';
@@ -627,15 +634,15 @@ function renderApiCards(items){
         ${topVisual}
         <div class="pcm-body">
           <span class="pcm-type">${escapeHtml(meta.label)}</span>
-          <h3 class="pcm-title">${escapeHtml(p.title)}</h3>
+          <h3 class="pcm-title">${escapeHtml(title)}</h3>
           ${shevHtml ? '<div class="pcm-shev">' + shevHtml + '</div>' : ''}
-          ${p.shortDesc ? '<p class="pcm-desc">' + escapeHtml(p.shortDesc) + '</p>' : ''}
+          ${shortDesc ? '<p class="pcm-desc">' + escapeHtml(shortDesc) + '</p>' : ''}
           <div class="pcm-meta">
-            ${p.region ? '<span class="pcm-region">📍 ' + escapeHtml(p.region) + '</span>' : ''}
-            ${p.industry ? '<span class="pcm-ind">' + escapeHtml(p.industry) + '</span>' : ''}
+            ${region ? '<span class="pcm-region">📍 ' + escapeHtml(region) + '</span>' : ''}
+            ${industry ? '<span class="pcm-ind">' + escapeHtml(industry) + '</span>' : ''}
           </div>
           <div class="pcm-foot">
-            <div class="pcm-price">${p.priceLabel ? escapeHtml(p.priceLabel) : '<span class="pcm-price-l">—</span>'}</div>
+            <div class="pcm-price">${priceLabel ? escapeHtml(priceLabel) : '<span class="pcm-price-l">—</span>'}</div>
             <a class="pcm-btn" href="/cabinet.html#publication-${encodeURIComponent(p.id)}">${escapeHtml(meta.btn)}</a>
           </div>
         </div>
@@ -807,6 +814,9 @@ if (searchInp) {
 
 // Запуск: грузим из API
 loadRegistryPage();
+
+// Смена языка → перезагружаем Реестр (карточки придут переведёнными: ?lang=)
+window.addEventListener('ac-lang-change', () => { loadRegistryPage(); });
 </script>
 <script src="/assets/i18n.js"></script>
 <script src="/assets/nav-active.js"></script>
