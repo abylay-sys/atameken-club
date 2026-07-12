@@ -2898,7 +2898,9 @@ async function showPublicationDetail(id){
     // Contacts block — показываем только если уже куплено или сам владелец;
     // иначе — paywall (1 токен).
     let isUnlocked = !!p.isOwner;
-    if (!isUnlocked) {
+    // Только для залогиненных: гость без токена → сразу paywall, без лишнего
+    // 401 на /wallet/purchased и попытки refresh.
+    if (!isUnlocked && AC.getToken()) {
       try {
         const { items } = await AC.purchasedCards();
         if (items.some(it => it.publicationId === p.id)) isUnlocked = true;

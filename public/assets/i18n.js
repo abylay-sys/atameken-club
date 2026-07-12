@@ -519,7 +519,6 @@
     // ── REGISTER (UI strings only — long legal text in modal остаётся на RU)
     'Деловая экосистема':      { kk: 'Іскерлік экожүйе',       en: 'Business ecosystem',   zh: '商业生态系统' },
     'Франчайзер':              { kk: 'Франчайзер',             en: 'Franchisor',           zh: '特许经营商' },
-    'Франчайзи':               { kk: 'Франчайзи',              en: 'Franchisee',           zh: '加盟商' },
     'Покупатель готового бизнеса': { kk: 'Дайын бизнес сатып алушы', en: 'Buyer of operating business', zh: '在营企业收购方' },
     'Покупатель товаров и сырья': { kk: 'Тауар мен шикізат сатып алушы', en: 'Buyer of goods and raw materials', zh: '商品与原材料买家' },
     'Продавец готового бизнеса': { kk: 'Дайын бизнес сатушы', en: 'Seller of operating business', zh: '在营企业出售方' },
@@ -632,7 +631,6 @@
     'Отправить ссылку':        { kk: 'Сілтеме жіберу',         en: 'Send link',            zh: '发送链接' },
     'Вспомнили пароль?':       { kk: 'Құпиясөзді есіңізге түсірдіңіз бе?', en: 'Remembered your password?', zh: '想起密码了？' },
     'Введите email':           { kk: 'Email-ді енгізіңіз',     en: 'Enter email',          zh: '请输入邮箱' },
-    'Отправляем…':             { kk: 'Жіберілуде…',            en: 'Sending…',             zh: '正在发送…' },
     'Если такой email зарегистрирован — ссылка отправлена. Проверьте почту (включая «Спам»).':
       { kk: 'Егер мұндай email тіркелген болса — сілтеме жіберілді. Поштаңызды тексеріңіз («Спам» қалтасын қоса).',
         en: 'If this email is registered — the link has been sent. Check your inbox (including Spam).',
@@ -746,7 +744,6 @@
     'Запрашиваемые инвестиции': { kk: 'Сұралатын инвестициялар', en: 'Requested investment', zh: '所需投资额' },
     'Цель инвестиций':         { kk: 'Инвестиция мақсаты',     en: 'Investment purpose',   zh: '投资用途' },
     'На что пойдут средства':  { kk: 'Қаражат неге жұмсалады', en: 'Where funds will be used', zh: '资金用途说明' },
-    'Контактное лицо':         { kk: 'Байланыс тұлғасы',       en: 'Contact person',       zh: '联系人' },
     'Имя представителя':       { kk: 'Өкіл аты',               en: 'Representative name',  zh: '代表姓名' },
     'Контактный телефон':      { kk: 'Байланыс телефоны',      en: 'Contact phone',        zh: '联系电话' },
     'Контактный email':        { kk: 'Байланыс email',         en: 'Contact email',        zh: '联系邮箱' },
