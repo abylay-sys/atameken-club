@@ -2203,16 +2203,26 @@ function openKaspiPayModal(payment){
     const s = document.createElement('style');
     s.id = 'kaspi-modal-styles';
     s.textContent = `
-      .kp-backdrop{position:fixed;inset:0;background:rgba(15,22,32,.65);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
-      .kp-modal{background:#fff;border-radius:10px;max-width:440px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden;position:relative;animation:kpIn .25s ease-out}
+      .kp-backdrop{position:fixed;inset:0;background:rgba(15,22,32,.65);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto}
+      /* max-height + flex-column: на «малом» экране модалка не обрезается — шапка
+         фиксирована, тело (.kp-body) скроллится. */
+      .kp-modal{background:#fff;border-radius:10px;max-width:440px;width:100%;max-height:calc(100vh - 2rem);display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden;position:relative;animation:kpIn .25s ease-out}
       @keyframes kpIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-      .kp-head{background:#F14635;color:#fff;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+      .kp-head{background:#F14635;color:#fff;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
       .kp-head-l{flex:1}
       .kp-head h3{margin:0;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.04em}
       .kp-head p{margin:.2rem 0 0;font-size:.72rem;opacity:.85;letter-spacing:.04em}
       .kp-close{background:none;border:0;color:#fff;font-size:1.5rem;cursor:pointer;line-height:1;padding:.25rem;opacity:.7;transition:opacity .2s}
       .kp-close:hover{opacity:1}
-      .kp-body{padding:1.5rem;text-align:center}
+      .kp-body{padding:1.5rem;text-align:center;overflow-y:auto}
+      /* Короткий/узкий экран: уменьшаем QR и отступы, чтобы всё влезло */
+      @media(max-width:400px),(max-height:760px){
+        .kp-body{padding:1.1rem}
+        .kp-qr-box img,.kp-qr-box svg{width:150px;height:150px}
+        .kp-amount{font-size:1.9rem}
+        .kp-tokens{margin-bottom:.85rem}
+        .kp-instr,.kp-ref,.kp-status{margin-bottom:.7rem}
+      }
       .kp-amount{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--ink);font-weight:600;line-height:1;margin-bottom:.4rem}
       .kp-amount small{font-size:.85rem;color:var(--ink4);font-weight:400;margin-left:.3rem}
       .kp-tokens{font-size:.78rem;color:var(--ink3);margin-bottom:1.25rem}
