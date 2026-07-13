@@ -1808,12 +1808,26 @@ function initMessagesUI() {
     }
     const langSel = extras.querySelector('#ms-mylang');
     const lang = langSel ? langSel.value : 'ru';
-    // Шлём через WS если есть, иначе REST
-    if (_msUiState.ws && _msUiState.ws.readyState === 1) {
-      _msUiState.ws.send(JSON.stringify({ type:'send', conversationId: _msUiState.activeId, text, lang }));
-    } else {
-      AC.sendChatMessage(_msUiState.activeId, text, lang).catch(e => alert('Не удалось отправить: '+(e.message||'')));
-    }
+    // ─── Оптимистичный показ: сразу добавляем сообщение в ленту (не ждём WS/REST),
+    // чтобы отправитель видел его мгновенно, без перезагрузки страницы. ───
+    const myId = (AC.getUser() && AC.getUser().id) || null;
+    const tmpId = 'tmp-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+    const convId = _msUiState.activeId;
+    _msUiState.messages.push({ id: tmpId, conversationId: convId, senderId: myId, originalText: text, originalLang: lang, translations: {}, createdAt: new Date().toISOString(), _pending: true });
+    renderMessages();
+
+    const finalize = (real) => {
+      const i = _msUiState.messages.findIndex(m => m.id === tmpId);
+      if (i >= 0) { if (real) _msUiState.messages[i] = real; else _msUiState.messages.splice(i, 1); }
+      renderMessages();
+    };
+    // Всегда шлём через REST: ответ содержит каноническое сообщение с переводами,
+    // и это исключает дубли/потери, возможные при отправке по WS. WS используем
+    // только для ПРИЁМА (входящие от собеседника + синхронизация других вкладок);
+    // echo нашего же сообщения дедупится по id в обработчике WS.
+    AC.sendChatMessage(convId, text, lang)
+      .then(r => finalize(r.message))
+      .catch(e => { finalize(null); alert('Не удалось отправить: '+(e.message||'')); });
   }
   if (sendBtn) { sendBtn.onclick = doSend; }
   if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(); } });
@@ -2041,19 +2055,23 @@ function renderMessages() {
   const myId = (AC.getUser() && AC.getUser().id) || null;
   const showTrans = extras.querySelector('#ms-translate')?.checked !== false;
   const peerLang = (_msUiState.peerLang || 'ru').toLowerCase();
+  // Язык, на котором ЧИТАЕТ текущий зритель (его язык интерфейса).
+  const viewerLang = ((window.ACLang && window.ACLang.lang) || localStorage.getItem('ac_lang') || 'ru').toLowerCase();
   body.innerHTML = _msUiState.messages.map(m => {
     const mine = m.senderId === myId;
     const orig = m.originalText || '';
-    // Если оригинал не на моём языке — показываем перевод. Для отправителя
-    // показываем перевод, чтобы он видел, что собеседник прочтёт.
     const translations = m.translations || {};
-    const translatedForOther = mine ? translations[peerLang] : translations['ru'];
-    const transTag = mine ? peerLang.toUpperCase() : 'RU';
+    // Полученное сообщение → показываем перевод на язык ЗРИТЕЛЯ.
+    // Своё сообщение → перевод на язык собеседника (что он прочтёт).
+    const showLang = mine ? peerLang : viewerLang;
+    const translatedForOther = translations[showLang];
+    const transTag = showLang.toUpperCase();
+    const pending = m._pending ? ' style="opacity:.55"' : '';
     return `
       <div class="ms-msg ${mine ? 'mine' : 'them'}">
-        <div class="ms-bubble">${escapeForAttr(orig)}</div>
+        <div class="ms-bubble"${pending}>${escapeForAttr(orig)}</div>
         ${translatedForOther && translatedForOther !== orig ? `<div class="ms-trans"${showTrans?'':' style="display:none"'}><span class="ms-trans-tag">${escapeForAttr(transTag)}</span>${escapeForAttr(translatedForOther)}</div>` : ''}
-        <div class="ms-time">${escapeForAttr(timeAgo(new Date(m.createdAt)))}</div>
+        <div class="ms-time">${escapeForAttr(timeAgo(new Date(m.createdAt)))}${m._pending ? ' · отправляется…' : ''}</div>
       </div>
     `;
   }).join('');
@@ -2085,7 +2103,19 @@ async function ensureChatSocket() {
         if (data.type === 'message' && data.message) {
           // Если сообщение для активного чата — добавляем в renderMessages
           if (data.message.conversationId === _msUiState.activeId) {
-            _msUiState.messages.push(data.message);
+            const incoming = data.message;
+            // Дедуп: реальный echo уже есть по id? — пропускаем.
+            const byId = _msUiState.messages.findIndex(m => m.id === incoming.id);
+            if (byId >= 0) { _msUiState.messages[byId] = incoming; }
+            else {
+              // Если это echo нашего оптимистичного сообщения — заменяем tmp.
+              const myId = (AC.getUser() && AC.getUser().id) || null;
+              const tmpIdx = _msUiState.messages.findIndex(m =>
+                m._pending && m.senderId === incoming.senderId && m.senderId === myId &&
+                (m.originalText || '') === (incoming.originalText || ''));
+              if (tmpIdx >= 0) _msUiState.messages[tmpIdx] = incoming;
+              else _msUiState.messages.push(incoming);
+            }
             renderMessages();
           }
           // Обновляем сайдбар (preview + unread)

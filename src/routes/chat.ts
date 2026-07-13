@@ -5,7 +5,7 @@ import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
 import { verifyAccessToken } from '../lib/jwt';
 import { randomToken } from '../lib/hash';
-import { translateToMany, normalizeLang, SUPPORTED_LANGS, type Lang } from '../services/translation';
+import { translateMessage, normalizeLang, SUPPORTED_LANGS, type Lang } from '../services/translation';
 import { notifySupportMessage } from '../services/telegram';
 
 // ─── WebSocket auth-tickets ───
@@ -355,28 +355,23 @@ async function sendAndBroadcast(
   conversationId: string,
   senderId: string,
   text: string,
-  origLang: Lang,
+  _hintLang: Lang, // язык, заявленный отправителем — теперь лишь подсказка, источник определяем сами
 ) {
-  // Список участников и их preferredLang (мы переведём на все языки, отличные от origLang)
   const parts = await prisma.conversationParticipant.findMany({ where: { conversationId } });
-  const targetLangs = Array.from(
-    new Set(
-      parts
-        .filter((p) => p.userId !== senderId)
-        .map((p) => normalizeLang(p.preferredLang))
-        .filter((l) => l !== origLang),
-    ),
-  );
+  // Переводим на основные языки интерфейса (ru/en/kk/zh) + языки участников, чтобы
+  // получатель видел сообщение на СВОЁМ языке, а не на заявленном отправителем.
+  const partLangs = parts.filter((p) => p.userId !== senderId).map((p) => normalizeLang(p.preferredLang));
+  const targetLangs = Array.from(new Set<Lang>(['ru', 'en', 'kk', 'zh', ...partLangs]));
 
-  // Параллельно: переводим (если есть кому) + создаём сообщение в БД
-  const translations = targetLangs.length ? await translateToMany(text, origLang, targetLangs) : {};
+  // ОДНИМ запросом: определяем реальный язык сообщения + переводим на targetLangs.
+  const { detected, translations } = await translateMessage(text, targetLangs);
 
   const msg = await prisma.message.create({
     data: {
       conversationId,
       senderId,
       originalText: text,
-      originalLang: origLang,
+      originalLang: detected,
       translations: Object.keys(translations).length ? (translations as any) : undefined,
     },
   });
@@ -393,7 +388,7 @@ async function sendAndBroadcast(
       conversationId,
       senderId,
       originalText: text,
-      originalLang: origLang,
+      originalLang: detected,
       translations: translations || {},
       createdAt: msg.createdAt,
     },

@@ -166,3 +166,39 @@ export async function translateFields(fields: Record<string, string>, targetLang
   }));
   return out;
 }
+
+/**
+ * Для чата: ОДНИМ запросом определяет язык сообщения и переводит его на все
+ * targetLangs (кроме совпадающего с определённым). Не полагается на язык,
+ * заявленный отправителем — поэтому английский текст, отправленный с
+ * выбранным «RU», всё равно корректно переведётся получателю.
+ */
+export async function translateMessage(text: string, targetLangs: Lang[]): Promise<{ detected: Lang; translations: Record<string, string> }> {
+  const detectedFallback: Lang = /[А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһ]/.test(text) ? 'ru' : 'en';
+  if (resolveProvider() === 'off' || !text.trim()) return { detected: detectedFallback, translations: {} };
+  const wanted = Array.from(new Set(targetLangs));
+
+  try {
+    const sys =
+      `You are a chat translator. First, detect the ISO 639-1 language code of the user's message. ` +
+      `Then translate the message into each of these languages: ${wanted.map((l) => `${l} (${LANG_NAME[l]})`).join(', ')}. ` +
+      `Omit any target language that equals the detected language. Preserve names, numbers, currencies, brand names and proper nouns; keep tone professional. ` +
+      `Return ONLY JSON of shape {"detected":"<iso code>","translations":{"<lang>":"<translated text>"}}.`;
+    const raw = await rawComplete(sys, text, true);
+    if (raw) {
+      const parsed = JSON.parse(stripFences(raw)) as { detected?: string; translations?: Record<string, string> };
+      const detected = normalizeLang(parsed.detected);
+      const tr = parsed.translations || {};
+      const translations: Record<string, string> = {};
+      for (const l of wanted) if (l !== detected && typeof tr[l] === 'string' && tr[l].trim()) translations[l] = cleanOutput(tr[l]);
+      return { detected, translations };
+    }
+  } catch (e) {
+    console.warn('[translate] message detect+translate failed, fallback:', (e as Error).message);
+  }
+
+  // Fallback: эвристический source + пофайловый перевод
+  const detected = detectedFallback;
+  const translations = await translateToMany(text, detected, wanted.filter((l) => l !== detected));
+  return { detected, translations };
+}
