@@ -11,10 +11,10 @@ import { translateFields, normalizeLang, translationEnabled, type Lang } from '.
 const AUTO_LANGS: Lang[] = ['kk', 'en', 'zh'];
 // Текстовые поля из data, которые имеет смысл переводить (длинные описания).
 const DATA_TEXT_KEYS = ['description', 'support', 'reason', 'whatIncluded', 'composition', 'certificates'];
-type TransBlob = Record<string, { src: string; fields: Record<string, string> }>;
+export type TransBlob = Record<string, { src: string; fields: Record<string, string> }>;
 
 // Собирает переводимые строковые поля объявления (top-level + текст из data).
-function pubFields(p: { title: string; shortDesc: string | null; industry: string | null; region: string | null; priceLabel: string | null; data: any }): Record<string, string> {
+export function pubFields(p: { title: string; shortDesc: string | null; industry: string | null; region: string | null; priceLabel: string | null; data: any }): Record<string, string> {
   const f: Record<string, string> = {};
   const put = (k: string, v: unknown) => { if (typeof v === 'string' && v.trim()) f[k] = v; };
   put('title', p.title); put('shortDesc', p.shortDesc); put('industry', p.industry);
@@ -29,7 +29,7 @@ function fieldsHash(f: Record<string, string>): string {
 
 // Возвращает переведённые поля для lang: из кэша (translations JSON) или
 // переводит через AI и кэширует. null — если провайдер off / lang=ru / нет полей.
-async function ensureTranslation(pubId: string, lang: Lang, fields: Record<string, string>, blob: TransBlob | null): Promise<Record<string, string> | null> {
+export async function ensureTranslation(pubId: string, lang: Lang, fields: Record<string, string>, blob: TransBlob | null): Promise<Record<string, string> | null> {
   if (lang === 'ru' || !translationEnabled()) return null;
   if (!Object.keys(fields).length) return null;
   const hash = fieldsHash(fields);

@@ -3051,6 +3051,8 @@ window.addEventListener('ac-lang-change', () => {
   if (dt && dt.style.display === 'block' && window.__pubDetailId) {
     showPublicationDetail(window.__pubDetailId);
   }
+  // Перезагружаем карточки «Избранного» — придут на новом языке (?lang=).
+  if (typeof window.loadFavorites === 'function') window.loadFavorites();
 });
 </script>
 
@@ -3775,16 +3777,31 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
       el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Нет добавленных в&nbsp;избранное карточек.<br/><span style="font-size:.78rem">Откройте Реестр и&nbsp;нажмите ★ в&nbsp;интересной карточке.</span></div>';
       return;
     }
-    el.innerHTML = items.map(({ publication: p }) => `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border)">
+    el.innerHTML = items.map(({ publication: p }) => {
+      // Авто-перевод карточки: бэкенд отдаёт p.t (переведённые поля) при ?lang≠ru.
+      const t = p.t || {};
+      const title = t.title || p.title;
+      const industry = t.industry || p.industry || '—';
+      const region = t.region || p.region || '—';
+      const priceLabel = t.priceLabel || p.priceLabel || '';
+      return `
+      <div class="fav-row" data-fav-open="${p.id}" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border);cursor:pointer">
         <div style="flex:1;min-width:0">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);font-weight:500;line-height:1.3">${escapeHtml(p.title)}</div>
-          <div style="font-size:.72rem;color:var(--ink4);margin-top:.2rem">${TYPE_LABEL[p.type] || p.type} · ${escapeHtml(p.industry || '—')} · ${escapeHtml(p.region || '—')}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);font-weight:500;line-height:1.3">${escapeHtml(title)}</div>
+          <div style="font-size:.72rem;color:var(--ink4);margin-top:.2rem">${TYPE_LABEL[p.type] || p.type} · ${escapeHtml(industry)} · ${escapeHtml(region)}</div>
         </div>
-        <div style="font-family:'Cormorant Garamond',serif;color:var(--red);font-weight:600;font-size:1rem;white-space:nowrap">${escapeHtml(p.priceLabel || '')}</div>
+        <div style="font-family:'Cormorant Garamond',serif;color:var(--red);font-weight:600;font-size:1rem;white-space:nowrap">${escapeHtml(priceLabel)}</div>
         <button class="btn-o btn-sm" style="font-size:.7rem;padding:.4rem .7rem" data-fav-remove="${p.id}">Убрать ★</button>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
+    // Клик по карточке → открываем детальную (кроме клика по кнопке «Убрать ★»).
+    el.querySelectorAll('[data-fav-open]').forEach((row) => {
+      row.addEventListener('click', (e) => {
+        if (e.target.closest('[data-fav-remove]')) return;
+        const id = row.getAttribute('data-fav-open');
+        if (id && typeof showPublicationDetail === 'function') showPublicationDetail(id);
+      });
+    });
     // Удаление из избранного — клик по кнопке «Убрать ★»
     el.querySelectorAll('[data-fav-remove]').forEach((btn) => {
       btn.addEventListener('click', async () => {
@@ -3800,21 +3817,27 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
       });
     });
   }
-  try {
-    const { items } = await AC.myFavorites();
-    // 4 dashboard'а (seeker/investor/franchise/sale) × оба типа (продавец/покупатель).
-    // Заполняем все контейнеры — отображается тот, на чьём dashboard'е юзер.
-    renderFavs(items, 'seekerFavs');
-    renderFavs(items, 'investorFavs');
-    renderFavs(items, 'franchiseFavs');
-    renderFavs(items, 'saleFavs');
-  } catch (err) {
-    console.warn('Failed to load favorites:', err);
-    ['seekerFavs','investorFavs','franchiseFavs','saleFavs'].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить избранное.</div>';
-    });
+  async function loadFavorites() {
+    try {
+      const { items } = await AC.myFavorites();
+      // 4 dashboard'а (seeker/investor/franchise/sale) × оба типа (продавец/покупатель).
+      // Заполняем все контейнеры — отображается тот, на чьём dashboard'е юзер.
+      renderFavs(items, 'seekerFavs');
+      renderFavs(items, 'investorFavs');
+      renderFavs(items, 'franchiseFavs');
+      renderFavs(items, 'saleFavs');
+    } catch (err) {
+      console.warn('Failed to load favorites:', err);
+      ['seekerFavs','investorFavs','franchiseFavs','saleFavs'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<div style="text-align:center;color:var(--ink4);font-size:.85rem;padding:1.5rem 0">Не удалось загрузить избранное.</div>';
+      });
+    }
   }
+  // Экспонируем на window: перезагрузка избранного при смене языка (карточки
+  // придут переведёнными, т.к. myFavorites шлёт ?lang=).
+  window.loadFavorites = loadFavorites;
+  await loadFavorites();
 
   // ── Загрузка баланса кошелька (отображается на всех dashboard'ах) ──
   try {

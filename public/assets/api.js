@@ -138,7 +138,11 @@
     async deletePublication(id) { return request('DELETE', '/publications/' + id, null, true); },
 
     // ── Избранное ──
-    async myFavorites() { return request('GET', '/favorites/mine', null, true); },
+    async myFavorites() {
+      const lang = this.curLang();
+      const qs = (lang && lang !== 'ru') ? ('?lang=' + encodeURIComponent(lang)) : '';
+      return request('GET', '/favorites/mine' + qs, null, true);
+    },
     async addFavorite(publicationId) { return request('POST', '/favorites/' + encodeURIComponent(publicationId), null, true); },
     async removeFavorite(publicationId) { return request('DELETE', '/favorites/' + encodeURIComponent(publicationId), null, true); },
 

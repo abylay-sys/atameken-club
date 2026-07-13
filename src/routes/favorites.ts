@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
+import { normalizeLang, translationEnabled } from '../services/translation';
+import { pubFields, ensureTranslation, type TransBlob } from './publications';
 
 export default async function favoritesRoutes(app: FastifyInstance) {
   // ── Мои избранные публикации ──
@@ -20,16 +22,36 @@ export default async function favoritesRoutes(app: FastifyInstance) {
             priceLabel: true,
             publishedAt: true,
             status: true,
+            // data/translations нужны для авто-перевода карточки; наружу НЕ отдаём.
+            data: true,
+            translations: true,
           },
         },
       },
     });
-    // Возвращаем только активные публикации, и не пропускаем удалённые
-    return {
-      items: rows
-        .filter((r) => r.publication.status === 'PUBLISHED')
-        .map((r) => ({ favoriteId: r.id, createdAt: r.createdAt, publication: r.publication })),
-    };
+
+    // Целевой язык (?lang=). Для не-ru навешиваем перевод карточки (общий кэш с Реестром).
+    const lang = normalizeLang((req.query as any).lang);
+    const doTranslate = lang !== 'ru' && translationEnabled();
+    const published = rows.filter((r) => r.publication.status === 'PUBLISHED');
+
+    const items = await Promise.all(
+      published.map(async (r) => {
+        const p = r.publication as any;
+        let t: Record<string, string> | null = null;
+        if (doTranslate) {
+          try {
+            t = await ensureTranslation(p.id, lang, pubFields(p), (p.translations as TransBlob | null) || null);
+          } catch (_) {
+            t = null; // при сбое показываем оригинал
+          }
+        }
+        // Не светим data/translations во внешнюю выдачу — только безопасные поля карточки.
+        const { data: _data, translations: _translations, ...pubSafe } = p;
+        return { favoriteId: r.id, createdAt: r.createdAt, publication: { ...pubSafe, ...(t ? { t } : {}) } };
+      }),
+    );
+    return { items };
   });
 
   // ── Добавить в избранное ──
