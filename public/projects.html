@@ -411,7 +411,8 @@ function renderShevStripHTML(activeIds, opts){
   const items = SHEVS.map(s => {
     const isOn = active.has(s.id);
     const style = isOn ? ` style="color:${s.color};border-color:${s.color};background:${s.color}14"` : '';
-    return `<div class="shev${isOn ? ' on' : ''}"${style}>${s.abbr}<span class="shev-tip">${s.title}${isOn ? '' : ' (не пройдено)'}</span></div>`;
+    // «(не пройдено)» — отдельной нодой (<span>), чтобы i18n перевёл и title, и суффикс
+    return `<div class="shev${isOn ? ' on' : ''}"${style}>${s.abbr}<span class="shev-tip">${s.title}${isOn ? '' : ' <span>(не пройдено)</span>'}</span></div>`;
   }).join('');
   return `<div class="shev-strip">${clubBadge}${items}</div>`;
 }
@@ -765,7 +766,7 @@ function renderPagination() {
   if (!mount) return;
   const { page, totalPages, total } = REG_STATE;
   if (totalPages <= 1) {
-    mount.innerHTML = total ? `<span class="pg-info">Всего: ${total}</span>` : '';
+    mount.innerHTML = total ? `<span class="pg-info"><span>Всего:</span> ${total}</span>` : '';
     return;
   }
   const pages = [];
@@ -776,7 +777,7 @@ function renderPagination() {
     <button type="button" class="pg-btn" data-pg="${Math.max(1, page-1)}"${page===1?' disabled':''}>‹</button>
     ${pages.map(p => `<button type="button" class="pg-btn${p===page?' on':''}" data-pg="${p}">${p}</button>`).join('')}
     <button type="button" class="pg-btn" data-pg="${Math.min(totalPages, page+1)}"${page===totalPages?' disabled':''}>›</button>
-    <span class="pg-info">Стр. ${page} из ${totalPages} · всего ${total}</span>
+    <span class="pg-info"><span>Стр.</span> ${page} <span>из</span> ${totalPages} · <span>всего</span> ${total}</span>
   `;
   mount.querySelectorAll('.pg-btn:not([disabled])').forEach(btn => {
     btn.addEventListener('click', () => {

@@ -1906,7 +1906,7 @@ async function selectConversation(id) {
   if (inputArea) {
     inputArea.style.opacity = '';
     const inp = inputArea.querySelector('input');
-    if (inp) { inp.disabled = false; inp.placeholder = 'Напишите сообщение… (будет переведено на язык собеседника)'; }
+    if (inp) { inp.disabled = false; inp.placeholder = (window.ACLang && window.ACLang.tr ? window.ACLang.tr('Напишите сообщение… (будет переведено на язык собеседника)') : 'Напишите сообщение… (будет переведено на язык собеседника)'); }
     const sendBtn = inputArea.querySelector('.ms-send, button');
     if (sendBtn) sendBtn.disabled = false;
   }
@@ -1999,7 +1999,7 @@ function selectSupportChat() {
   if (inputArea) {
     inputArea.style.opacity = '';
     const inp = inputArea.querySelector('input');
-    if (inp) { inp.disabled = false; inp.placeholder = 'Опишите вашу проблему или вопрос…'; inp.value = ''; }
+    if (inp) { inp.disabled = false; inp.placeholder = (window.ACLang && window.ACLang.tr ? window.ACLang.tr('Опишите вашу проблему или вопрос…') : 'Опишите вашу проблему или вопрос…'); inp.value = ''; }
     const sendBtn = inputArea.querySelector('.ms-send, button');
     if (sendBtn) sendBtn.disabled = false;
   }
