@@ -1558,6 +1558,14 @@
     'Стр.': { kk: 'Бет', en: 'Page', zh: '第' },
     'из': { kk: '/', en: 'of', zh: '/' },
     'всего': { kk: 'барлығы', en: 'total', zh: '共' },
+    // ── Kaspi QR (оплата пакетов)
+    'Оплата пакета токенов': { kk: 'Токендер топтамасын төлеу', en: 'Token package payment', zh: '代币套餐付款' },
+    'Отсканируйте QR-код в приложении Kaspi.kz или откройте кнопкой ниже, затем введите указанную сумму и оплатите.': { kk: 'Kaspi.kz қосымшасында QR-кодты сканерлеңіз немесе төмендегі түймемен ашыңыз, содан кейін көрсетілген соманы енгізіп төлеңіз.', en: 'Scan the QR code in the Kaspi.kz app or open it with the button below, then enter the amount shown and pay.', zh: '在 Kaspi.kz 应用中扫描二维码，或点击下方按钮打开，然后输入所示金额并付款。' },
+    'Получатель': { kk: 'Алушы', en: 'Recipient', zh: '收款方' },
+    'Номер счёта': { kk: 'Шот нөмірі', en: 'Invoice number', zh: '账单编号' },
+    'После оплаты доступ активируется после подтверждения. Сохраните чек Kaspi.': { kk: 'Төлемнен кейін қолжетімділік растағаннан кейін қосылады. Kaspi түбіртегін сақтаңыз.', en: 'After payment, access is activated once confirmed. Keep your Kaspi receipt.', zh: '付款后，经确认即开通访问权限。请保留您的 Kaspi 收据。' },
+    'Открыть Kaspi.kz': { kk: 'Kaspi.kz ашу', en: 'Open Kaspi.kz', zh: '打开 Kaspi.kz' },
+    'Готово': { kk: 'Дайын', en: 'Done', zh: '完成' },
   };
 
   // ─── HTML-блоки: элементы с инлайн-разметкой (<em>, <br>) ────────────────────
