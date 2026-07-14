@@ -3034,6 +3034,15 @@ window.addEventListener('ac-lang-change', () => {
   }
   // Перезагружаем карточки «Избранного» — придут на новом языке (?lang=).
   if (typeof window.loadFavorites === 'function') window.loadFavorites();
+  // Перерисовываем открытый чат: перевод сообщений должен следовать за языком
+  // интерфейса. renderMessages читает актуальный ACLang.lang как язык зрителя,
+  // поэтому полученные сообщения покажутся на новом языке без перезагрузки.
+  try {
+    if (typeof renderMessages === 'function' && _msUiState && _msUiState.extras
+        && Array.isArray(_msUiState.messages) && _msUiState.messages.length) {
+      renderMessages();
+    }
+  } catch (_) { /* чат ещё не открывали — пропускаем */ }
 });
 </script>
 
