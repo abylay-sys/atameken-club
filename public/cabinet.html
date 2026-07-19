@@ -1423,9 +1423,9 @@ const ACTIVITIES = {
   'deal-support': {
     badge: 'Группы А, Б и В',
     title: 'Сопровождение сделки',
-    desc: 'Полное юридическое и переговорное сопровождение сделки под ключ: от первого контакта до подписи. Можно разделить пополам с контрагентом (по 0,75% с каждой стороны).',
-    price: '1,5%',
-    priceSub: 'от суммы сделки',
+    desc: 'Полное юридическое и переговорное сопровождение сделки под ключ: от первого контакта до подписи. Можно разделить пополам с контрагентом.',
+    price: 'по запросу',
+    priceSub: 'индивидуальный расчёт',
     includes: ['Подготовка и ведение переговоров', 'Согласование коммерческих условий', 'Разработка и проверка договоров', 'Сопровождение до момента подписи и расчётов'],
     duration: 'индивидуально (от 2 недель)',
     audience: 'Все стороны сделки — продавцы и покупатели'
@@ -1522,11 +1522,7 @@ function showActivity(id) {
   if (mainCard) mainCard.style.display = '';
 
   // Спец-UI для конкретных активностей
-  if (id === 'deal-support' && extras) {
-    const tpl = document.getElementById('tpl-deal-support');
-    if (tpl) extras.appendChild(tpl.content.cloneNode(true));
-    initDealSupportUI();
-  } else if (id === 'messages' && extras) {
+  if (id === 'messages' && extras) {
     // Сообщения бесплатные — прячем «деталку услуги» сверху, показываем только чат
     if (mainCard) mainCard.style.display = 'none';
     const tpl = document.getElementById('tpl-messages');
