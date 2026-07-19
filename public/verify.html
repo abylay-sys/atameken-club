@@ -38,6 +38,10 @@ strong{color:var(--ink);font-weight:600}
 .tn-back{font-size:var(--t2);font-weight:500;color:var(--ink3);display:flex;align-items:center;gap:.35rem;transition:color .2s}
 .tn-back:hover{color:var(--red)}
 .tn-back svg{width:13px;height:13px}
+.lang-switch{display:inline-flex;gap:2px;background:var(--red-dim2,#f6ecec);border-radius:6px;padding:2px}
+.lang-btn{border:0;background:transparent;font:600 .72rem/1 'Inter',sans-serif;color:var(--ink3);padding:.32rem .5rem;border-radius:4px;cursor:pointer;transition:all .15s}
+.lang-btn:hover{color:var(--red)}
+.lang-btn.active{background:#fff;color:var(--red);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 
 .wrap{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
 
@@ -137,6 +141,12 @@ strong{color:var(--ink);font-weight:600}
     <span class="tn-name"><span class="tn-name-top">Бизнес-сообщество</span><span class="tn-name-bot">«ATAMEKEN Club»</span></span>
   </a>
   <div class="tn-right">
+    <div class="lang-switch" role="group" aria-label="Язык">
+      <button class="lang-btn" type="button">RU</button>
+      <button class="lang-btn" type="button">KZ</button>
+      <button class="lang-btn" type="button">EN</button>
+      <button class="lang-btn" type="button">中文</button>
+    </div>
     <a href="/cabinet.html" class="tn-back">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 12L6 8l4-4"/></svg>
       В кабинет
@@ -528,5 +538,7 @@ strong{color:var(--ink);font-weight:600}
   });
 })();
 </script>
+<script src="/assets/i18n.js"></script>
+<script src="/assets/nav-active.js"></script>
 </body>
 </html>
