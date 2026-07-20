@@ -1359,7 +1359,7 @@ const ACTIVITIES = {
     desc: 'Независимая проверка компании по открытым и платным источникам. Подтверждает регистрационные данные, отсутствие критичных рисков и благонадёжность для будущих контрагентов.',
     price: '$50',
     priceSub: 'единоразово',
-    includes: ['Проверка регистрации в БД (eGov / Statsnet и аналогах)', 'Налоговые задолженности и статус по обязательным платежам', 'Связи с аффилированными лицами и судебные дела', 'Краткое резюме с присвоением шеврона в карточке Реестра'],
+    includes: ['Проверка регистрации в БД', 'Налоговые задолженности и статус по обязательным платежам', 'Связи с аффилированными лицами и судебные дела', 'Краткое резюме с присвоением шеврона в карточке Реестра'],
     note: '* Стоимость по услугам указана для Резидентов Республики Казахстан. Для компаний, зарегистрированных в других юрисдикциях, стоимость Услуг может отличаться.',
     duration: '1–3 рабочих дня',
     audience: 'Соискатели · Франчайзеры · Продавцы · Продавцы товаров'
@@ -1497,6 +1497,11 @@ const ACTIVITIES = {
   }
 };
 
+// Перевод строк, которые задаются из JS (alert / textContent): MutationObserver
+// ловит только DOM, нативные alert'ы — нет, поэтому переводим их явно.
+function _t(s) { return (window.ACLang && window.ACLang.tr) ? window.ACLang.tr(s) : s; }
+window._t = _t;
+
 function showActivity(id) {
   const data = ACTIVITIES[id];
   if (!data) return false;
@@ -1574,7 +1579,7 @@ function initDealSupportUI() {
   checks.forEach(cb => cb.addEventListener('change', update));
   if (splitCb) splitCb.addEventListener('change', updateSplit);
   if (submit) submit.addEventListener('click', async () => {
-    if (!AC.getToken()) { alert('Войдите в кабинет, чтобы подписать документы.'); location.href = '/login.html'; return; }
+    if (!AC.getToken()) { alert(_t('Войдите в кабинет, чтобы подписать документы.')); location.href = '/login.html'; return; }
     submit.disabled = true; submit.textContent = 'Создаём сделку…';
     try {
       const { deal } = await AC.createDeal({ splitWithCounter: !!(splitCb && splitCb.checked) });
@@ -2027,7 +2032,7 @@ function selectSupportChat() {
 }
 async function sendSupportMessage(text) {
   if (!text || !text.trim()) return;
-  if (!AC.getToken()) { alert('Войдите в кабинет, чтобы написать в Службу Поддержки.'); location.href = '/login.html'; return; }
+  if (!AC.getToken()) { alert(_t('Войдите в кабинет, чтобы написать в Службу Поддержки.')); location.href = '/login.html'; return; }
   const thread = _loadSupportThread();
   const msg = { mine: true, text: text.trim(), ts: Date.now(), status: 'sending' };
   thread.push(msg);
@@ -2617,7 +2622,7 @@ function showPublication(sellerType) {
   const fr = document.getElementById('pubForm');
   fr.onsubmit = async (e) => {
     e.preventDefault();
-    if (!AC.getToken()) { alert('Войдите в кабинет, чтобы опубликовать карточку.'); location.href = '/login.html'; return; }
+    if (!AC.getToken()) { alert(_t('Войдите в кабинет, чтобы опубликовать карточку.')); location.href = '/login.html'; return; }
 
     // Собираем все поля формы в объект data
     const formData = {};
@@ -3524,7 +3529,7 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
       });
       // Кнопка "Купить" — ведёт на логин
       const buyBtn = document.getElementById('actDtBuy');
-      if (buyBtn) buyBtn.onclick = () => { alert('Войдите в кабинет, чтобы оформить покупку.'); location.href = '/login.html'; };
+      if (buyBtn) buyBtn.onclick = () => { alert(_t('Войдите в кабинет, чтобы оформить покупку.')); location.href = '/login.html'; };
     }
     return;
   }
