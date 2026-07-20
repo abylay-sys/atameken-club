@@ -974,6 +974,9 @@ strong{color:var(--ink);font-weight:600}
               </div>
             </div>
 
+            <!-- Сноска о стоимости — показывается только у услуг с фиксированной ценой -->
+            <p id="actDtNote" style="display:none;font-size:.72rem;color:var(--ink4);line-height:1.5;font-style:italic;margin:-.35rem 0 0"></p>
+
             <div>
               <h4 style="font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:0 0 .65rem">Что входит</h4>
               <ul style="margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.4rem" id="actDtIncludes"></ul>
@@ -1357,6 +1360,7 @@ const ACTIVITIES = {
     price: '$50',
     priceSub: 'единоразово',
     includes: ['Проверка регистрации в БД (eGov / Statsnet и аналогах)', 'Налоговые задолженности и статус по обязательным платежам', 'Связи с аффилированными лицами и судебные дела', 'Краткое резюме с присвоением шеврона в карточке Реестра'],
+    note: '* Стоимость по услугам указана для Резидентов Республики Казахстан. Для компаний, зарегистрированных в других юрисдикциях, стоимость Услуг может отличаться.',
     duration: '1–3 рабочих дня',
     audience: 'Соискатели · Франчайзеры · Продавцы · Продавцы товаров'
   },
@@ -1367,6 +1371,7 @@ const ACTIVITIES = {
     price: '$100',
     priceSub: 'единоразово',
     includes: ['Объём рынка и темпы роста по нише', 'Карта конкурентов с краткими профилями', 'Тренды и драйверы спроса', 'PDF-отчёт + краткое резюме для карточки'],
+    note: '* Стоимость по услугам указана для Резидентов Республики Казахстан. Для компаний, зарегистрированных в других юрисдикциях, стоимость Услуг может отличаться.',
     duration: '5–7 рабочих дней',
     audience: 'Соискатели инвестиций · Франчайзеры · Продавцы готового бизнеса'
   },
@@ -1506,6 +1511,12 @@ function showActivity(id) {
   document.getElementById('actDtPrice').textContent = data.price;
   document.getElementById('actDtPriceSub').textContent = data.priceSub || '';
   document.getElementById('actDtDuration').textContent = data.duration;
+  // Сноска о стоимости (только у услуг с фиксированной ценой — см. поле note)
+  const noteEl = document.getElementById('actDtNote');
+  if (noteEl) {
+    noteEl.textContent = data.note || '';
+    noteEl.style.display = data.note ? '' : 'none';
+  }
   const ul = document.getElementById('actDtIncludes');
   ul.innerHTML = '';
   data.includes.forEach(it => {
