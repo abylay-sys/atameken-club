@@ -149,7 +149,7 @@
 | **Наименование** | ТОО «ATAMEKEN Club» |
 | **БИН** | [указывается] |
 | **Адрес** | Республика Казахстан, г. Алматы, ул. Шевченко, 18/6 |
-| **Email** | info@atameken.club |
+| **Email** | atameken.club.kz@gmail.com |
 | **Сайт** | atameken.club |
 
 ---

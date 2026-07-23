@@ -85,7 +85,7 @@ export function buildPasswordResetEmail(params: { fullName: string | null; reset
     '',
     '—',
     'ATAMEKEN Club',
-    'support@atameken.club',
+    'atameken.club.kz@gmail.com',
   ].join('\n');
 
   const html = `<!DOCTYPE html>
@@ -107,7 +107,7 @@ export function buildPasswordResetEmail(params: { fullName: string | null; reset
   <div style="border-top:1px solid #E2E8F0;padding-top:1rem;font-size:.78rem;color:#94a3b8;line-height:1.55">
     <p style="margin:0 0 .35rem"><strong style="color:#4A5568">Ссылка действительна 1 час.</strong></p>
     <p style="margin:0 0 1rem">Если вы не запрашивали восстановление — просто проигнорируйте это письмо. Ваш пароль останется без изменений.</p>
-    <p style="margin:0;font-size:.72rem">© ${new Date().getFullYear()} ТОО «ATAMEKEN Club» · Алматы, Казахстан · <a href="mailto:support@atameken.club" style="color:#94a3b8">support@atameken.club</a></p>
+    <p style="margin:0;font-size:.72rem">© ${new Date().getFullYear()} ТОО «ATAMEKEN Club» · Алматы, Казахстан · <a href="mailto:atameken.club.kz@gmail.com" style="color:#94a3b8">atameken.club.kz@gmail.com</a></p>
   </div>
 </body>
 </html>`;
