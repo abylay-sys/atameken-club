@@ -631,3 +631,23 @@ footer{background:var(--ink2);padding:2rem max(3rem,calc((100vw - 1140px) / 2));
   z-index:4;
 }
 .card-priority svg{width:9px;height:9px}
+/* ─── Узкие экраны (≤560px): шапка строго в одну строку ──────────────────────
+   Баг: при ≤900px nav получает flex-wrap:wrap, а логотип не сжимается
+   (.logo-main/.logo-sub-name имеют white-space:nowrap) + базовый gap:2rem.
+   На телефоне сумма «логотип + бургер + nav-right» не влезала, бургер и
+   кнопка «Войти» переносились на вторую строку и оказывались за пределами
+   видимой области фиксированной шапки — кнопки меню в правом верхнем углу
+   просто не было (репорт по вкладке «Реестр», но касалось всех страниц).
+   Решение: запрещаем перенос, логотипу разрешаем сжиматься (min-width:0 +
+   ellipsis), бургеру и nav-right — flex-shrink:0, чтобы они были всегда. */
+@media(max-width:560px){
+  nav{flex-wrap:nowrap;gap:.5rem;padding:.6rem .9rem}
+  .logo{min-width:0;flex:0 1 auto;gap:.5rem}
+  .logo-emblem{width:40px;height:40px;flex-shrink:0}
+  .logo-emblem img{width:40px;height:40px}
+  .logo-text{min-width:0;overflow:hidden}
+  .logo-main{font-size:.72rem;overflow:hidden;text-overflow:ellipsis}
+  .logo-sub-name{font-size:.86rem;overflow:hidden;text-overflow:ellipsis}
+  .nav-burger{flex-shrink:0}
+  .nav-right{flex-shrink:0;gap:.35rem}
+}

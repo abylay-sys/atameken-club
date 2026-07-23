@@ -260,12 +260,19 @@ const SVC_DATA = [
 
 function fmtN(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' ').replace(/ /g, ' '); }
 
+// Цена всегда показывается как «от {минимум}» — верхнюю границу (s.pt) не
+// выводим, чтобы не пугать вилкой (решение клиента). «от» вынесено отдельным
+// span'ом: словарь i18n сопоставляет текст целиком, а с числом внутри ключ не
+// составить — так «от» и «тг» переводятся, а число остаётся числом.
 function priceHtml(s) {
-  const f = fmtN(s.pf);
-  if (s.pt && s.pt > s.pf) {
-    return `${f} – ${fmtN(s.pt)} <span class="svc-card-price-cur">тг</span>`;
-  }
-  return `от ${f} <span class="svc-card-price-cur">тг</span>`;
+  return `<span class="svc-card-price-from">от</span> ${fmtN(s.pf)} <span class="svc-card-price-cur">тг</span>`;
+}
+
+// Срок: диапазон «3–6 нед» → «от 3 нед». Не-диапазоны («подписка») — как есть.
+function termHtml(t) {
+  const m = String(t).match(/^\s*(\d+)\s*[–—-]\s*\d+\s*(\S.*)$/);
+  if (!m) return t;
+  return `<span class="svc-card-term-from">от</span> ${m[1]} <span class="svc-card-term-unit">${m[2].trim()}</span>`;
 }
 
 function renderServices(filter) {
@@ -285,7 +292,7 @@ function renderServices(filter) {
           <div class="svc-card-price">${priceHtml(s)}</div>
           <div class="svc-card-model">${s.m}</div>
         </div>
-        <div class="svc-card-term"><span class="svc-card-term-lbl">Срок</span>${s.t}</div>
+        <div class="svc-card-term"><span class="svc-card-term-lbl">Срок</span>${termHtml(s.t)}</div>
       </div>
       <button type="button" class="svc-card-cta" data-svc-id="svc-${s.n}" data-svc-name="${s.name.replace(/"/g, '&quot;')}">Заказать услугу</button>
     </div>
